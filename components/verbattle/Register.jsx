@@ -1,104 +1,147 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-
-/* ------------------------------------------------------------------ */
-/*  Static data                                                        */
-/* ------------------------------------------------------------------ */
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { Icon } from "./icons";
 
 const ROLES = [
-  { id: "student", label: "Student", icon: "🎓" },
-  { id: "teacher", label: "Teacher", icon: "🧑‍🏫" },
-  { id: "school", label: "School", icon: "🏛️" },
-  { id: "parent", label: "Parent", icon: "👤" },
+  {
+    id: "student",
+    label: "Student",
+    icon: "Graduation",
+    note: "For learners ready to compete and grow.",
+  },
+  {
+    id: "teacher",
+    label: "Teacher",
+    icon: "Cap",
+    note: "For mentors and faculty champions.",
+  },
+  {
+    id: "school",
+    label: "School",
+    icon: "Building",
+    note: "For institutions planning a larger rollout.",
+  },
+  {
+    id: "parent",
+    label: "Parent",
+    icon: "Users",
+    note: "For families supporting young speakers.",
+  },
 ];
 
-const STATS = [
-  { icon: "👥", value: "50,000+", label: "Students" },
-  { icon: "🏆", value: "100+", label: "Events" },
-  { icon: "🏫", value: "500+", label: "Schools" },
+const HERO_STATS = [
+  { icon: "Users", value: "50,000+", label: "Students" },
+  { icon: "Trophy", value: "100+", label: "Events" },
+  { icon: "ShieldCheck", value: "Trusted", label: "By Schools" },
 ];
 
 const WHY_ITEMS = [
   {
-    icon: "🎓",
-    title: "National Level Platform",
-    desc: "Compete with the best students from across India.",
+    icon: "Sparkles",
+    title: "Premium stage experience",
+    desc: "A cleaner, more guided registration flow for serious participants.",
   },
   {
-    icon: "🏅",
-    title: "Skill Development",
-    desc: "Improve communication, leadership, critical thinking and more.",
+    icon: "BadgeCheck",
+    title: "Structured learning path",
+    desc: "Build confidence with competitions, workshops and mentoring.",
   },
   {
-    icon: "🏆",
-    title: "Certificate & Rewards",
-    desc: "Win certificates, trophies and exciting prizes.",
+    icon: "Trophy",
+    title: "Recognition that matters",
+    desc: "Awards, certificates and visibility for your effort and talent.",
   },
   {
-    icon: "👤",
-    title: "Mentorship",
-    desc: "Learn from top mentors, speakers and industry experts.",
+    icon: "ShieldCheck",
+    title: "Trusted by schools",
+    desc: "Made for school communities, teachers and parents alike.",
   },
 ];
 
-/* Gallery — replace src values with your own event photos any time;
-   these are placeholder web images so the slider has real content now. */
+const SHOWCASE_CARDS = [
+  {
+    image: "/image copy 24.png",
+    eyebrow: "Flagship event",
+    title: "National Debate Championship",
+    desc: "A polished stage for strong speakers, quick thinkers and future leaders.",
+  },
+  {
+    image: "/image copy 21.png",
+    eyebrow: "Community moment",
+    title: "Students, mentors and teams",
+    desc: "A vibrant classroom-to-stage experience with real participation energy.",
+  },
+  {
+    image: "/founder.png",
+    eyebrow: "Leadership lens",
+    title: "Built with purpose",
+    desc: "A thoughtful platform shaped around growth, confidence and impact.",
+  },
+];
+
 const GALLERY_IMAGES = [
-  {
-    src: "https://images.unsplash.com/photo-1591115765373-5207764f72e7?auto=format&fit=crop&w=900&q=80",
-    caption: "National Debate Finals, Delhi",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=900&q=80",
-    caption: "Leadership Bootcamp 2026",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?auto=format&fit=crop&w=900&q=80",
-    caption: "Inter-School Championship",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=900&q=80",
-    caption: "Winners' Felicitation Ceremony",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?auto=format&fit=crop&w=900&q=80",
-    caption: "Public Speaking Workshop",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1531545514256-b1400bc00f31?auto=format&fit=crop&w=900&q=80",
-    caption: "Regional Round, Bengaluru",
-  },
+  { src: "/image copy 2.png", caption: "Students on stage" },
+  { src: "/image copy 3.png", caption: "Mentorship moments" },
+  { src: "/image copy 4.png", caption: "Winners' celebration" },
+  { src: "/image copy 5.png", caption: "Audience and energy" },
+  { src: "/image copy 6.png", caption: "Gallery collage" },
+  { src: "/image copy 7.png", caption: "On-ground action" },
+  { src: "/image copy 8.png", caption: "Student storytelling" },
+  { src: "/image copy 9.png", caption: "Grand final moments" },
 ];
 
-/* Ongoing competitions — swap copy/images for your live events */
 const COMPETITIONS = [
   {
     tag: "Open",
     tagTone: "open",
-    title: "National Debate Championship 2026",
-    desc: "India's biggest inter-school debate event. Sharpen your argument and take the national stage.",
-    date: "Registrations close 15 Jul 2026",
-    image:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=80",
+    title: "Verbattle Karnataka 2026",
+    desc: "The flagship registration path for students, teachers and school partners.",
+    date: "Now accepting registrations",
+    image: "/image copy 20.png",
   },
   {
     tag: "Closing Soon",
     tagTone: "closing",
-    title: "Young Leaders Summit",
-    desc: "A 3-day leadership intensive with mentorship from industry speakers and live case challenges.",
-    date: "Only 6 days left to register",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=800&q=80",
+    title: "Summer Camp Intake",
+    desc: "A sharp, practical communication track built for motivated learners.",
+    date: "Seats filling fast",
+    image: "/image copy 19.png",
   },
   {
-    tag: "Coming Soon",
+    tag: "New Batch",
     tagTone: "soon",
-    title: "Verbattle Public Speaking Cup",
-    desc: "A platform for first-time speakers to build confidence and compete for national recognition.",
-    date: "Opens 1 Aug 2026",
-    image:
-      "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
+    title: "Workshop Circuit",
+    desc: "Teacher and student workshops with a flexible schedule and clear outcomes.",
+    date: "Rolling admissions",
+    image: "/image copy 22.png",
+  },
+];
+
+const COMMUNITY_ITEMS = [
+  {
+    icon: "Sparkles",
+    tone: "red",
+    title: "Learn",
+    desc: "Access workshops, resources and guided practice.",
+  },
+  {
+    icon: "Trophy",
+    tone: "gold",
+    title: "Compete",
+    desc: "Step into debates and competitive speaking formats.",
+  },
+  {
+    icon: "ShieldCheck",
+    tone: "green",
+    title: "Grow",
+    desc: "Develop confidence, clarity and leadership habits.",
+  },
+  {
+    icon: "BadgeCheck",
+    tone: "gold",
+    title: "Inspire",
+    desc: "Bring others along and lead by example.",
   },
 ];
 
@@ -111,17 +154,16 @@ const HOW_HEARD_OPTIONS = [
   "Other",
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Reveal-on-scroll hook                                              */
-/* ------------------------------------------------------------------ */
-
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node) {
+      return undefined;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -129,9 +171,11 @@ function useReveal(threshold = 0.15) {
           observer.disconnect();
         }
       },
-      { threshold }
+      { threshold },
     );
+
     observer.observe(node);
+
     return () => observer.disconnect();
   }, [threshold]);
 
@@ -141,6 +185,7 @@ function useReveal(threshold = 0.15) {
 function Reveal({ as = "div", className = "", delay = 0, children, ...rest }) {
   const [ref, visible] = useReveal();
   const Tag = as;
+
   return (
     <Tag
       ref={ref}
@@ -153,30 +198,28 @@ function Reveal({ as = "div", className = "", delay = 0, children, ...rest }) {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Gallery slider                                                     */
-/* ------------------------------------------------------------------ */
-
 function GallerySlider() {
-  const trackRef = useRef(null);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const slideCount = GALLERY_IMAGES.length;
 
   const goTo = useCallback(
-    (i) => {
-      const next = (i + slideCount) % slideCount;
-      setIndex(next);
+    (nextIndex) => {
+      setIndex((nextIndex + slideCount) % slideCount);
     },
-    [slideCount]
+    [slideCount],
   );
 
   useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => {
-      setIndex((prev) => (prev + 1) % slideCount);
+    if (paused) {
+      return undefined;
+    }
+
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % slideCount);
     }, 3500);
-    return () => clearInterval(id);
+
+    return () => window.clearInterval(timer);
   }, [paused, slideCount]);
 
   return (
@@ -187,16 +230,15 @@ function GallerySlider() {
     >
       <div
         className="vbr-gallery-track"
-        ref={trackRef}
         style={{ transform: `translateX(-${index * 100}%)` }}
       >
-        {GALLERY_IMAGES.map((img, i) => (
-          <div className="vbr-gallery-slide" key={i}>
+        {GALLERY_IMAGES.map((image) => (
+          <div className="vbr-gallery-slide" key={image.caption}>
             <div className="vbr-gallery-frame">
-              <img src={img.src} alt={img.caption} loading="lazy" />
+              <img src={image.src} alt={image.caption} loading="lazy" />
               <div className="vbr-gallery-caption">
                 <span className="vbr-gallery-caption-dot" />
-                {img.caption}
+                {image.caption}
               </div>
             </div>
           </div>
@@ -221,9 +263,9 @@ function GallerySlider() {
       </button>
 
       <div className="vbr-gallery-dots">
-        {GALLERY_IMAGES.map((_, i) => (
+        {GALLERY_IMAGES.map((image, i) => (
           <button
-            key={i}
+            key={image.caption}
             type="button"
             className={`vbr-gallery-dot ${i === index ? "vbr-gallery-dot--active" : ""}`}
             aria-label={`Go to photo ${i + 1}`}
@@ -235,9 +277,42 @@ function GallerySlider() {
   );
 }
 
-/* ------------------------------------------------------------------ */
-/*  Main component                                                     */
-/* ------------------------------------------------------------------ */
+function RoleIcon({ name }) {
+  const map = {
+    Graduation: Icon.Cap,
+    Cap: Icon.Cap,
+    Building: Icon.Building,
+    Users: Icon.Users,
+  };
+
+  const SelectedIcon = map[name] || Icon.Users;
+  return <SelectedIcon className="vb-icon-18" />;
+}
+
+function PanelIcon({ name }) {
+  const map = {
+    Sparkles: Icon.Sparkles,
+    BadgeCheck: Icon.BadgeCheck,
+    Trophy: Icon.Trophy,
+    ShieldCheck: Icon.ShieldCheck,
+    Users: Icon.Users,
+  };
+
+  const SelectedIcon = map[name] || Icon.Sparkles;
+  return <SelectedIcon className="vb-icon-16" />;
+}
+
+function CommunityIcon({ name }) {
+  const map = {
+    Sparkles: Icon.Sparkles,
+    Trophy: Icon.Trophy,
+    ShieldCheck: Icon.ShieldCheck,
+    BadgeCheck: Icon.BadgeCheck,
+  };
+
+  const SelectedIcon = map[name] || Icon.Sparkles;
+  return <SelectedIcon className="vb-icon-18" />;
+}
 
 export default function VerbattleRegister() {
   const [role, setRole] = useState("student");
@@ -247,13 +322,12 @@ export default function VerbattleRegister() {
   const [heroIn, setHeroIn] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setHeroIn(true), 80);
-    return () => clearTimeout(t);
+    const timer = window.setTimeout(() => setHeroIn(true), 80);
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
     <div className="vbr-page">
-      {/* ============================= HERO ============================= */}
       <section className="vbr-hero">
         <div className="vbr-hero-glow vbr-hero-glow--1" />
         <div className="vbr-hero-glow vbr-hero-glow--2" />
@@ -262,79 +336,108 @@ export default function VerbattleRegister() {
           <div className="vbr-hero-copy">
             <span className="vbr-eyebrow">Register Now</span>
             <h1 className="vbr-hero-title">
-              Begin Your
+              A polished
               <br />
-              <span className="vbr-hero-title-accent">Leadership</span> Journey
+              <span className="vbr-hero-title-accent">registration</span> experience
             </h1>
             <p className="vbr-hero-sub">
-              Join thousands of students across India who are learning,
-              growing and leading with confidence.
+              Join Verbattle through a cleaner, more professional flow designed for students,
+              educators and schools who want a serious stage experience.
             </p>
 
+            <div className="vbr-hero-actions">
+              <button type="button" className="vbr-hero-btn">
+                Start Registration <Icon.ArrowRight className="vb-icon-14" />
+              </button>
+              <button type="button" className="vbr-hero-btn vbr-hero-btn--ghost">
+                <Icon.Play className="vb-icon-14" />
+                View Highlights
+              </button>
+            </div>
+
             <div className="vbr-hero-stats">
-              {STATS.map((s, i) => (
-                <div
-                  className="vbr-hero-stat"
-                  key={s.label}
-                  style={{ transitionDelay: `${i * 90 + 200}ms` }}
-                >
-                  <span className="vbr-hero-stat-icon">{s.icon}</span>
-                  <div>
-                    <strong>{s.value}</strong>
-                    <span>{s.label}</span>
+              {HERO_STATS.map((stat, index) => {
+                const StatIcon = {
+                  Users: Icon.Users,
+                  Trophy: Icon.Trophy,
+                  ShieldCheck: Icon.ShieldCheck,
+                }[stat.icon];
+
+                return (
+                  <div
+                    className="vbr-hero-stat"
+                    key={stat.label}
+                    style={{ transitionDelay: `${index * 90 + 200}ms` }}
+                  >
+                    <span className="vbr-hero-stat-icon">
+                      <StatIcon className="vb-icon-18" />
+                    </span>
+                    <div>
+                      <strong>{stat.value}</strong>
+                      <span>{stat.label}</span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 
           <div className="vbr-hero-visual">
-            <div className="vbr-hero-photo-ring" />
-            <img
-              className="vbr-hero-photo"
-              src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=700&q=80"
-              alt="Verbattle student award winners"
-            />
-            <div className="vbr-hero-badges">
-              <div
-                className="vbr-badge-card"
-                style={{ transitionDelay: "260ms" }}
-              >
-                <span className="vbr-badge-icon vbr-badge-icon--red">🎯</span>
-                <div>
-                  <strong>Debate</strong>
-                  <p>Sharpen your critical thinking and argument skills.</p>
+            <div className="vbr-hero-card vbr-hero-card--main">
+              <img src="/image copy 24.png" alt="Verbattle event spotlight" />
+              <div className="vbr-hero-card__overlay">
+                <div className="vbr-hero-card__chip">
+                  <Icon.Sparkles className="vb-icon-14" />
+                  Premium event access
                 </div>
+                <strong>Built for confidence, clarity and stage presence.</strong>
               </div>
-              <div
-                className="vbr-badge-card"
-                style={{ transitionDelay: "380ms" }}
-              >
-                <span className="vbr-badge-icon vbr-badge-icon--navy">🏛️</span>
-                <div>
-                  <strong>Leadership</strong>
-                  <p>Build confidence and become an inspiring leader.</p>
-                </div>
-              </div>
-              <div
-                className="vbr-badge-card"
-                style={{ transitionDelay: "500ms" }}
-              >
-                <span className="vbr-badge-icon vbr-badge-icon--gold">🏆</span>
-                <div>
-                  <strong>Recognition</strong>
-                  <p>Win awards and get national recognition for your talent.</p>
-                </div>
+            </div>
+
+            <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--top">
+              <img src="/image copy 21.png" alt="Students in a Verbattle program" />
+            </div>
+
+            <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--bottom">
+              <img src="/image copy 10.png" alt="Community learning moment" />
+            </div>
+
+            <div className="vbr-hero-floating-card">
+              <span className="vbr-hero-floating-icon">
+                <Icon.ShieldCheck className="vb-icon-18" />
+              </span>
+              <div>
+                <strong>Trusted by schools</strong>
+                <p>Clear, professional and easy to act on.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ====================== WHY + FORM + SIDEBAR ===================== */}
+      <section className="vbr-showcase">
+        <Reveal className="vbr-section-head">
+          <span className="vbr-eyebrow vbr-eyebrow--dark">What You Get</span>
+          <h2>Registration built like a proper campaign page</h2>
+          <p>Clean visuals, strong hierarchy and the same cinematic energy as the home page.</p>
+        </Reveal>
+
+        <div className="vbr-feature-grid">
+          {SHOWCASE_CARDS.map((card, index) => (
+            <Reveal className="vbr-feature-card" key={card.title} delay={index * 100}>
+              <img src={card.image} alt={card.title} />
+              <div className="vbr-feature-card__body">
+                <span className="vbr-feature-card__eyebrow">{card.eyebrow}</span>
+                <h3>{card.title}</h3>
+                <p>{card.desc}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       <section className="vbr-main">
         <div className="vbr-main-grid">
-          {/* ---- Left column ---- */}
           <Reveal className="vbr-why-card" as="aside">
             <h3>
               Why Register with <span className="vbr-text-accent">Verbattle</span>?
@@ -343,7 +446,9 @@ export default function VerbattleRegister() {
             <ul className="vbr-why-list">
               {WHY_ITEMS.map((item) => (
                 <li key={item.title}>
-                  <span className="vbr-why-icon">{item.icon}</span>
+                  <span className="vbr-why-icon">
+                    <PanelIcon name={item.icon} />
+                  </span>
                   <div>
                     <strong>{item.title}</strong>
                     <p>{item.desc}</p>
@@ -355,18 +460,14 @@ export default function VerbattleRegister() {
             <div className="vbr-testimonial">
               <span className="vbr-quote-mark">“</span>
               <p>
-                Verbattle has truly transformed my confidence and public
-                speaking skills. It&apos;s a wonderful platform for students
-                like me.
+                Verbattle has transformed the confidence and communication skills of our students.
+                The registration experience now feels just as polished as the platform itself.
               </p>
               <div className="vbr-testimonial-person">
-                <img
-                  src="https://images.unsplash.com/photo-1607746882042-944635dfe10e?auto=format&fit=crop&w=120&q=80"
-                  alt="Ananya Sharma"
-                />
+                <img src="/image copy 10.png" alt="Student testimonial" />
                 <div>
-                  <strong>Ananya Sharma</strong>
-                  <span>Student</span>
+                  <strong>Verbattle Community</strong>
+                  <span>Students and mentors</span>
                   <div className="vbr-stars">★★★★★</div>
                 </div>
               </div>
@@ -374,19 +475,24 @@ export default function VerbattleRegister() {
 
             <div className="vbr-help-card">
               <h4>Need Help?</h4>
-              <p>We&apos;re here to assist you with your registration.</p>
-              <a href="tel:+919876543210">📞 +91 98765 43210</a>
-              <a href="mailto:info@verbattle.com">✉️ info@verbattle.com</a>
-              <span className="vbr-help-hours">🕒 Mon – Sat | 9:00 AM – 6:00 PM</span>
+              <p>We&apos;re here to help with registration, school onboarding and event details.</p>
+              <a href="tel:+919886464641">
+                <Icon.Phone className="vb-icon-14" /> +91 98864 64641
+              </a>
+              <a href="mailto:info@verbattle.com">
+                <Icon.Mail className="vb-icon-14" /> info@verbattle.com
+              </a>
+              <span className="vbr-help-hours">
+                <Icon.Calendar className="vb-icon-14" /> Mon - Sat | 9:00 AM - 6:00 PM
+              </span>
             </div>
           </Reveal>
 
-          {/* ---- Form column ---- */}
           <Reveal className="vbr-form-card" delay={120}>
             <div className="vbr-form-head">
               <div>
                 <h2>Create Your Account</h2>
-                <p>Fill in your details to get started with Verbattle.</p>
+                <p>Fill in the details below to get started with Verbattle.</p>
               </div>
               <span className="vbr-login-link">
                 Already have an account? <a href="#login">Login</a>
@@ -395,25 +501,26 @@ export default function VerbattleRegister() {
 
             <form
               className="vbr-form"
-              onSubmit={(e) => {
-                e.preventDefault();
+              onSubmit={(event) => {
+                event.preventDefault();
               }}
             >
               <label className="vbr-field-label">
                 I am registering as <span className="vbr-required">*</span>
               </label>
               <div className="vbr-role-grid">
-                {ROLES.map((r) => (
+                {ROLES.map((item) => (
                   <button
-                    key={r.id}
+                    key={item.id}
                     type="button"
-                    className={`vbr-role-btn ${
-                      role === r.id ? "vbr-role-btn--active" : ""
-                    }`}
-                    onClick={() => setRole(r.id)}
+                    className={`vbr-role-btn ${role === item.id ? "vbr-role-btn--active" : ""}`}
+                    onClick={() => setRole(item.id)}
                   >
-                    <span className="vbr-role-icon">{r.icon}</span>
-                    {r.label}
+                    <span className="vbr-role-icon">
+                      <RoleIcon name={item.icon} />
+                    </span>
+                    <span>{item.label}</span>
+                    <small>{item.note}</small>
                   </button>
                 ))}
               </div>
@@ -472,11 +579,10 @@ export default function VerbattleRegister() {
                     <option value="" disabled>
                       Select State
                     </option>
-                    <option>Maharashtra</option>
-                    <option>Delhi</option>
                     <option>Karnataka</option>
+                    <option>Delhi</option>
+                    <option>Maharashtra</option>
                     <option>Tamil Nadu</option>
-                    <option>Puducherry</option>
                     <option>Odisha</option>
                   </select>
                 </div>
@@ -492,10 +598,7 @@ export default function VerbattleRegister() {
                 <label>
                   School / Institution <span className="vbr-required">*</span>
                 </label>
-                <input
-                  type="text"
-                  placeholder="Enter your school or institution name"
-                />
+                <input type="text" placeholder="Enter your school or institution name" />
               </div>
 
               <h4 className="vbr-section-title">Account Security</h4>
@@ -513,10 +616,14 @@ export default function VerbattleRegister() {
                     <button
                       type="button"
                       className="vbr-input-icon-btn"
-                      onClick={() => setShowPassword((v) => !v)}
+                      onClick={() => setShowPassword((value) => !value)}
                       aria-label="Toggle password visibility"
                     >
-                      {showPassword ? "🙈" : "👁️"}
+                      {showPassword ? (
+                        <Icon.EyeOff className="vb-icon-16" />
+                      ) : (
+                        <Icon.Eye className="vb-icon-16" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -532,10 +639,14 @@ export default function VerbattleRegister() {
                     <button
                       type="button"
                       className="vbr-input-icon-btn"
-                      onClick={() => setShowConfirm((v) => !v)}
+                      onClick={() => setShowConfirm((value) => !value)}
                       aria-label="Toggle confirm password visibility"
                     >
-                      {showConfirm ? "🙈" : "👁️"}
+                      {showConfirm ? (
+                        <Icon.EyeOff className="vb-icon-16" />
+                      ) : (
+                        <Icon.Eye className="vb-icon-16" />
+                      )}
                     </button>
                   </div>
                 </div>
@@ -565,8 +676,8 @@ export default function VerbattleRegister() {
                     <option value="" disabled>
                       Select an option
                     </option>
-                    {HOW_HEARD_OPTIONS.map((opt) => (
-                      <option key={opt}>{opt}</option>
+                    {HOW_HEARD_OPTIONS.map((option) => (
+                      <option key={option}>{option}</option>
                     ))}
                   </select>
                 </div>
@@ -576,11 +687,11 @@ export default function VerbattleRegister() {
                 <input
                   type="checkbox"
                   checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
+                  onChange={(event) => setAgreed(event.target.checked)}
                 />
                 <span>
-                  I agree to the <a href="#terms">Terms &amp; Conditions</a>{" "}
-                  and <a href="#privacy">Privacy Policy</a>{" "}
+                  I agree to the <a href="#terms">Terms &amp; Conditions</a> and{" "}
+                  <a href="#privacy">Privacy Policy</a>{" "}
                   <span className="vbr-required">*</span>
                 </span>
               </label>
@@ -590,8 +701,7 @@ export default function VerbattleRegister() {
               </button>
 
               <p className="vbr-form-footnote">
-                By registering, you agree to our{" "}
-                <a href="#terms">Terms &amp; Conditions</a> and{" "}
+                By registering, you agree to our <a href="#terms">Terms &amp; Conditions</a> and{" "}
                 <a href="#privacy">Privacy Policy</a>.
               </p>
             </form>
@@ -599,27 +709,21 @@ export default function VerbattleRegister() {
         </div>
       </section>
 
-      {/* ===================== COMMUNITY STRIP ===================== */}
       <Reveal as="section" className="vbr-community">
         <h3>Join a Community of Future Leaders</h3>
         <p>
-          Verbattle is more than a platform — it&apos;s a movement to empower
-          young minds and build a better tomorrow.
+          Verbattle is more than a platform. It is a movement to empower young minds and help
+          them step into the spotlight with confidence.
         </p>
         <div className="vbr-community-grid">
-          {[
-            { icon: "🔓", tone: "red", title: "Learn", desc: "Access workshops, resources and expert sessions." },
-            { icon: "🏆", tone: "gold", title: "Compete", desc: "Participate in debates and win exciting prizes." },
-            { icon: "🏛️", tone: "green", title: "Grow", desc: "Build skills that shape your future and career." },
-            { icon: "✨", tone: "gold", title: "Inspire", desc: "Lead with confidence and inspire others." },
-          ].map((item, i) => (
+          {COMMUNITY_ITEMS.map((item, index) => (
             <div
               className="vbr-community-item"
               key={item.title}
-              style={{ transitionDelay: `${i * 90}ms` }}
+              style={{ transitionDelay: `${index * 90}ms` }}
             >
               <span className={`vbr-community-icon vbr-community-icon--${item.tone}`}>
-                {item.icon}
+                <CommunityIcon name={item.icon} />
               </span>
               <strong>{item.title}</strong>
               <p>{item.desc}</p>
@@ -628,7 +732,6 @@ export default function VerbattleRegister() {
         </div>
       </Reveal>
 
-      {/* ============================ GALLERY ============================ */}
       <section className="vbr-gallery-section">
         <Reveal className="vbr-section-head">
           <span className="vbr-eyebrow vbr-eyebrow--dark">Moments That Matter</span>
@@ -641,7 +744,6 @@ export default function VerbattleRegister() {
         </Reveal>
       </section>
 
-      {/* ======================= ONGOING COMPETITIONS ===================== */}
       <section className="vbr-competitions-section">
         <Reveal className="vbr-section-head">
           <span className="vbr-eyebrow vbr-eyebrow--dark">Step Onto the Stage</span>
@@ -650,23 +752,19 @@ export default function VerbattleRegister() {
         </Reveal>
 
         <div className="vbr-competitions-grid">
-          {COMPETITIONS.map((c, i) => (
-            <Reveal
-              className="vbr-comp-card"
-              key={c.title}
-              delay={i * 110}
-            >
+          {COMPETITIONS.map((competition, index) => (
+            <Reveal className="vbr-comp-card" key={competition.title} delay={index * 110}>
               <div className="vbr-comp-image-wrap">
-                <img src={c.image} alt={c.title} loading="lazy" />
-                <span className={`vbr-comp-tag vbr-comp-tag--${c.tagTone}`}>
-                  {c.tag}
+                <img src={competition.image} alt={competition.title} loading="lazy" />
+                <span className={`vbr-comp-tag vbr-comp-tag--${competition.tagTone}`}>
+                  {competition.tag}
                 </span>
               </div>
               <div className="vbr-comp-body">
-                <h3>{c.title}</h3>
-                <p>{c.desc}</p>
+                <h3>{competition.title}</h3>
+                <p>{competition.desc}</p>
                 <div className="vbr-comp-footer">
-                  <span className="vbr-comp-date">📅 {c.date}</span>
+                  <span className="vbr-comp-date">📅 {competition.date}</span>
                   <button type="button" className="vbr-comp-btn">
                     View Details →
                   </button>
@@ -676,25 +774,20 @@ export default function VerbattleRegister() {
           ))}
         </div>
 
-        {/* Marketing / promo banner */}
         <Reveal delay={200} className="vbr-promo-banner">
           <div className="vbr-promo-glow" />
           <div className="vbr-promo-content">
             <span className="vbr-eyebrow vbr-eyebrow--light">Limited Seats</span>
             <h3>Don&apos;t Miss the Next Big Stage</h3>
             <p>
-              Early registrations get priority access to mentorship sessions
-              and a discounted entry fee. Spots are filling fast.
+              Early registrations get priority access to mentorship sessions and a smoother
+              onboarding flow.
             </p>
             <button type="button" className="vbr-promo-btn">
               Register Now <span className="vbr-submit-arrow">→</span>
             </button>
           </div>
-          <img
-            className="vbr-promo-image"
-            src="https://images.unsplash.com/photo-1517048676732-d65bc937f952?auto=format&fit=crop&w=700&q=80"
-            alt="Students celebrating a debate win"
-          />
+          <img className="vbr-promo-image" src="/image copy 23.png" alt="Students celebrating a debate win" />
         </Reveal>
       </section>
     </div>

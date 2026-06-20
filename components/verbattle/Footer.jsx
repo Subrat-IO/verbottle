@@ -67,9 +67,18 @@ export default function Footer({ footerData, navLinks }) {
         <div className="vb-footer__col">
           <h5>Contact</h5>
           <ul className="vb-footer__contact">
-            <li><Icon.Phone className="vb-icon-14" /> {footerData.phone}</li>
-            <li><Icon.Mail className="vb-icon-14" /> {footerData.email}</li>
-            <li><Icon.Pin className="vb-icon-14" /> {footerData.address}</li>
+            <li>
+              <span className="vb-footer__contact-icon"><Icon.Phone className="vb-icon-14" /></span>
+              <span>{footerData.phone}</span>
+            </li>
+            <li>
+              <span className="vb-footer__contact-icon"><Icon.Mail className="vb-icon-14" /></span>
+              <span>{footerData.email}</span>
+            </li>
+            <li>
+              <span className="vb-footer__contact-icon"><Icon.Pin className="vb-icon-14" /></span>
+              <span>{footerData.address}</span>
+            </li>
           </ul>
         </div>
 

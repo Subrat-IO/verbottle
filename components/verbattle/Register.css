@@ -25,9 +25,11 @@
   --vbr-shadow-soft: 0 10px 30px rgba(19, 35, 77, 0.08);
   --vbr-shadow-lift: 0 20px 45px rgba(19, 35, 77, 0.14);
 
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family: var(--font-body), "Segoe UI", system-ui, -apple-system, sans-serif;
   color: var(--vbr-ink);
-  background: var(--vbr-bg);
+  background:
+    radial-gradient(circle at top left, rgba(237, 243, 255, 0.9), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #f7f9fd 100%);
   overflow-x: hidden;
 }
 
@@ -39,7 +41,7 @@
 .vbr-page h2,
 .vbr-page h3,
 .vbr-page h4 {
-  font-family: "Poppins", "Inter", system-ui, sans-serif;
+  font-family: var(--font-display), var(--font-body), sans-serif;
   margin: 0;
   line-height: 1.2;
   letter-spacing: -0.01em;
@@ -246,98 +248,285 @@
 /* Hero visual */
 .vbr-page .vbr-hero-visual {
   position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 360px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.72fr;
+  grid-template-rows: auto auto;
+  gap: 16px;
+  align-items: stretch;
+  min-height: 420px;
 }
 
-.vbr-page .vbr-hero-photo-ring {
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--vbr-red) 0%, var(--vbr-gold) 100%);
-  opacity: 0.85;
-  animation: vbr-pulse-ring 5s ease-in-out infinite;
-}
-
-@keyframes vbr-pulse-ring {
-  0%, 100% { transform: scale(1); opacity: 0.85; }
-  50% { transform: scale(1.05); opacity: 0.65; }
-}
-
-.vbr-page .vbr-hero-photo {
+.vbr-page .vbr-hero-card {
   position: relative;
-  z-index: 1;
-  width: 300px;
-  height: 360px;
-  object-fit: cover;
-  border-radius: var(--vbr-radius-lg);
+  overflow: hidden;
+  border-radius: 26px;
   box-shadow: var(--vbr-shadow-lift);
-  border: 4px solid rgba(255, 255, 255, 0.15);
 }
 
-.vbr-page .vbr-hero-badges {
+.vbr-page .vbr-hero-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vbr-page .vbr-hero-card--main {
+  grid-row: 1 / span 2;
+  min-height: 420px;
+}
+
+.vbr-page .vbr-hero-card--main::after {
+  content: "";
   position: absolute;
-  right: -10px;
-  top: 0;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 18, 39, 0.08) 0%, rgba(4, 18, 39, 0.55) 100%);
+}
+
+.vbr-page .vbr-hero-card__overlay {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  z-index: 1;
+  color: #fff;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  z-index: 2;
+  gap: 10px;
 }
 
-.vbr-page .vbr-badge-card {
+.vbr-page .vbr-hero-card__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vbr-page .vbr-hero-card__overlay strong {
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.25;
+  max-width: 360px;
+}
+
+.vbr-page .vbr-hero-card--side {
+  min-height: 202px;
+}
+
+.vbr-page .vbr-hero-card--top {
+  margin-top: 6px;
+}
+
+.vbr-page .vbr-hero-card--bottom {
+  margin-bottom: 6px;
+}
+
+.vbr-page .vbr-hero-floating-card {
+  position: absolute;
+  left: 22px;
+  top: 18px;
   display: flex;
   gap: 12px;
-  align-items: flex-start;
-  background: #fff;
-  border-radius: var(--vbr-radius-md);
+  align-items: center;
   padding: 14px 16px;
-  width: 220px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: var(--vbr-shadow-soft);
-  opacity: 0;
-  transform: translateX(24px);
-  animation: vbr-slide-in 0.6s ease forwards;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backdrop-filter: blur(14px);
 }
 
-.vbr-page .vbr-badge-card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: var(--vbr-shadow-lift);
-}
-
-@keyframes vbr-slide-in {
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.vbr-page .vbr-badge-icon {
-  flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+.vbr-page .vbr-hero-floating-icon {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+  background: #eaf8f2;
+  color: var(--vbr-green);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
+  flex-shrink: 0;
 }
 
-.vbr-page .vbr-badge-icon--red { background: #fde6e4; }
-.vbr-page .vbr-badge-icon--navy { background: #e3e9f7; }
-.vbr-page .vbr-badge-icon--gold { background: #fdedd3; }
-
-.vbr-page .vbr-badge-card strong {
+.vbr-page .vbr-hero-floating-card strong {
   display: block;
   font-size: 14px;
   margin-bottom: 2px;
+  color: var(--vbr-ink);
 }
 
-.vbr-page .vbr-badge-card p {
+.vbr-page .vbr-hero-floating-card p {
   font-size: 12px;
   color: var(--vbr-gray);
-  margin: 0;
-  line-height: 1.4;
+}
+
+.vbr-page .vbr-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.vbr-page .vbr-hero-btn {
+  height: 48px;
+  border: none;
+  border-radius: 999px;
+  padding: 0 20px;
+  background: #fff;
+  color: var(--vbr-navy-deep);
+  font-size: 14px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: var(--vbr-shadow-soft);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.vbr-page .vbr-hero-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--vbr-shadow-lift);
+}
+
+.vbr-page .vbr-hero-btn--ghost {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: none;
+  backdrop-filter: blur(12px);
+}
+
+.vbr-page .vbr-hero-btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.vbr-page .vbr-hero-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.vbr-page .vbr-hero-stat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 170px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease, background 0.2s ease;
+}
+
+.vbr-page .vbr-hero-stat:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.vbr-page .vbr-hero-stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.vbr-page .vbr-hero-stat strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.vbr-page .vbr-hero-stat span {
+  font-size: 12px;
+  color: #c7d1e7;
+}
+
+/* Showcase strip */
+.vbr-page .vbr-showcase {
+  padding: 40px 6vw 20px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.vbr-page .vbr-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.vbr-page .vbr-feature-card {
+  overflow: hidden;
+  border-radius: var(--vbr-radius-lg);
+  background: #fff;
+  border: 1px solid var(--vbr-border);
+  box-shadow: var(--vbr-shadow-soft);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vbr-page .vbr-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--vbr-shadow-lift);
+}
+
+.vbr-page .vbr-feature-card img {
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  display: block;
+}
+
+.vbr-page .vbr-feature-card__body {
+  padding: 18px 18px 20px;
+}
+
+.vbr-page .vbr-feature-card__eyebrow {
+  display: inline-block;
+  margin-bottom: 10px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--vbr-red);
+}
+
+.vbr-page .vbr-feature-card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.vbr-page .vbr-feature-card p {
+  font-size: 13.5px;
+}
+
+.vbr-page .vbr-section-head {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 32px;
+}
+
+.vbr-page .vbr-section-head h2 {
+  font-size: clamp(26px, 3vw, 34px);
+  margin: 14px 0 12px;
+  color: var(--vbr-navy-deep);
+}
+
+.vbr-page .vbr-section-head p {
+  font-size: 15px;
 }
 
 /* ===================================================================
@@ -404,6 +593,15 @@
   justify-content: center;
   font-size: 16px;
   transition: transform 0.3s ease;
+}
+
+.vbr-page .vbr-why-icon svg,
+.vbr-page .vbr-community-icon svg,
+.vbr-page .vbr-hero-stat-icon svg,
+.vbr-page .vbr-hero-floating-icon svg,
+.vbr-page .vbr-help-card svg,
+.vbr-page .vbr-help-hours svg {
+  display: block;
 }
 
 .vbr-page .vbr-why-list li:hover .vbr-why-icon {
@@ -583,11 +781,24 @@
   color: var(--vbr-gray);
   cursor: pointer;
   transition: all 0.25s ease;
+  text-align: center;
 }
 
 .vbr-page .vbr-role-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 22px;
   transition: transform 0.25s ease;
+}
+
+.vbr-page .vbr-role-btn small {
+  display: block;
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 500;
+  color: inherit;
+  opacity: 0.78;
 }
 
 .vbr-page .vbr-role-btn:hover {
@@ -1220,6 +1431,10 @@
     margin-top: 12px;
   }
 
+  .vbr-page .vbr-feature-grid {
+    grid-template-columns: 1fr;
+  }
+
   .vbr-page .vbr-main-grid {
     grid-template-columns: 1fr;
   }
@@ -1243,32 +1458,41 @@
     font-size: 34px;
   }
 
+  .vbr-page .vbr-hero-actions {
+    gap: 10px;
+  }
+
+  .vbr-page .vbr-hero-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
   .vbr-page .vbr-hero-stats {
     gap: 18px;
   }
 
   .vbr-page .vbr-hero-visual {
-    min-height: 380px;
+    grid-template-columns: 1fr;
+    min-height: 0;
   }
 
-  .vbr-page .vbr-hero-photo {
-    width: 240px;
-    height: 290px;
+  .vbr-page .vbr-hero-card--main {
+    grid-row: auto;
+    min-height: 320px;
   }
 
-  .vbr-page .vbr-hero-photo-ring {
-    width: 260px;
-    height: 260px;
+  .vbr-page .vbr-hero-card--side {
+    width: 100%;
+    min-height: 160px;
   }
 
-  .vbr-page .vbr-hero-badges {
+  .vbr-page .vbr-hero-floating-card {
     position: static;
-    margin-top: 28px;
-    width: 100%;
+    margin-top: 10px;
   }
 
-  .vbr-page .vbr-badge-card {
-    width: 100%;
+  .vbr-page .vbr-showcase {
+    padding-top: 24px;
   }
 
   .vbr-page .vbr-main {
@@ -1328,5 +1552,9 @@
   .vbr-page .vbr-gallery-caption {
     font-size: 13px;
     padding: 18px 16px 14px;
+  }
+
+  .vbr-page .vbr-feature-card img {
+    height: 180px;
   }
 }

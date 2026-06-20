@@ -57,6 +57,25 @@ export const Icon = {
       <path d="M16 15.2c2.6.4 4.6 1.8 5 3.8" />
     </svg>
   ),
+  BadgeCheck: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M9 12.5l2.2 2.2L15.8 10" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  ShieldCheck: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <path d="M12 3l7 3v5c0 4.6-3 8.7-7 10-4-1.3-7-5.4-7-10V6l7-3z" />
+      <path d="M9.2 12.2l1.9 1.9 3.7-4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+  Sparkles: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <path d="M12 2l1.2 4.2L17.4 7.4l-4.2 1.2L12 13l-1.2-4.4-4.2-1.2 4.2-1.2L12 2z" strokeLinejoin="round" />
+      <path d="M18.5 13l.7 2.3 2.3.7-2.3.7-.7 2.3-.7-2.3-2.3-.7 2.3-.7.7-2.3z" />
+      <path d="M4 14l.7 2.3 2.3.7-2.3.7L4 20l-.7-2.3-2.3-.7 2.3-.7L4 14z" />
+    </svg>
+  ),
   Cap: (p) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
       <path d="M2 9l10-5 10 5-10 5L2 9z" />
@@ -64,10 +83,35 @@ export const Icon = {
       <path d="M22 9v5" />
     </svg>
   ),
+  Building: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <rect x="4" y="5" width="16" height="16" rx="2" />
+      <path d="M8 9h2M8 13h2M8 17h2M14 9h2M14 13h2M14 17h2" />
+      <path d="M10 21v-4h4v4" />
+    </svg>
+  ),
   Pin: (p) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
       <path d="M12 22s7-7.4 7-12.5a7 7 0 10-14 0C5 14.6 12 22 12 22z" />
       <circle cx="12" cy="9.5" r="2.3" />
+    </svg>
+  ),
+  MapPin: (p) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
+      <path d="M12 2a7 7 0 00-7 7c0 5.1 7 13 7 13s7-7.9 7-13a7 7 0 00-7-7zm0 9.6a2.6 2.6 0 110-5.2 2.6 2.6 0 010 5.2z" />
+    </svg>
+  ),
+  Eye: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z" />
+      <circle cx="12" cy="12" r="2.6" />
+    </svg>
+  ),
+  EyeOff: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" {...p}>
+      <path d="M3 3l18 18" strokeLinecap="round" />
+      <path d="M10.5 10.5A3 3 0 0012 15a3 3 0 002.5-4.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 12s3.5-6 8-6a8.4 8.4 0 013.7.8M20 12s-1.1 1.9-3.1 3.6" strokeLinecap="round" />
     </svg>
   ),
   Calendar: (p) => (
