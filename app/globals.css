@@ -1,0 +1,16 @@
+@import url("../VerbattleHome.css");
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color: transparent;
+}
