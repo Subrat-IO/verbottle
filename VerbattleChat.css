@@ -11,21 +11,21 @@
   background:
     radial-gradient(circle at top left, rgba(255, 215, 0, 0.12), transparent 28%),
     linear-gradient(180deg, #fffdf8 0%, #f8f4ec 100%);
-  width: min(420px, calc(100vw - 32px));
+  width: min(360px, calc(100vw - 24px));
   margin: 0;
-  border-radius: 28px;
+  border-radius: 24px;
   overflow: hidden;
   border: 1px solid rgba(19, 35, 77, 0.08);
   box-shadow: 0 24px 60px rgba(19, 35, 77, 0.12);
   display: flex;
   flex-direction: column;
-  height: min(680px, calc(100vh - 140px));
+  height: min(451px, calc(100vh - 56px));
 }
 
 .vb-live-assistant {
   position: fixed;
-  right: 100px;
-  bottom: 100px;
+  right: 20px;
+  bottom: 20px;
   z-index: 140;
 }
 
@@ -108,7 +108,7 @@
   background:
     radial-gradient(circle at top right, rgba(255, 215, 0, 0.16), transparent 24%),
     linear-gradient(135deg, #13234d 0%, #1b3266 58%, #233f7d 100%);
-  padding: 18px 22px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 14px;
@@ -116,8 +116,8 @@
 }
 
 .vb-header-avatar {
-  width: 50px;
-  height: 50px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: linear-gradient(135deg, #ffe27a 0%, #f2a93b 100%);
   display: flex;
@@ -128,19 +128,19 @@
 }
 
 .vb-header-avatar svg {
-  width: 24px;
-  height: 24px;
+  width: 21px;
+  height: 21px;
 }
 
 .vb-header-text h1 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
   color: #fff;
   letter-spacing: 0.3px;
 }
 
 .vb-header-text p {
-  font-size: 11.5px;
+  font-size: 11px;
   color: rgba(226, 233, 248, 0.78);
   margin-top: 3px;
   display: flex;
@@ -177,10 +177,10 @@
 .vb-messages {
   flex: 1;
   overflow-y: auto;
-  padding: 22px 18px;
+  padding: 18px 14px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.6), transparent 26%),
     linear-gradient(180deg, #fffdf9 0%, #f7f3eb 100%);
@@ -249,10 +249,10 @@
 
 .vb-bubble {
   max-width: 72%;
-  padding: 12px 16px;
-  border-radius: 20px;
-  font-size: 13.5px;
-  line-height: 1.6;
+  padding: 11px 14px;
+  border-radius: 18px;
+  font-size: 13px;
+  line-height: 1.5;
   font-weight: 400;
   letter-spacing: 0.1px;
   box-shadow: 0 14px 28px rgba(19, 35, 77, 0.08);
@@ -310,6 +310,14 @@
   animation: msgSlideIn 0.3s ease 0.1s both;
 }
 
+.vb-greeting-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-left: 44px;
+  animation: msgSlideIn 0.3s ease 0.1s both;
+}
+
 .vb-chip {
   border: 1px solid rgba(230, 51, 42, 0.18);
   background: #fff;
@@ -334,6 +342,17 @@
 
 .vb-chip:active {
   transform: scale(0.96);
+}
+
+.vb-greeting-chip {
+  border-color: rgba(19, 35, 77, 0.12);
+  color: #13234d;
+}
+
+.vb-greeting-chip:hover {
+  background: rgba(19, 35, 77, 0.06);
+  border-color: rgba(19, 35, 77, 0.22);
+  color: #13234d;
 }
 
 .vb-yesno {
@@ -373,7 +392,7 @@
 .vb-yesno-btn:active { transform: scale(0.96); }
 
 .vb-input-area {
-  padding: 14px 16px 16px;
+  padding: 12px 12px 12px;
   background: rgba(255, 255, 255, 0.96);
   border-top: 1px solid rgba(19, 35, 77, 0.08);
   display: flex;
@@ -385,9 +404,9 @@
 .vb-input {
   flex: 1;
   border: 1.5px solid rgba(19, 35, 77, 0.12);
-  border-radius: 26px;
-  padding: 12px 18px;
-  font-size: 13.5px;
+  border-radius: 22px;
+  padding: 10px 14px;
+  font-size: 13px;
   font-family: 'Poppins', sans-serif;
   font-weight: 400;
   background: #fff;
@@ -408,8 +427,8 @@
 }
 
 .vb-send-btn {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: linear-gradient(135deg, #e6332a 0%, #f24e45 100%);
   border: none;
@@ -444,9 +463,9 @@
   background: #ffffff;
   border: 1px solid rgba(19, 35, 77, 0.08);
   border-radius: 18px;
-  padding: 16px 18px;
-  font-size: 13px;
-  line-height: 1.9;
+  padding: 14px 16px;
+  font-size: 12.5px;
+  line-height: 1.75;
   color: #1c2333;
   max-width: 72%;
   box-shadow: 0 16px 34px rgba(19, 35, 77, 0.1);
@@ -531,14 +550,14 @@
 
 @media (max-width: 760px) {
   .vb-live-assistant {
-    right: 16px;
-    bottom: 16px;
+    right: 12px;
+    bottom: 12px;
   }
 
   .vb-root {
-    width: min(100vw - 32px, 380px);
-    height: min(78vh, calc(100vh - 90px));
-    border-radius: 22px;
+    width: min(100vw - 24px, 360px);
+    height: min(77vh, calc(100vh - 72px));
+    border-radius: 20px;
   }
 
   .vb-bubble,

@@ -35,11 +35,11 @@ const CloseIcon = () => (
 
 const HOBBIES = ["Reading", "Sports", "Music", "Art", "Coding", "Dance", "Travel", "Cooking", "Gaming", "Photography"];
 
-const STEPS = [
+const FORM_STEPS = [
   {
     id: "name",
     type: "text",
-    ask: () => "Welcome to the Verbattle website. I am your live assistant.\n\nIf you have any queries, I am here to help. What is your full name?",
+    ask: () => "Welcome to the Verbattle website. I am your live assistant.\n\nTo start the conversation, say hi or tap a greeting below. What is your full name?",
     placeholder: "e.g. Riya Sharma",
     validate: (v) => (v.trim().length < 2 ? "Please enter your full name." : null),
   },
@@ -106,6 +106,28 @@ const STEPS = [
   },
 ];
 
+const INTRO_STEP = {
+  id: "greeting",
+  type: "greeting",
+  ask: () => "To start the conversation, say hi or choose a greeting below.",
+};
+
+function getIndianGreeting() {
+  const hour = Number(
+    new Intl.DateTimeFormat("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      hour12: false,
+    })
+      .formatToParts(new Date())
+      .find((part) => part.type === "hour")?.value ?? 0,
+  );
+
+  if (hour >= 5 && hour < 12) return "Good morning";
+  if (hour >= 12 && hour < 17) return "Good afternoon";
+  return "Good evening";
+}
+
 export default function VerbattleChat() {
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -117,8 +139,11 @@ export default function VerbattleChat() {
   const [isDone, setIsDone] = useState(false);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [waitingInput, setWaitingInput] = useState(false);
+  const [greetingLabel, setGreetingLabel] = useState(() => getIndianGreeting());
   const msgsRef = useRef(null);
   const inputRef = useRef(null);
+  const chatSteps = [INTRO_STEP, ...FORM_STEPS];
+  const currentStep = chatSteps[step];
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -137,7 +162,7 @@ export default function VerbattleChat() {
   };
 
   const askStep = (idx, updatedData) => {
-    const s = STEPS[idx];
+    const s = chatSteps[idx];
     const q = typeof s.ask === "function" ? s.ask(updatedData || data) : s.ask;
     setIsTyping(true);
     setWaitingInput(false);
@@ -154,16 +179,32 @@ export default function VerbattleChat() {
   }, []);
 
   useEffect(() => {
+    const updateGreeting = () => setGreetingLabel(getIndianGreeting());
+    updateGreeting();
+    const timer = window.setInterval(updateGreeting, 60000);
+    return () => window.clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
     if (isOpen && waitingInput && currentStep?.type === "text") {
       setTimeout(() => inputRef.current?.focus(), 120);
     }
-  }, [isOpen, waitingInput]);
+  }, [currentStep?.type, isOpen, waitingInput]);
 
-  const progress = Math.round((step / STEPS.length) * 100);
+  const progress = Math.round((step / Math.max(chatSteps.length - 1, 1)) * 100);
+
+  const goToNextStep = (next, updated) => {
+    setStep(next);
+    if (next >= chatSteps.length) {
+      showSummary(updated);
+    } else {
+      askStep(next, updated);
+    }
+  };
 
   const handleSend = () => {
     if (isDone || !waitingInput) return;
-    const s = STEPS[step];
+    const s = chatSteps[step];
     if (s.type !== "text" && s.type !== "chips") return;
     const val = inputVal.trim();
     const err = s.validate ? s.validate(val) : null;
@@ -176,44 +217,34 @@ export default function VerbattleChat() {
     const updated = { ...data, [s.id]: val };
     setData(updated);
     setInputVal("");
-    const next = step + 1;
-    setStep(next);
-    if (next >= STEPS.length) {
-      showSummary(updated);
-    } else {
-      askStep(next, updated);
-    }
+    goToNextStep(step + 1, updated);
   };
 
   const handleChip = (val) => {
     if (!waitingInput) return;
     setError("");
     addUserMsg(val);
-    const s = STEPS[step];
+    const s = chatSteps[step];
     const updated = { ...data, [s.id]: val };
     setData(updated);
-    const next = step + 1;
-    setStep(next);
-    if (next >= STEPS.length) {
-      showSummary(updated);
-    } else {
-      askStep(next, updated);
-    }
+    goToNextStep(step + 1, updated);
   };
 
   const handleYesNo = (val) => {
     if (!waitingInput) return;
     addUserMsg(val);
-    const s = STEPS[step];
+    const s = chatSteps[step];
     const updated = { ...data, [s.id]: val };
     setData(updated);
-    const next = step + 1;
-    setStep(next);
-    if (next >= STEPS.length) {
-      showSummary(updated);
-    } else {
-      askStep(next, updated);
-    }
+    goToNextStep(step + 1, updated);
+  };
+
+  const handleGreeting = (val) => {
+    if (!waitingInput) return;
+    addUserMsg(val);
+    const updated = { ...data, greeting: val };
+    setData(updated);
+    goToNextStep(1, updated);
   };
 
   const toggleHobby = (h) => {
@@ -226,13 +257,7 @@ export default function VerbattleChat() {
     addUserMsg(val);
     const updated = { ...data, hobbies: val };
     setData(updated);
-    const next = step + 1;
-    setStep(next);
-    if (next >= STEPS.length) {
-      showSummary(updated);
-    } else {
-      askStep(next, updated);
-    }
+    goToNextStep(step + 1, updated);
   };
 
   const showSummary = (finalData) => {
@@ -255,8 +280,6 @@ export default function VerbattleChat() {
       }, 700);
     }, 900);
   };
-
-  const currentStep = STEPS[step];
 
   return (
     <div className={`vb-live-assistant${isOpen ? " is-open" : " is-closed"}`}>
@@ -316,6 +339,13 @@ export default function VerbattleChat() {
                     </div>
                     {msg.extra?.stepIdx === step && waitingInput && (
                       <>
+                        {currentStep?.type === "greeting" && (
+                          <div className="vb-greeting-chips">
+                            <button className="vb-chip vb-greeting-chip" onClick={() => handleGreeting(greetingLabel)}>
+                              {greetingLabel}
+                            </button>
+                          </div>
+                        )}
                         {currentStep?.type === "chips" && (
                           <div className="vb-chips">
                             {currentStep.chips.map((c) => (
