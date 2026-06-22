@@ -19,7 +19,7 @@ export default function HeroSection({
   
   return (
     <section id="home" className="vb-hero">
-      <div className="vb-hero__bg" style={{ backgroundImage: "url(/image.png)" }} />
+      <div className="vb-hero__bg" style={{ backgroundImage: "url(/competitions/herobg.webp)" }} />
       <div className="vb-hero__mesh" />
       <div className="vb-container vb-hero__inner">
         <div className="vb-hero__left vb-reveal vb-reveal--left">

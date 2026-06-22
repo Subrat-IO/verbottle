@@ -136,6 +136,10 @@
   padding: 80px 0;
 }
 
+.pgm-section--entry {
+  padding-top: 132px;
+}
+
 .pgm-section--light {
   background: var(--vb-surface-soft);
 }
@@ -894,6 +898,10 @@
 }
 
 @media (max-width: 640px) {
+  .pgm-section--entry {
+    padding-top: 96px;
+  }
+
   .pgm-hero {
     min-height: 100svh;
   }

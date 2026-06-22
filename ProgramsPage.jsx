@@ -321,7 +321,7 @@ function ProgramsGrid() {
   const filtered = activeFilter === "All" ? programs : programs.filter(p => p.level === activeFilter);
 
   return (
-    <section className="pgm-section pgm-section--light" id="programs">
+    <section className="pgm-section pgm-section--light pgm-section--entry" id="programs">
       <div className="vb-container">
         <div className="pgm-section__head">
           <RevealDiv>
@@ -580,7 +580,6 @@ export default function ProgramsPage() {
     <div className="vb">
       <Header menuOpen={menuOpen} navLinks={navLinks} setMenuOpen={setMenuOpen} />
       <main className="vb-main">
-        <ProgramsHero />
         <ProgramsGrid />
         <AchievementsSlider />
         <MasonryGallery />

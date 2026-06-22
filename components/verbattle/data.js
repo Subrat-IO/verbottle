@@ -1,19 +1,127 @@
 export const navLinks = [
-  { label: "Home", href: "#home", active: true },
-  { label: "Programs", href: "/programs" },
-  { label: "Competitions", href: "/competitions" },
-  { label: "Gallery", href: "#gallery" },
-  { label: "Founder", href: "#founder" },
-  { label: "Awardees", href: "#awardees" },
-  { label: "YouTube", href: "#recent-competitions" },
-  { label: "Contact", href: "#contact" },
+  {
+    label: "Home",
+    href: "#home",
+    active: true,
+  },
+  {
+    label: "About",
+    href: "#founder",
+    children: [
+      { label: "Foundation", href: "#founder", icon: "Building", desc: "Meet the purpose and people behind Verbattle." },
+      { label: "Appeal", href: "#contact", icon: "Sparkles", desc: "Connect with our mission and support the movement." },
+      { label: "Milestones", href: "#gallery", icon: "BadgeCheck", desc: "See the moments that shaped the platform." },
+      { label: "Overview", href: "#home", icon: "Eye", desc: "Get the quick introduction to what Verbattle does." },
+      { label: "Vision", href: "#awardees", icon: "ShieldCheck", desc: "Explore the learner-first outcomes we build toward." },
+      { label: "Discovery", href: "#recent-competitions", icon: "Play", desc: "Watch stories, clips, and fresh platform highlights." },
+    ],
+    feature: {
+      eyebrow: "About Verbattle",
+      title: "A stage built for confident thinkers and brave young voices.",
+      href: "#founder",
+      cta: "Read Our Story",
+      image: "/founder.png",
+    },
+  },
+  {
+    label: "Debate",
+    href: "/competitions",
+    children: [
+      { label: "Process", href: "/competitions", icon: "Check", desc: "Understand how students train, compete, and progress." },
+      { label: "About Debate", href: "/competitions", icon: "Users", desc: "Discover the formats and learning outcomes we focus on." },
+      { label: "Debate Format", href: "/competitions", icon: "Cap", desc: "See how structure, rebuttal, and delivery come together." },
+      { label: "Blog", href: "#recent-competitions", icon: "Play", desc: "Catch commentary, clips, and speaking insights." },
+      { label: "FAQs", href: "/register", icon: "ShieldCheck", desc: "Get answers before you enroll or register a school." },
+    ],
+    feature: {
+      eyebrow: "Debate Tracks",
+      title: "From first arguments to national rounds, every format sharpens clarity.",
+      href: "/competitions",
+      cta: "Explore Debate",
+      image: "/image copy 20.png",
+    },
+  },
+  {
+    label: "Programs",
+    href: "/programs",
+    children: [
+      { label: "Forum", href: "/programs", icon: "Users", desc: "Collaborative speaking spaces that reward clear thought." },
+      { label: "Verbattle Academy", href: "/programs", icon: "Cap", desc: "Structured learning tracks for debate and communication." },
+      { label: "Debate Club", href: "/programs", icon: "Sparkles", desc: "High-energy cohorts for regular sparring and practice." },
+      { label: "Activity Zone", href: "/programs", icon: "Star", desc: "Creative engagement sessions for younger participants." },
+      { label: "Teachers Workshop", href: "/programs", icon: "Building", desc: "Training designed for faculty mentors and school teams." },
+      { label: "Certification", href: "/programs", icon: "BadgeCheck", desc: "Goal-based completion pathways with recognition." },
+    ],
+    feature: {
+      eyebrow: "Programs",
+      title: "Hands-on tracks in speaking, debate, leadership, and stage confidence.",
+      href: "/programs",
+      cta: "Browse Programs",
+      image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
+    },
+  },
+  {
+    label: "Competition",
+    href: "/competitions",
+    children: [
+      { label: "Senior Speech Competition", href: "/competitions", icon: "Trophy", desc: "Advanced speaking contests with national-level pressure." },
+      { label: "Speech Competition", href: "/competitions", icon: "Mic", desc: "Core speech rounds for performance and persuasion." },
+      { label: "Verbattle Open", href: "/competitions", icon: "Star", desc: "Open-format competitive events across categories." },
+      { label: "Junior", href: "/competitions", icon: "Users", desc: "Friendly but serious circuits for younger speakers." },
+      { label: "International", href: "/competitions", icon: "Pin", desc: "Global-stage opportunities and outward-facing circuits." },
+      { label: "Online", href: "/competitions", icon: "Calendar", desc: "Flexible digital rounds with the same Verbattle rigor." },
+    ],
+    feature: {
+      eyebrow: "Competition Circuit",
+      title: "Red-hot stages, judged rounds, and standout moments that travel far.",
+      href: "/competitions",
+      cta: "See Competitions",
+      image: "/image copy 11.png",
+    },
+  },
+  {
+    label: "Support",
+    href: "#contact",
+    children: [
+      { label: "Sponsors", href: "#contact", icon: "Building", desc: "Support student voice through meaningful partnerships." },
+      { label: "Patrons", href: "#contact", icon: "BadgeCheck", desc: "Back long-term educational impact with trusted advocacy." },
+      { label: "Donate", href: "#contact", icon: "Heart", desc: "Help expand access to debate and communication training." },
+      { label: "Global Collaboration", href: "#contact", icon: "Pin", desc: "Work with Verbattle on outreach, programs, or events." },
+    ],
+    feature: {
+      eyebrow: "Support The Mission",
+      title: "Fuel access, scholarships, and bigger stages for every emerging speaker.",
+      href: "#contact",
+      cta: "Partner With Us",
+      image: "/image copy 5.png",
+    },
+  },
+  {
+    label: "Registration",
+    href: "/register",
+  },
+  {
+    label: "Blog",
+    href: "#recent-competitions",
+    children: [
+      { label: "Workshop Registration", href: "/register", icon: "Calendar", desc: "Join upcoming workshops and reserve your place early." },
+      { label: "National Level Online School Debate Competition", href: "/competitions", icon: "Play", desc: "Track spotlight events and marquee student rounds." },
+    ],
+    feature: {
+      eyebrow: "Latest Updates",
+      title: "Workshops, competition announcements, and high-energy clips in one stream.",
+      href: "#recent-competitions",
+      cta: "Watch Updates",
+      image: "/image copy 15.png",
+    },
+  },
 ];
 
 export const heroVideos = [
   {
-    title: "Education alone can change the society",
-    titleLines: ["Education Alone", "Changes Society"],
-    accent: "Society",
+    title: "Speak up and Change the world!",
+    titleLines: ["Speak up and", "Change the "],
+    accent: "world!",
     description:
       "A powerful student-led clip that turns the hero into a living message about learning, leadership, and social change.",
     type: "local",
@@ -57,7 +165,7 @@ export const sponsors = [
 ];
 
 export const stats = [
-  { icon: "Trophy", value: "₹10,00,00,000+", label: "Spent On The Cause", bg: "#ffe7d4", color: "#d26716" },
+  { icon: "Trophy", value: "Rs 10,00,00,000+", label: "Spent On The Cause", bg: "#ffe7d4", color: "#d26716" },
   { icon: "Cap", value: "7,000+", label: "Teachers Trained", bg: "#e5f0ff", color: "#1847af" },
   { icon: "Users", value: "1,000,000+", label: "Students Put On Stage", bg: "#efe7ff", color: "#7b39de" },
   { icon: "Calendar", value: "80+", label: "Large Scale Competitions", bg: "#ddf7ea", color: "#128d55" },
@@ -104,7 +212,7 @@ export const impactList = [
 export const competitions = [
   {
     state: "Verbattle Karnataka 2026",
-    title: "Debate • Leadership • Opportunity for Students",
+    title: "Debate - Leadership - Opportunity for Students",
     date: "Now Open",
     image: "/image copy 20.png",
     status: "Registrations Open",

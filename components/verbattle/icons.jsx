@@ -9,6 +9,12 @@ export const Icon = {
       <path d="M8 5v14l11-7z" />
     </svg>
   ),
+  Mic: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" {...p}>
+      <rect x="9" y="3" width="6" height="11" rx="3" />
+      <path d="M6 11a6 6 0 0 0 12 0M12 17v4M8.5 21h7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
   ChevronLeft: (p) => (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" {...p}>
       <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -135,6 +141,11 @@ export const Icon = {
   Send: (p) => (
     <svg viewBox="0 0 24 24" fill="currentColor" {...p}>
       <path d="M3 11.5L20 4l-6.5 17-2.6-7.1L3 11.5z" />
+    </svg>
+  ),
+  Heart: (p) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" {...p}>
+      <path d="M12 20.5s-7-4.4-7-10.1C5 7.3 7.2 5.5 9.8 5.5c1.5 0 2.9.7 3.7 1.9.8-1.2 2.2-1.9 3.7-1.9C19.8 5.5 22 7.3 22 10.4c0 5.7-7 10.1-7 10.1h-3z" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
   Trophy: (p) => (

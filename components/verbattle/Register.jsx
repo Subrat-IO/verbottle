@@ -1,463 +1,182 @@
 "use client";
 
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "./icons";
 
-const ROLES = [
-  {
-    id: "student",
-    label: "Student",
-    icon: "Graduation",
-    note: "For learners ready to compete and grow.",
-  },
-  {
-    id: "teacher",
-    label: "Teacher",
-    icon: "Cap",
-    note: "For mentors and faculty champions.",
-  },
-  {
-    id: "school",
-    label: "School",
-    icon: "Building",
-    note: "For institutions planning a larger rollout.",
-  },
-  {
-    id: "parent",
-    label: "Parent",
-    icon: "Users",
-    note: "For families supporting young speakers.",
-  },
-];
-
-const HERO_STATS = [
-  { icon: "Users", value: "50,000+", label: "Students" },
-  { icon: "Trophy", value: "100+", label: "Events" },
-  { icon: "ShieldCheck", value: "Trusted", label: "By Schools" },
-];
-
-const WHY_ITEMS = [
-  {
-    icon: "Sparkles",
-    title: "Real speaking practice",
-    desc: "Move beyond the form and into a clear path for stage confidence.",
-  },
-  {
-    icon: "BadgeCheck",
-    title: "Structured progress",
-    desc: "CT Pro, workshops and competitions create a visible learning ladder.",
-  },
-  {
-    icon: "Trophy",
-    title: "Recognition that matters",
-    desc: "Trophies, certificates and coverage make the effort feel real.",
-  },
-  {
-    icon: "ShieldCheck",
-    title: "Trusted by schools",
-    desc: "Built for students, teachers and institutions that want a serious stage.",
-  },
-];
-
-const SHOWCASE_CARDS = [
-  {
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
-    eyebrow: "Flagship course",
-    title: "CT Pro",
-    desc: "20 sessions of guided communication and public speaking practice.",
-  },
-  {
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
-    eyebrow: "Workshop moment",
-    title: "Students in the room",
-    desc: "Classroom learning that moves quickly into live speaking practice.",
-  },
-  {
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg",
-    eyebrow: "Recognition",
-    title: "Awards and coverage",
-    desc: "The finish line is visible, celebratory and worth sharing.",
-  },
-];
-
-const GALLERY_IMAGES = [
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg", caption: "Students in session" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.40.jpeg", caption: "Workshop focus" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg", caption: "Speaking with confidence" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.47.jpeg", caption: "Guided practice" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg", caption: "Online speech competition" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg", caption: "Certificate moment" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg", caption: "Free speech stage" },
-  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg", caption: "Stage recognition" },
-];
-
-const COMPETITIONS = [
-  {
-    tag: "Open",
-    tagTone: "open",
-    title: "CT Pro",
-    desc: "A 20-session communication training program for students who want a clearer voice.",
-    date: "Admissions open",
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
-  },
-  {
-    tag: "Live",
-    tagTone: "soon",
-    title: "National Speech Competition",
-    desc: "A stage-ready competition format with awards and recognition built in.",
-    date: "Register now",
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg",
-  },
-  {
-    tag: "New Batch",
-    tagTone: "closing",
-    title: "School Workshop Circuit",
-    desc: "In-school sessions that turn students into more confident speakers and listeners.",
-    date: "Season intake",
-    image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
-  },
-];
-
-const COMMUNITY_ITEMS = [
-  {
-    icon: "Sparkles",
-    tone: "red",
-    title: "Learn",
-    desc: "Access workshops, resources and guided practice.",
-  },
-  {
-    icon: "Trophy",
-    tone: "gold",
-    title: "Speak",
-    desc: "Step into debates and speaking formats with support.",
-  },
-  {
-    icon: "ShieldCheck",
-    tone: "green",
-    title: "Grow",
-    desc: "Develop confidence, clarity and leadership habits.",
-  },
-  {
-    icon: "BadgeCheck",
-    tone: "gold",
-    title: "Celebrate",
-    desc: "Bring others along and make progress visible.",
-  },
-];
-
-const HOW_HEARD_OPTIONS = [
-  "Social Media",
-  "School / Teacher",
-  "Friend or Family",
-  "Search Engine",
-  "Event / Workshop",
-  "Other",
-];
-
+const DRAFT_KEY = "verbattle_registration_draft_v2";
+const COMPETITION_TYPES = ["Debate", "Speech"];
+const CATEGORY_OPTIONS = ["Beginner", "Junior", "Junior Plus", "Kannada"];
 const GENDER_OPTIONS = ["Male", "Female", "Other", "Prefer not to say"];
-
+const PAYMENT_MODES = ["UPI", "Bank Transfer", "Cash", "Other"];
+const MEDIUM_OPTIONS = ["English", "Kannada", "Hindi", "Other"];
+const RELATIONSHIP_OPTIONS = ["Father", "Mother", "Guardian", "Sibling", "Other"];
+const CLASS_OPTIONS = [
+  "Class 5",
+  "Class 6",
+  "Class 7",
+  "Class 8",
+  "Class 9",
+  "Class 10",
+  "Class 11",
+  "Class 12",
+];
 const STATE_OPTIONS = [
   "Andhra Pradesh",
   "Delhi",
   "Karnataka",
+  "Kerala",
   "Maharashtra",
-  "Odisha",
   "Tamil Nadu",
   "Telangana",
   "West Bengal",
 ];
 
-const GRADE_OPTIONS = [
-  "Grade 8",
-  "Grade 9",
-  "Grade 10",
-  "Grade 11",
-  "Grade 12",
-  "College / University",
-];
+const STEP_META = {
+  speech: [
+    { title: "Student Details", icon: "Users" },
+    { title: "School & Mentor", icon: "Building" },
+    { title: "Program Details", icon: "BadgeCheck" },
+    { title: "Upload & Review", icon: "Upload" },
+    { title: "Confirmation", icon: "CheckCircle" },
+  ],
+  debate: [
+    { title: "Student 1", icon: "Users" },
+    { title: "Student 2", icon: "Users" },
+    { title: "School & Mentor", icon: "Building" },
+    { title: "Program Details", icon: "BadgeCheck" },
+    { title: "Upload & Review", icon: "Upload" },
+    { title: "Confirmation", icon: "CheckCircle" },
+  ],
+};
 
-function useReveal(threshold = 0.15) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) {
-      return undefined;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold },
-    );
-
-    observer.observe(node);
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return [ref, visible];
-}
-
-function Reveal({ as = "div", className = "", delay = 0, children, ...rest }) {
-  const [ref, visible] = useReveal();
-  const Tag = as;
-
-  return (
-    <Tag
-      ref={ref}
-      className={`vbr-reveal ${visible ? "vbr-reveal--visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
-      {...rest}
-    >
-      {children}
-    </Tag>
-  );
-}
-
-function GallerySlider() {
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const slideCount = GALLERY_IMAGES.length;
-
-  const goTo = useCallback(
-    (nextIndex) => {
-      setIndex((nextIndex + slideCount) % slideCount);
-    },
-    [slideCount],
-  );
-
-  useEffect(() => {
-    if (paused) {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % slideCount);
-    }, 3500);
-
-    return () => window.clearInterval(timer);
-  }, [paused, slideCount]);
-
-  return (
-    <div
-      className="vbr-gallery-slider"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div
-        className="vbr-gallery-track"
-        style={{ transform: `translateX(-${index * 100}%)` }}
-      >
-        {GALLERY_IMAGES.map((image) => (
-          <div className="vbr-gallery-slide" key={image.caption}>
-            <div className="vbr-gallery-frame">
-              <img src={image.src} alt={image.caption} loading="lazy" />
-              <div className="vbr-gallery-caption">
-                <span className="vbr-gallery-caption-dot" />
-                {image.caption}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <button
-        className="vbr-gallery-arrow vbr-gallery-arrow--prev"
-        onClick={() => goTo(index - 1)}
-        aria-label="Previous photo"
-        type="button"
-      >
-        ‹
-      </button>
-      <button
-        className="vbr-gallery-arrow vbr-gallery-arrow--next"
-        onClick={() => goTo(index + 1)}
-        aria-label="Next photo"
-        type="button"
-      >
-        ›
-      </button>
-
-      <div className="vbr-gallery-dots">
-        {GALLERY_IMAGES.map((image, i) => (
-          <button
-            key={image.caption}
-            type="button"
-            className={`vbr-gallery-dot ${i === index ? "vbr-gallery-dot--active" : ""}`}
-            aria-label={`Go to photo ${i + 1}`}
-            onClick={() => goTo(i)}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RoleIcon({ name }) {
-  const map = {
-    Graduation: Icon.Cap,
-    Cap: Icon.Cap,
-    Building: Icon.Building,
-    Users: Icon.Users,
-  };
-
-  const SelectedIcon = map[name] || Icon.Users;
-  return <SelectedIcon className="vb-icon-18" />;
-}
-
-function PanelIcon({ name }) {
-  const map = {
-    Sparkles: Icon.Sparkles,
-    BadgeCheck: Icon.BadgeCheck,
-    Trophy: Icon.Trophy,
-    ShieldCheck: Icon.ShieldCheck,
-    Users: Icon.Users,
-  };
-
-  const SelectedIcon = map[name] || Icon.Sparkles;
-  return <SelectedIcon className="vb-icon-16" />;
-}
-
-function CommunityIcon({ name }) {
-  const map = {
-    Sparkles: Icon.Sparkles,
-    Trophy: Icon.Trophy,
-    ShieldCheck: Icon.ShieldCheck,
-    BadgeCheck: Icon.BadgeCheck,
-  };
-
-  const SelectedIcon = map[name] || Icon.Sparkles;
-  return <SelectedIcon className="vb-icon-18" />;
-}
-
-function SmoothSelect({
-  id,
-  ariaLabel,
-  value,
-  placeholder,
-  options,
-  onChange,
-  query,
-  onQueryChange,
-  isOpen,
-  onToggle,
-  registerRef,
-}) {
-  const selectedLabel = value || placeholder;
-  const visibleOptions = options.filter((option) => option.toLowerCase().includes(query.toLowerCase()));
-
-  return (
-    <div className="vbr-smooth-select" ref={registerRef}>
-      <input
-        id={id}
-        type="text"
-        className={`vbr-select-trigger ${value ? "vbr-select-trigger--filled" : ""} ${
-          isOpen ? "vbr-select-trigger--open" : ""
-        }`}
-        value={isOpen ? query : selectedLabel}
-        placeholder={placeholder}
-        onFocus={() => {
-          if (!isOpen) {
-            onToggle();
-          }
-        }}
-        onClick={() => {
-          if (!isOpen) {
-            onToggle();
-          }
-        }}
-        onChange={(event) => {
-          onQueryChange(event.target.value);
-          if (!isOpen) {
-            onToggle();
-          }
-        }}
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        aria-autocomplete="list"
-        aria-controls={`${id}-menu`}
-        aria-label={ariaLabel || placeholder}
-        autoComplete="off"
-      />
-      <span className="vbr-select-trigger__icon vbr-select-trigger__icon--floating">
-        <Icon.ChevronDown className="vb-icon-14" />
-      </span>
-
-      {isOpen ? (
-        <div id={`${id}-menu`} className="vbr-select-menu" role="listbox" aria-label={ariaLabel || placeholder}>
-          {visibleOptions.length ? visibleOptions.map((option) => {
-            const active = option === value;
-
-            return (
-              <button
-                key={option}
-                type="button"
-                role="option"
-                aria-selected={active}
-                className={`vbr-select-option ${active ? "vbr-select-option--active" : ""}`}
-                onClick={() => onChange(option)}
-              >
-                <span>{option}</span>
-                {active ? <Icon.Check className="vb-icon-14" /> : null}
-              </button>
-            );
-          }) : (
-            <div className="vbr-select-empty">No matches found</div>
-          )}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
-export default function VerbattleRegister() {
-  const [role, setRole] = useState("student");
-  const [agreed, setAgreed] = useState(false);
-  const [heroIn, setHeroIn] = useState(false);
-  const [openSelect, setOpenSelect] = useState(null);
-  const [selectQueries, setSelectQueries] = useState({
+function createParticipant(index) {
+  return {
+    participantNo: index + 1,
+    fullName: "",
+    dateOfBirth: "",
+    age: "",
     gender: "",
+    schoolName: "",
+    classGradeSection: "",
+    motherTongue: "",
+    spokenLanguages: "",
+    fatherName: "",
+    fatherOccupation: "",
+    motherName: "",
+    motherOccupation: "",
+    residenceAddress: "",
+    districtCity: "",
     state: "",
-    grade: "",
-    heard: "",
-  });
-  const [formValues, setFormValues] = useState({
-    gender: "",
-    state: "",
+    pincode: "",
+    residencePhone: "",
+    mobileEmergencyNumber: "",
+    email: "",
+    otherAreasOfInterest: "",
+    parentGuardianName: "",
+    relationship: "",
+    participantPhoto: null,
+    schoolIdCard: null,
+  };
+}
+
+const INITIAL_FORM = {
+  competitionType: "Debate",
+  category: "Beginner",
+  school: {
+    schoolName: "",
+    headOfInstitutionName: "",
+    affiliation: "",
+    mediumOfEducation: "",
+    classesFrom: "",
+    classesTo: "",
+    schoolAddress: "",
+    schoolPincode: "",
+    schoolPhoneNumber: "",
+    schoolEmail: "",
+    schoolWebsite: "",
+    schoolContactPerson: "",
+  },
+  mentor: {
+    teacherMentorName: "",
+    teacherMentorContactNumber: "",
+    teacherMentorEmail: "",
+  },
+  participants: [createParticipant(0), createParticipant(1)],
+  parentGuardian: {
+    parentGuardianName: "",
+    relationship: "",
+    parentEmail: "",
+    parentMobileNumber: "",
+    parentAddress: "",
     city: "",
-    school: "",
-    grade: "",
-    heardAbout: "",
-  });
-  const selectRefs = useRef({});
+    state: "",
+    pincode: "",
+  },
+  payment: {
+    paymentMode: "",
+    utrNumber: "",
+    paymentScreenshot: null,
+    consentForm: null,
+  },
+  declaration: {
+    infoCorrect: false,
+    agreeTerms: false,
+    consentParticipation: false,
+  },
+};
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => setHeroIn(true), 80);
-    return () => window.clearTimeout(timer);
-  }, []);
+function getApiBaseUrl() {
+  return (
+    process.env.NEXT_PUBLIC_REGISTRATION_API_URL ||
+    "http://localhost/verbattle-admin/backend/api"
+  );
+}
+
+function getStepMeta(formType, step) {
+  return STEP_META[formType][step];
+}
+
+function InputField({ label, required, children }) {
+  return (
+    <label className="vbr-form-field">
+      <span className="vbr-form-label">
+        {label}
+        {required ? <span className="vbr-required">*</span> : null}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function TextInput(props) {
+  return <input className="vbr-clean-input" {...props} />;
+}
+
+function NativeSelect({ children, ...props }) {
+  return (
+    <select className="vbr-clean-input" {...props}>
+      {children}
+    </select>
+  );
+}
+
+function SmoothSelect({ value, onChange, options, placeholder }) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const ref = useRef(null);
 
   useEffect(() => {
     function handlePointerDown(event) {
-      if (!openSelect) {
-        return;
-      }
-
-      const container = selectRefs.current[openSelect];
-      if (container && !container.contains(event.target)) {
-        setOpenSelect(null);
+      if (ref.current && !ref.current.contains(event.target)) {
+        setOpen(false);
+        setQuery("");
       }
     }
 
     function handleEscape(event) {
       if (event.key === "Escape") {
-        setOpenSelect(null);
+        setOpen(false);
+        setQuery("");
       }
     }
 
@@ -468,486 +187,861 @@ export default function VerbattleRegister() {
       document.removeEventListener("pointerdown", handlePointerDown);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [openSelect]);
+  }, []);
 
-  function updateSelectValue(field, nextValue) {
-    setFormValues((current) => ({ ...current, [field]: nextValue }));
-    setSelectQueries((current) => ({ ...current, [field]: nextValue }));
-    setOpenSelect(null);
-  }
+  const filteredOptions = options.filter((option) =>
+    option.toLowerCase().includes((open ? query : "").toLowerCase()),
+  );
 
   return (
-    <div className="vbr-page">
-      <section className="vbr-hero">
-        <div className="vbr-hero-glow vbr-hero-glow--1" />
-        <div className="vbr-hero-glow vbr-hero-glow--2" />
+    <div className="vbr-smooth-select" ref={ref}>
+      <button
+        type="button"
+        className={`vbr-clean-input vbr-smooth-trigger ${open ? "is-open" : ""} ${value ? "is-filled" : ""}`}
+        onClick={() => {
+          setOpen((current) => !current);
+          setQuery("");
+        }}
+      >
+        <span>{value || placeholder}</span>
+        <Icon.ChevronDown className="vb-icon-14" />
+      </button>
 
-        <div className={`vbr-hero-inner ${heroIn ? "vbr-hero-inner--in" : ""}`}>
-          <div className="vbr-hero-copy">
-            <span className="vbr-eyebrow">Register Now</span>
-            <h1 className="vbr-hero-title">
-              A polished
-              <br />
-              <span className="vbr-hero-title-accent">program</span> experience
-            </h1>
-            <p className="vbr-hero-sub">
-              Join Verbattle through a cleaner, more professional flow designed for students,
-              educators and schools who want a serious stage experience.
-            </p>
+      {open ? (
+        <div className="vbr-smooth-menu">
+          <input
+            className="vbr-smooth-search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={`Search ${placeholder.toLowerCase()}`}
+            autoFocus
+          />
 
-            <div className="vbr-hero-actions">
-              <a href="#registration-form" className="vbr-hero-btn">
-                <span>Start Registration</span>
-                <span className="vbr-btn-arrow">
-                  <Icon.ArrowRight className="vb-icon-14" />
-                </span>
-              </a>
-              <Link href="/programs" className="vbr-hero-btn vbr-hero-btn--ghost">
-                <span>Browse Programs</span>
-                <span className="vbr-btn-arrow vbr-btn-arrow--light">
-                  <Icon.ArrowRight className="vb-icon-14" />
-                </span>
-              </Link>
-            </div>
-
-            <div className="vbr-hero-stats">
-              {HERO_STATS.map((stat, index) => {
-                const StatIcon = {
-                  Users: Icon.Users,
-                  Trophy: Icon.Trophy,
-                  ShieldCheck: Icon.ShieldCheck,
-                }[stat.icon];
-
-                return (
-                  <div
-                    className="vbr-hero-stat"
-                    key={stat.label}
-                    style={{ transitionDelay: `${index * 90 + 200}ms` }}
-                  >
-                    <span className="vbr-hero-stat-icon">
-                      <StatIcon className="vb-icon-18" />
-                    </span>
-                    <div>
-                      <strong>{stat.value}</strong>
-                      <span>{stat.label}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="vbr-hero-visual">
-            <div className="vbr-hero-card vbr-hero-card--main">
-              <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg" alt="Verbattle CT Pro poster" />
-              <div className="vbr-hero-card__overlay">
-                <div className="vbr-hero-card__chip">
-                  <Icon.Sparkles className="vb-icon-14" />
-                  Premium program access
-                </div>
-                <strong>Built for confidence, clarity and stage presence.</strong>
-              </div>
-            </div>
-
-            <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--top">
-              <img src="/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg" alt="Students in a Verbattle program" />
-            </div>
-
-            <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--bottom">
-              <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg" alt="Community learning moment" />
-            </div>
-
-            <div className="vbr-hero-floating-card">
-              <span className="vbr-hero-floating-icon">
-                <Icon.ShieldCheck className="vb-icon-18" />
-              </span>
-              <div>
-                <strong>Trusted by schools</strong>
-                <p>Clear, professional and easy to act on.</p>
-              </div>
-            </div>
+          <div className="vbr-smooth-options">
+            {filteredOptions.length ? (
+              filteredOptions.map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  className={`vbr-smooth-option ${value === option ? "is-active" : ""}`}
+                  onClick={() => {
+                    onChange(option);
+                    setOpen(false);
+                    setQuery("");
+                  }}
+                >
+                  <span>{option}</span>
+                  {value === option ? <Icon.Check className="vb-icon-14" /> : null}
+                </button>
+              ))
+            ) : (
+              <div className="vbr-smooth-empty">No matching options</div>
+            )}
           </div>
         </div>
-      </section>
+      ) : null}
+    </div>
+  );
+}
 
-      <section className="vbr-showcase">
-        <Reveal className="vbr-section-head">
-          <span className="vbr-eyebrow vbr-eyebrow--dark">What You Get</span>
-          <h2>Registration built around the real program images</h2>
-          <p>Clean visuals, strong hierarchy and the same cinematic energy as the home page.</p>
-        </Reveal>
+function TextArea(props) {
+  return <textarea className="vbr-clean-input vbr-clean-textarea" rows={4} {...props} />;
+}
 
-        <div className="vbr-feature-grid">
-          {SHOWCASE_CARDS.map((card, index) => (
-            <Reveal className="vbr-feature-card" key={card.title} delay={index * 100}>
-              <img src={card.image} alt={card.title} />
-              <div className="vbr-feature-card__body">
-                <span className="vbr-feature-card__eyebrow">{card.eyebrow}</span>
-                <h3>{card.title}</h3>
-                <p>{card.desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+function FileInput({ onChange, accept }) {
+  return (
+    <input
+      className="vbr-clean-input vbr-clean-file"
+      type="file"
+      accept={accept}
+      onChange={(event) => onChange(event.target.files?.[0] || null)}
+    />
+  );
+}
 
-      <section className="vbr-main">
-        <div className="vbr-main-grid">
-          <Reveal className="vbr-why-card" as="aside">
-            <h3>
-              Why Register with <span className="vbr-text-accent">Verbattle</span>?
-            </h3>
+function StepIcon({ name }) {
+  const map = {
+    Users: Icon.Users,
+    Building: Icon.Building,
+    BadgeCheck: Icon.BadgeCheck,
+    Upload: Icon.ArrowUpRight,
+    CheckCircle: Icon.Check,
+  };
 
-            <ul className="vbr-why-list">
-              {WHY_ITEMS.map((item) => (
-                <li key={item.title}>
-                  <span className="vbr-why-icon">
-                    <PanelIcon name={item.icon} />
-                  </span>
-                  <div>
-                    <strong>{item.title}</strong>
-                    <p>{item.desc}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+  const Selected = map[name] || Icon.Check;
+  return <Selected className="vb-icon-16" />;
+}
 
-            <div className="vbr-testimonial">
-              <span className="vbr-quote-mark">“</span>
-              <p>
-                Verbattle has transformed the confidence and communication skills of our students.
-                The registration experience now feels just as polished as the platform itself.
-              </p>
-              <div className="vbr-testimonial-person">
-                <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg" alt="Student testimonial" />
-                <div>
-                  <strong>Verbattle Community</strong>
-                  <span>Students and mentors</span>
-                  <div className="vbr-stars">★★★★★</div>
-                </div>
-              </div>
-            </div>
+export default function VerbattleRegister() {
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(null);
+  const [draftSaved, setDraftSaved] = useState(false);
 
-            <div className="vbr-help-card">
-              <h4>Need Help?</h4>
-              <p>We&apos;re here to help with registration, school onboarding and event details.</p>
-              <a href="tel:+919886464641">
-                <Icon.Phone className="vb-icon-14" /> +91 98864 64641
-              </a>
-              <a href="mailto:info@verbattle.com">
-                <Icon.Mail className="vb-icon-14" /> info@verbattle.com
-              </a>
-              <span className="vbr-help-hours">
-                <Icon.Calendar className="vb-icon-14" /> Mon - Sat | 9:00 AM - 6:00 PM
-              </span>
-            </div>
-          </Reveal>
+  const competitionKey = form.competitionType.toLowerCase();
+  const steps = STEP_META[competitionKey];
+  const participantCount = form.competitionType === "Debate" ? 2 : 1;
+  const lastStep = steps.length - 1;
 
-          <Reveal className="vbr-form-card" delay={120}>
-            <div className="vbr-form-head">
-              <div>
-                <h2>Competition Registration</h2>
-                <p>Tell us about the participant and choose the right competition path.</p>
-              </div>
-            </div>
+  useEffect(() => {
+    const raw = window.localStorage.getItem(DRAFT_KEY);
 
-            <form
-              id="registration-form"
-              className="vbr-form"
-              onSubmit={(event) => {
-                event.preventDefault();
+    if (!raw) {
+      return;
+    }
+
+    try {
+      const parsed = JSON.parse(raw);
+      setForm((current) => ({
+        ...current,
+        ...parsed,
+        participants: current.participants.map((participant, index) => ({
+          ...participant,
+          ...(parsed.participants?.[index] || {}),
+          participantPhoto: null,
+          schoolIdCard: null,
+        })),
+        payment: {
+          ...current.payment,
+          ...(parsed.payment || {}),
+          paymentScreenshot: null,
+          consentForm: null,
+        },
+      }));
+    } catch {
+      window.localStorage.removeItem(DRAFT_KEY);
+    }
+  }, []);
+
+  const progress = useMemo(() => ((currentStep + 1) / steps.length) * 100, [currentStep, steps.length]);
+
+  function changeCompetitionType(type) {
+    setForm((current) => ({
+      ...current,
+      competitionType: type,
+    }));
+    setCurrentStep(0);
+    setSubmitError("");
+    setSubmitSuccess(null);
+  }
+
+  function patchSection(section, key, value) {
+    setForm((current) => ({
+      ...current,
+      [section]: {
+        ...current[section],
+        [key]: value,
+      },
+    }));
+  }
+
+  function patchParticipant(index, key, value) {
+    setForm((current) => ({
+      ...current,
+      participants: current.participants.map((participant, participantIndex) =>
+        participantIndex === index ? { ...participant, [key]: value } : participant,
+      ),
+    }));
+  }
+
+  function patchDeclaration(key, value) {
+    setForm((current) => ({
+      ...current,
+      declaration: {
+        ...current.declaration,
+        [key]: value,
+      },
+    }));
+  }
+
+  function validateParticipant(index) {
+    const participant = form.participants[index];
+
+    return (
+      participant.fullName &&
+      participant.dateOfBirth &&
+      participant.gender &&
+      participant.classGradeSection &&
+      participant.mobileEmergencyNumber &&
+      participant.parentGuardianName &&
+      participant.relationship &&
+      participant.districtCity &&
+      participant.state &&
+      participant.pincode
+    );
+  }
+
+  function validateCurrentStep() {
+    if (competitionKey === "speech" && currentStep === 0) {
+      return validateParticipant(0);
+    }
+
+    if (competitionKey === "speech" && currentStep === 1) {
+      return (
+        form.school.schoolName &&
+        form.school.schoolAddress &&
+        form.school.schoolPincode &&
+        form.school.schoolPhoneNumber &&
+        form.school.schoolEmail &&
+        form.mentor.teacherMentorName &&
+        form.mentor.teacherMentorContactNumber &&
+        form.mentor.teacherMentorEmail
+      );
+    }
+
+    if (competitionKey === "speech" && currentStep === 2) {
+      return form.competitionType && form.category && form.payment.paymentMode && form.payment.utrNumber;
+    }
+
+    if (competitionKey === "speech" && currentStep === 3) {
+      return true;
+    }
+
+    if (competitionKey === "debate" && currentStep === 0) {
+      return validateParticipant(0);
+    }
+
+    if (competitionKey === "debate" && currentStep === 1) {
+      return validateParticipant(1);
+    }
+
+    if (competitionKey === "debate" && currentStep === 2) {
+      return (
+        form.school.schoolName &&
+        form.school.schoolAddress &&
+        form.school.schoolPincode &&
+        form.school.schoolPhoneNumber &&
+        form.school.schoolEmail &&
+        form.mentor.teacherMentorName &&
+        form.mentor.teacherMentorContactNumber &&
+        form.mentor.teacherMentorEmail
+      );
+    }
+
+    if (competitionKey === "debate" && currentStep === 3) {
+      return form.competitionType && form.category && form.payment.paymentMode && form.payment.utrNumber;
+    }
+
+    if (currentStep === lastStep) {
+      return (
+        form.declaration.infoCorrect &&
+        form.declaration.agreeTerms &&
+        form.declaration.consentParticipation
+      );
+    }
+
+    return true;
+  }
+
+  function saveDraft() {
+    const serializable = {
+      ...form,
+      participants: form.participants.map(({ participantPhoto, schoolIdCard, ...rest }) => rest),
+      payment: {
+        ...form.payment,
+        paymentScreenshot: null,
+        consentForm: null,
+      },
+    };
+
+    window.localStorage.setItem(DRAFT_KEY, JSON.stringify(serializable));
+    setDraftSaved(true);
+    window.setTimeout(() => setDraftSaved(false), 1800);
+  }
+
+  function nextStep() {
+    if (!validateCurrentStep()) {
+      setSubmitError("Please complete the required fields in this step before continuing.");
+      return;
+    }
+
+    setSubmitError("");
+    setCurrentStep((step) => Math.min(step + 1, lastStep));
+  }
+
+  function previousStep() {
+    setSubmitError("");
+    setCurrentStep((step) => Math.max(step - 1, 0));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!validateCurrentStep()) {
+      setSubmitError("Please complete the declaration before submitting.");
+      return;
+    }
+
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const payload = new FormData();
+
+      payload.append("competitionType", form.competitionType);
+      payload.append("category", form.category);
+      payload.append("school", JSON.stringify(form.school));
+      payload.append("mentor", JSON.stringify(form.mentor));
+      payload.append("parentGuardian", JSON.stringify(form.parentGuardian));
+      payload.append(
+        "payment",
+        JSON.stringify({
+          paymentMode: form.payment.paymentMode,
+          utrNumber: form.payment.utrNumber,
+        }),
+      );
+      payload.append("declaration", JSON.stringify(form.declaration));
+      payload.append(
+        "participants",
+        JSON.stringify(
+          form.participants
+            .slice(0, participantCount)
+            .map(({ participantPhoto, schoolIdCard, ...rest }) => rest),
+        ),
+      );
+
+      form.participants.slice(0, participantCount).forEach((participant, index) => {
+        if (participant.participantPhoto) {
+          payload.append(`participantPhoto_${index + 1}`, participant.participantPhoto);
+        }
+
+        if (participant.schoolIdCard) {
+          payload.append(`schoolIdCard_${index + 1}`, participant.schoolIdCard);
+        }
+      });
+
+      if (form.payment.paymentScreenshot) {
+        payload.append("paymentScreenshot", form.payment.paymentScreenshot);
+      }
+
+      if (form.payment.consentForm) {
+        payload.append("consentForm", form.payment.consentForm);
+      }
+
+      const response = await fetch(`${getApiBaseUrl()}/registrations/create.php`, {
+        method: "POST",
+        body: payload,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Registration failed. Please try again.");
+      }
+
+      window.localStorage.removeItem(DRAFT_KEY);
+      setSubmitSuccess(data);
+      setForm(INITIAL_FORM);
+      setCurrentStep(0);
+    } catch (error) {
+      setSubmitError(error.message);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function renderParticipantStep(index) {
+    const participant = form.participants[index];
+    const isPrimary = index === 0;
+
+    return (
+      <div className="vbr-form-stage">
+        <div className="vbr-grid-2">
+          <InputField label={`Full Name of ${form.competitionType === "Debate" ? `Student ${index + 1}` : "Student"}`} required>
+            <TextInput
+              value={participant.fullName}
+              onChange={(event) => patchParticipant(index, "fullName", event.target.value)}
+              placeholder="Enter full name"
+            />
+          </InputField>
+
+          <InputField label="Parent / Guardian Name" required>
+            <TextInput
+              value={participant.parentGuardianName}
+              onChange={(event) => {
+                patchParticipant(index, "parentGuardianName", event.target.value);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "parentGuardianName", event.target.value);
+                }
               }}
-            >
-              <label className="vbr-field-label">
-                I am registering as <span className="vbr-required">*</span>
-              </label>
-              <div className="vbr-role-grid">
-                {ROLES.map((item) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    className={`vbr-role-btn ${role === item.id ? "vbr-role-btn--active" : ""}`}
-                    onClick={() => setRole(item.id)}
-                  >
-                    <span className="vbr-role-icon">
-                      <RoleIcon name={item.icon} />
-                    </span>
-                    <span>{item.label}</span>
-                    <small>{item.note}</small>
-                  </button>
-                ))}
-              </div>
+              placeholder="Enter parent / guardian name"
+            />
+          </InputField>
 
-              <h4 className="vbr-section-title">Personal Information</h4>
+          <InputField label="Date of Birth" required>
+            <TextInput
+              type="date"
+              value={participant.dateOfBirth}
+              onChange={(event) => patchParticipant(index, "dateOfBirth", event.target.value)}
+            />
+          </InputField>
 
-              <div className="vbr-row-2">
-                <div className="vbr-field">
-                  <label>
-                    Full Name <span className="vbr-required">*</span>
-                  </label>
-                  <input type="text" placeholder="Enter your full name" />
-                </div>
-                <div className="vbr-field">
-                  <label>
-                    Email Address <span className="vbr-required">*</span>
-                  </label>
-                  <input type="email" placeholder="Enter your email address" />
-                </div>
-              </div>
+          <InputField label="Relationship" required>
+            <SmoothSelect
+              value={participant.relationship}
+              onChange={(nextValue) => {
+                patchParticipant(index, "relationship", nextValue);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "relationship", nextValue);
+                }
+              }}
+              options={RELATIONSHIP_OPTIONS}
+              placeholder="Select relationship"
+            />
+          </InputField>
 
-              <div className="vbr-row-2">
-                <div className="vbr-field">
-                  <label>
-                    Mobile Number <span className="vbr-required">*</span>
-                  </label>
-                  <input type="tel" placeholder="Enter your mobile number" />
-                </div>
-                <div className="vbr-field">
-                  <label>
-                    Date of Birth <span className="vbr-required">*</span>
-                  </label>
-                  <input type="date" />
-                </div>
-              </div>
+          <InputField label="Gender" required>
+            <SmoothSelect
+              value={participant.gender}
+              onChange={(nextValue) => patchParticipant(index, "gender", nextValue)}
+              options={GENDER_OPTIONS}
+              placeholder="Select gender"
+            />
+          </InputField>
 
-              <div className="vbr-row-3">
-                <div className="vbr-field">
-                  <label>
-                    Gender <span className="vbr-required">*</span>
-                  </label>
-                  <SmoothSelect
-                    id="gender-select"
-                    ariaLabel="Gender"
-                    value={formValues.gender}
-                    placeholder="Select gender"
-                    options={GENDER_OPTIONS}
-                    query={selectQueries.gender}
-                    onQueryChange={(nextQuery) =>
-                      setSelectQueries((current) => ({ ...current, gender: nextQuery }))
-                    }
-                    isOpen={openSelect === "gender"}
-                    onToggle={() => setOpenSelect((current) => (current === "gender" ? null : "gender"))}
-                    onChange={(nextValue) => updateSelectValue("gender", nextValue)}
-                    registerRef={(node) => {
-                      selectRefs.current.gender = node;
-                    }}
-                  />
-                </div>
-                <div className="vbr-field">
-                  <label>
-                    State <span className="vbr-required">*</span>
-                  </label>
-                  <SmoothSelect
-                    id="state-select"
-                    ariaLabel="State"
-                    value={formValues.state}
-                    placeholder="Select state"
-                    options={STATE_OPTIONS}
-                    query={selectQueries.state}
-                    onQueryChange={(nextQuery) =>
-                      setSelectQueries((current) => ({ ...current, state: nextQuery }))
-                    }
-                    isOpen={openSelect === "state"}
-                    onToggle={() => setOpenSelect((current) => (current === "state" ? null : "state"))}
-                    onChange={(nextValue) => updateSelectValue("state", nextValue)}
-                    registerRef={(node) => {
-                      selectRefs.current.state = node;
-                    }}
-                  />
-                </div>
-                <div className="vbr-field">
-                  <label>
-                    City <span className="vbr-required">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Enter your city"
-                    value={formValues.city}
-                    onChange={(event) => setFormValues((current) => ({ ...current, city: event.target.value }))}
-                  />
-                </div>
-              </div>
+          <InputField label="Parent Mobile Number" required>
+            <TextInput
+              value={isPrimary ? form.parentGuardian.parentMobileNumber : participant.mobileEmergencyNumber}
+              onChange={(event) => {
+                if (isPrimary) {
+                  patchSection("parentGuardian", "parentMobileNumber", event.target.value);
+                }
+                patchParticipant(index, "mobileEmergencyNumber", event.target.value);
+              }}
+              placeholder="+91 Enter mobile number"
+            />
+          </InputField>
 
-              <div className="vbr-field">
-                <label>
-                  School / Institution <span className="vbr-required">*</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Enter your school or institution name"
-                  value={formValues.school}
-                  onChange={(event) =>
-                    setFormValues((current) => ({ ...current, school: event.target.value }))
+          <InputField label="Class / Grade" required>
+            <SmoothSelect
+              value={participant.classGradeSection}
+              onChange={(nextValue) => patchParticipant(index, "classGradeSection", nextValue)}
+              options={CLASS_OPTIONS}
+              placeholder="Select class / grade"
+            />
+          </InputField>
+
+          <InputField label="Parent Email Address">
+            <TextInput
+              type="email"
+              value={isPrimary ? form.parentGuardian.parentEmail : participant.email}
+              onChange={(event) => {
+                if (isPrimary) {
+                  patchSection("parentGuardian", "parentEmail", event.target.value);
+                }
+                patchParticipant(index, "email", event.target.value);
+              }}
+              placeholder="Enter email address"
+            />
+          </InputField>
+
+          <InputField label="Mobile Number" required>
+            <TextInput
+              value={participant.mobileEmergencyNumber}
+              onChange={(event) => patchParticipant(index, "mobileEmergencyNumber", event.target.value)}
+              placeholder="+91 Enter mobile number"
+            />
+          </InputField>
+
+          <InputField label="City" required>
+            <TextInput
+              value={participant.districtCity}
+              onChange={(event) => {
+                patchParticipant(index, "districtCity", event.target.value);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "city", event.target.value);
+                }
+              }}
+              placeholder="Enter city"
+            />
+          </InputField>
+
+          <InputField label="Email Address">
+            <TextInput
+              type="email"
+              value={participant.email}
+              onChange={(event) => patchParticipant(index, "email", event.target.value)}
+              placeholder="Enter email address"
+            />
+          </InputField>
+
+          <InputField label="State" required>
+            <SmoothSelect
+              value={participant.state}
+              onChange={(nextValue) => {
+                patchParticipant(index, "state", nextValue);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "state", nextValue);
+                }
+              }}
+              options={STATE_OPTIONS}
+              placeholder="Select state"
+            />
+          </InputField>
+
+          <InputField label="Address" required>
+            <TextArea
+              value={participant.residenceAddress}
+              onChange={(event) => {
+                patchParticipant(index, "residenceAddress", event.target.value);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "parentAddress", event.target.value);
+                }
+              }}
+              placeholder="Enter your address"
+            />
+          </InputField>
+
+          <InputField label="Pincode" required>
+            <TextInput
+              value={participant.pincode}
+              onChange={(event) => {
+                patchParticipant(index, "pincode", event.target.value);
+                if (isPrimary) {
+                  patchSection("parentGuardian", "pincode", event.target.value);
+                }
+              }}
+              placeholder="Enter pincode"
+            />
+          </InputField>
+        </div>
+      </div>
+    );
+  }
+
+  function renderSchoolStep() {
+    return (
+      <div className="vbr-form-stage">
+        <div className="vbr-grid-2">
+          <InputField label="School Name" required>
+            <TextInput value={form.school.schoolName} onChange={(e) => patchSection("school", "schoolName", e.target.value)} placeholder="Enter school name" />
+          </InputField>
+          <InputField label="Teacher / Registered Mentor" required>
+            <TextInput value={form.mentor.teacherMentorName} onChange={(e) => patchSection("mentor", "teacherMentorName", e.target.value)} placeholder="Enter teacher / mentor name" />
+          </InputField>
+          <InputField label="Head of Institution Name">
+            <TextInput value={form.school.headOfInstitutionName} onChange={(e) => patchSection("school", "headOfInstitutionName", e.target.value)} placeholder="Enter head of institution name" />
+          </InputField>
+          <InputField label="Teacher / Mentor Contact Number" required>
+            <TextInput value={form.mentor.teacherMentorContactNumber} onChange={(e) => patchSection("mentor", "teacherMentorContactNumber", e.target.value)} placeholder="Enter mentor contact number" />
+          </InputField>
+          <InputField label="Affiliation">
+            <TextInput value={form.school.affiliation} onChange={(e) => patchSection("school", "affiliation", e.target.value)} placeholder="Enter affiliation" />
+          </InputField>
+          <InputField label="Teacher / Mentor Email" required>
+            <TextInput type="email" value={form.mentor.teacherMentorEmail} onChange={(e) => patchSection("mentor", "teacherMentorEmail", e.target.value)} placeholder="Enter mentor email" />
+          </InputField>
+          <InputField label="Medium of Education">
+            <SmoothSelect
+              value={form.school.mediumOfEducation}
+              onChange={(nextValue) => patchSection("school", "mediumOfEducation", nextValue)}
+              options={MEDIUM_OPTIONS}
+              placeholder="Select medium"
+            />
+          </InputField>
+          <InputField label="School Phone Number" required>
+            <TextInput value={form.school.schoolPhoneNumber} onChange={(e) => patchSection("school", "schoolPhoneNumber", e.target.value)} placeholder="Enter school phone number" />
+          </InputField>
+          <InputField label="Classes From">
+            <TextInput value={form.school.classesFrom} onChange={(e) => patchSection("school", "classesFrom", e.target.value)} placeholder="From" />
+          </InputField>
+          <InputField label="School Email" required>
+            <TextInput type="email" value={form.school.schoolEmail} onChange={(e) => patchSection("school", "schoolEmail", e.target.value)} placeholder="Enter school email" />
+          </InputField>
+          <InputField label="Classes To">
+            <TextInput value={form.school.classesTo} onChange={(e) => patchSection("school", "classesTo", e.target.value)} placeholder="To" />
+          </InputField>
+          <InputField label="School Website">
+            <TextInput value={form.school.schoolWebsite} onChange={(e) => patchSection("school", "schoolWebsite", e.target.value)} placeholder="Enter school website" />
+          </InputField>
+          <InputField label="School Pincode" required>
+            <TextInput value={form.school.schoolPincode} onChange={(e) => patchSection("school", "schoolPincode", e.target.value)} placeholder="Enter school pincode" />
+          </InputField>
+          <InputField label="School Contact Person">
+            <TextInput value={form.school.schoolContactPerson} onChange={(e) => patchSection("school", "schoolContactPerson", e.target.value)} placeholder="Enter school contact person" />
+          </InputField>
+        </div>
+
+        <InputField label="School Address" required>
+          <TextArea value={form.school.schoolAddress} onChange={(e) => patchSection("school", "schoolAddress", e.target.value)} placeholder="Enter school address" />
+        </InputField>
+      </div>
+    );
+  }
+
+  function renderProgramStep() {
+    return (
+      <div className="vbr-form-stage">
+        <div className="vbr-program-grid">
+          <InputField label="Category" required>
+            <SmoothSelect
+              value={form.category}
+              onChange={(nextValue) => setForm((current) => ({ ...current, category: nextValue }))}
+              options={CATEGORY_OPTIONS}
+              placeholder="Select category"
+            />
+          </InputField>
+
+          <div className="vbr-current-flow-card">
+            <span className="vbr-form-label">Selected Competition</span>
+            <strong>{form.competitionType}</strong>
+            <small>The form fields change instantly when you switch between Debate and Speech above.</small>
+          </div>
+
+          <InputField label="Payment Mode" required>
+            <SmoothSelect
+              value={form.payment.paymentMode}
+              onChange={(nextValue) => patchSection("payment", "paymentMode", nextValue)}
+              options={PAYMENT_MODES}
+              placeholder="Select payment mode"
+            />
+          </InputField>
+
+          <InputField label="UTR Number" required>
+            <TextInput value={form.payment.utrNumber} onChange={(event) => patchSection("payment", "utrNumber", event.target.value)} placeholder="Enter UTR number" />
+          </InputField>
+        </div>
+      </div>
+    );
+  }
+
+  function renderUploadsStep() {
+    return (
+      <div className="vbr-form-stage">
+        <div className="vbr-grid-2">
+          {form.participants.slice(0, participantCount).map((participant, index) => (
+            <React.Fragment key={participant.participantNo}>
+              <InputField label={`Participant ${index + 1} Photo`}>
+                <FileInput accept=".jpg,.jpeg,.png,.webp" onChange={(file) => patchParticipant(index, "participantPhoto", file)} />
+              </InputField>
+              <InputField label={`Participant ${index + 1} School ID Card`}>
+                <FileInput accept=".pdf,.jpg,.jpeg,.png" onChange={(file) => patchParticipant(index, "schoolIdCard", file)} />
+              </InputField>
+            </React.Fragment>
+          ))}
+
+          <InputField label="Payment Screenshot">
+            <FileInput accept=".jpg,.jpeg,.png,.pdf" onChange={(file) => patchSection("payment", "paymentScreenshot", file)} />
+          </InputField>
+
+          <InputField label="Consent Form (Optional)">
+            <FileInput accept=".pdf,.jpg,.jpeg,.png" onChange={(file) => patchSection("payment", "consentForm", file)} />
+          </InputField>
+        </div>
+
+        <div className="vbr-review-box">
+          <div>
+            <span>Competition</span>
+            <strong>{form.competitionType}</strong>
+          </div>
+          <div>
+            <span>Category</span>
+            <strong>{form.category}</strong>
+          </div>
+          <div>
+            <span>School</span>
+            <strong>{form.school.schoolName || "-"}</strong>
+          </div>
+          <div>
+            <span>Participants</span>
+            <strong>{participantCount}</strong>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  function renderConfirmationStep() {
+    return (
+      <div className="vbr-form-stage">
+        <div className="vbr-confirmation-copy">
+          <h3>Final confirmation</h3>
+          <p>Please confirm the details below before we submit the registration to the admin portal.</p>
+        </div>
+
+        <label className="vbr-check-row">
+          <input type="checkbox" checked={form.declaration.infoCorrect} onChange={(event) => patchDeclaration("infoCorrect", event.target.checked)} />
+          <span>I confirm that all information provided is correct.</span>
+        </label>
+        <label className="vbr-check-row">
+          <input type="checkbox" checked={form.declaration.agreeTerms} onChange={(event) => patchDeclaration("agreeTerms", event.target.checked)} />
+          <span>I agree to Verbattle terms and conditions.</span>
+        </label>
+        <label className="vbr-check-row">
+          <input type="checkbox" checked={form.declaration.consentParticipation} onChange={(event) => patchDeclaration("consentParticipation", event.target.checked)} />
+          <span>I consent to participation in the competition.</span>
+        </label>
+      </div>
+    );
+  }
+
+  function renderCurrentStep() {
+    if (competitionKey === "speech") {
+      if (currentStep === 0) {
+        return renderParticipantStep(0);
+      }
+
+      if (currentStep === 1) {
+        return renderSchoolStep();
+      }
+
+      if (currentStep === 2) {
+        return renderProgramStep();
+      }
+
+      if (currentStep === 3) {
+        return renderUploadsStep();
+      }
+
+      return renderConfirmationStep();
+    }
+
+    if (currentStep === 0) {
+      return renderParticipantStep(0);
+    }
+
+    if (currentStep === 1) {
+      return renderParticipantStep(1);
+    }
+
+    if (currentStep === 2) {
+      return renderSchoolStep();
+    }
+
+    if (currentStep === 3) {
+      return renderProgramStep();
+    }
+
+    if (currentStep === 4) {
+      return renderUploadsStep();
+    }
+
+    return renderConfirmationStep();
+  }
+
+  const currentMeta = getStepMeta(competitionKey, currentStep);
+
+  return (
+    <div className="vbr-register-clean">
+      <section className="vbr-register-wrap">
+        <div className="vbr-register-header">
+          <div>
+            <span className="vbr-register-chip">Verbattle Registration</span>
+            <h1>Register for Debate or Speech.</h1>
+            <p>Pick the competition format, fill the details clearly, and submit everything in one guided flow.</p>
+          </div>
+          <div className="vbr-register-type-switcher">
+            {COMPETITION_TYPES.map((type) => {
+              const active = form.competitionType === type;
+              const count = type === "Debate" ? 2 : 1;
+
+              return (
+                <button
+                  key={type}
+                  type="button"
+                  className={`vbr-register-type-card ${active ? "is-active" : ""}`}
+                  onClick={() => changeCompetitionType(type)}
+                >
+                  <strong>{type}</strong>
+                  <span>{count} participant{count > 1 ? "s" : ""} in this flow</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <form className="vbr-register-card" onSubmit={handleSubmit}>
+          <div className="vbr-stepper">
+            {steps.map((step, index) => (
+              <button
+                key={step.title}
+                type="button"
+                className={`vbr-stepper-item ${index === currentStep ? "is-current" : index < currentStep ? "is-complete" : ""}`}
+                onClick={() => {
+                  if (index <= currentStep) {
+                    setCurrentStep(index);
                   }
-                />
-              </div>
-
-              <h4 className="vbr-section-title">Additional Information</h4>
-
-              <div className="vbr-row-2">
-                <div className="vbr-field">
-                  <label>
-                    Grade / Class <span className="vbr-required">*</span>
-                  </label>
-                  <SmoothSelect
-                    id="grade-select"
-                    ariaLabel="Grade / Class"
-                    value={formValues.grade}
-                    placeholder="Select grade / class"
-                    options={GRADE_OPTIONS}
-                    query={selectQueries.grade}
-                    onQueryChange={(nextQuery) =>
-                      setSelectQueries((current) => ({ ...current, grade: nextQuery }))
-                    }
-                    isOpen={openSelect === "grade"}
-                    onToggle={() => setOpenSelect((current) => (current === "grade" ? null : "grade"))}
-                    onChange={(nextValue) => updateSelectValue("grade", nextValue)}
-                    registerRef={(node) => {
-                      selectRefs.current.grade = node;
-                    }}
-                  />
-                </div>
-                <div className="vbr-field">
-                  <label>How did you hear about us?</label>
-                  <SmoothSelect
-                    id="heard-select"
-                    ariaLabel="How did you hear about us?"
-                    value={formValues.heardAbout}
-                    placeholder="Select an option"
-                    options={HOW_HEARD_OPTIONS}
-                    query={selectQueries.heard}
-                    onQueryChange={(nextQuery) =>
-                      setSelectQueries((current) => ({ ...current, heard: nextQuery }))
-                    }
-                    isOpen={openSelect === "heard"}
-                    onToggle={() => setOpenSelect((current) => (current === "heard" ? null : "heard"))}
-                    onChange={(nextValue) => updateSelectValue("heard", nextValue)}
-                    registerRef={(node) => {
-                      selectRefs.current.heard = node;
-                    }}
-                  />
-                </div>
-              </div>
-
-              <label className="vbr-checkbox-row">
-                <input
-                  type="checkbox"
-                  checked={agreed}
-                  onChange={(event) => setAgreed(event.target.checked)}
-                />
-                <span>
-                  I agree to the <a href="#terms">Terms &amp; Conditions</a> and{" "}
-                  <a href="#privacy">Privacy Policy</a>{" "}
-                  <span className="vbr-required">*</span>
+                }}
+                disabled={index > currentStep}
+              >
+                <span className="vbr-stepper-icon">
+                  <StepIcon name={step.icon} />
                 </span>
-              </label>
+                <span className="vbr-stepper-label">{step.title}</span>
+              </button>
+            ))}
+          </div>
 
-              <button type="submit" className="vbr-submit-btn">
-                <span>Register Now</span>
-                <span className="vbr-submit-arrow">
-                  <Icon.ArrowRight className="vb-icon-14" />
-                </span>
+          <div className="vbr-stage-head">
+            <div>
+              <span className="vbr-stage-kicker">Step {currentStep + 1}</span>
+              <h2>{currentMeta.title}</h2>
+            </div>
+            <div className="vbr-stage-progress">
+              <span>{Math.round(progress)}%</span>
+              <div className="vbr-stage-progress-bar">
+                <div style={{ width: `${progress}%` }} />
+              </div>
+            </div>
+          </div>
+
+          {renderCurrentStep()}
+
+          {submitError ? <div className="vbr-inline-message vbr-inline-message--error">{submitError}</div> : null}
+          {submitSuccess ? (
+            <div className="vbr-inline-message vbr-inline-message--success">
+              Registration submitted successfully. Application number: <strong>{submitSuccess.applicationNo}</strong>
+            </div>
+          ) : null}
+
+          <div className="vbr-footer-actions">
+            <div className="vbr-footer-left">
+              <button type="button" className="vbr-secondary-btn" onClick={saveDraft}>
+                Save & Exit
+              </button>
+              {draftSaved ? <span className="vbr-draft-note">Draft saved</span> : null}
+            </div>
+
+            <div className="vbr-footer-right">
+              <button type="button" className="vbr-secondary-btn" onClick={previousStep} disabled={currentStep === 0 || submitting}>
+                Back
               </button>
 
-              <p className="vbr-form-footnote">
-                By registering, you agree to our <a href="#terms">Terms &amp; Conditions</a> and{" "}
-                <a href="#privacy">Privacy Policy</a>.
-              </p>
-            </form>
-          </Reveal>
-        </div>
-      </section>
-
-      <Reveal as="section" className="vbr-community">
-        <h3>Join a Community of Future Leaders</h3>
-        <p>
-          Verbattle is more than a platform. It is a movement to empower young minds and help
-          them step into the spotlight with confidence.
-        </p>
-        <div className="vbr-community-grid">
-          {COMMUNITY_ITEMS.map((item, index) => (
-            <div
-              className="vbr-community-item"
-              key={item.title}
-              style={{ transitionDelay: `${index * 90}ms` }}
-            >
-              <span className={`vbr-community-icon vbr-community-icon--${item.tone}`}>
-                <CommunityIcon name={item.icon} />
-              </span>
-              <strong>{item.title}</strong>
-              <p>{item.desc}</p>
+              {currentStep < lastStep ? (
+                <button type="button" className="vbr-primary-btn" onClick={nextStep}>
+                  Save & Continue
+                </button>
+              ) : (
+                <button type="submit" className="vbr-primary-btn" disabled={submitting}>
+                  {submitting ? "Submitting..." : "Submit Registration"}
+                </button>
+              )}
             </div>
-          ))}
-        </div>
-      </Reveal>
-
-      <section className="vbr-gallery-section">
-        <Reveal className="vbr-section-head">
-          <span className="vbr-eyebrow vbr-eyebrow--dark">Moments That Matter</span>
-          <h2>Our Gallery</h2>
-          <p>A glimpse into the events, victories and friendships built on the Verbattle stage.</p>
-        </Reveal>
-
-        <Reveal delay={100}>
-          <GallerySlider />
-        </Reveal>
-      </section>
-
-      <section className="vbr-competitions-section">
-        <Reveal className="vbr-section-head">
-          <span className="vbr-eyebrow vbr-eyebrow--dark">Step Onto the Stage</span>
-          <h2>Ongoing Competitions</h2>
-          <p>Live and upcoming events you can register for right now.</p>
-        </Reveal>
-
-        <div className="vbr-competitions-grid">
-          {COMPETITIONS.map((competition, index) => (
-            <Reveal className="vbr-comp-card" key={competition.title} delay={index * 110}>
-              <div className="vbr-comp-image-wrap">
-                <img src={competition.image} alt={competition.title} loading="lazy" />
-                <span className={`vbr-comp-tag vbr-comp-tag--${competition.tagTone}`}>
-                  {competition.tag}
-                </span>
-              </div>
-              <div className="vbr-comp-body">
-                <h3>{competition.title}</h3>
-                <p>{competition.desc}</p>
-                <div className="vbr-comp-footer">
-                  <span className="vbr-comp-date">📅 {competition.date}</span>
-                  <button type="button" className="vbr-comp-btn">
-                    <span>View Details</span>
-                    <span className="vbr-comp-btn__arrow">
-                      <Icon.ArrowRight className="vb-icon-14" />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-
-        <Reveal delay={200} className="vbr-promo-banner">
-          <div className="vbr-promo-glow" />
-          <div className="vbr-promo-content">
-            <span className="vbr-eyebrow vbr-eyebrow--light">Limited Seats</span>
-            <h3>Don&apos;t Miss the Next Big Stage</h3>
-            <p>
-              Early registrations get priority access to mentorship sessions and a smoother
-              onboarding flow.
-            </p>
-            <button type="button" className="vbr-promo-btn">
-              <span>Register Now</span>
-              <span className="vbr-submit-arrow">
-                <Icon.ArrowRight className="vb-icon-14" />
-              </span>
-            </button>
           </div>
-          <img
-            className="vbr-promo-image"
-            src="/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg"
-            alt="Students celebrating a debate win"
-          />
-        </Reveal>
+        </form>
+
+        <div className="vbr-safety-strip">Your information is safe with us and will never be shared.</div>
+
+        <div className="vbr-benefit-row">
+          <div>
+            <strong>Secure & Safe</strong>
+            <span>100% secure registration</span>
+          </div>
+          <div>
+            <strong>Quick Process</strong>
+            <span>Takes less than 3 minutes</span>
+          </div>
+          <div>
+            <strong>Easy Steps</strong>
+            <span>Simple and hassle free</span>
+          </div>
+          <div>
+            <strong>Need Help?</strong>
+            <span>We're here to assist you</span>
+          </div>
+        </div>
       </section>
     </div>
   );

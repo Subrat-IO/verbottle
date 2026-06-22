@@ -11,9 +11,13 @@ export function resolveNavHref(href, pathname = "/") {
 }
 
 export function isNavLinkActive(link, pathname = "/") {
-  if (pathname !== "/") {
+  if (pathname === "/") {
+    return Boolean(link.active || link.href === "#home");
+  }
+
+  if (!link?.href || link.href.startsWith("#")) {
     return false;
   }
 
-  return Boolean(link.active || link.href === "#home");
+  return pathname === link.href || pathname.startsWith(`${link.href}/`);
 }
