@@ -1,6 +1,6 @@
 export const navLinks = [
   { label: "Home", href: "#home", active: true },
-  { label: "Programs", href: "#programs" },
+  { label: "Programs", href: "/programs" },
   { label: "Competitions", href: "#competitions" },
   { label: "Gallery", href: "#gallery" },
   { label: "Founder", href: "#founder" },
@@ -65,40 +65,40 @@ export const stats = [
 
 export const programs = [
   {
-    title: "Verbattle Academy",
-    desc: "Structured debate, speech and leadership learning for students who want confident stage presence.",
+    title: "CT Pro",
+    desc: "A 20-session communication training program built for voice, speech, presentation and thinking skills.",
     bg: "#fff0e7",
     iconBg: "#ffd6b8",
     iconColor: "#d36a20",
     icon: "Cap",
-    image: "https://verbattle.com/images/vertimg2.jpg",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
   },
   {
-    title: "Debate Competitions",
-    desc: "National and state-level competition journeys with speaking, face-off and finals formats.",
+    title: "Speech Competition",
+    desc: "A high-energy stage and online competition format that turns practice into recognition.",
     bg: "#edf2ff",
     iconBg: "#cad7ff",
     iconColor: "#274a9e",
-    icon: "Users",
-    image: "https://verbattle.com/images/upcoming_event0.jpg",
+    icon: "Trophy",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg",
   },
   {
-    title: "Verbattle Foundation",
-    desc: "A mission-driven arm focused on democratic values, youth dialogue and intellectual empowerment.",
+    title: "School Workshop",
+    desc: "Interactive classroom sessions that help students speak up, think clearly and lead better.",
     bg: "#f8ebff",
     iconBg: "#e0c8ff",
     iconColor: "#7d3fe0",
-    icon: "Pin",
-    image: "https://verbattle.com/images/hero_banner.jpg",
+    icon: "Users",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
   },
 ];
 
 export const impactList = [
-  "Communication that feels fearless",
-  "Critical thinking through debate",
-  "Leadership built on real stage practice",
-  "Recognition through award-led competition",
-  "Long-term school and student development",
+  "20-session communication training",
+  "School and student-friendly program formats",
+  "Stage practice, debate rounds and workshop support",
+  "Recognition through trophies, certificates and coverage",
+  "Built for learners, teachers and school partners",
 ];
 
 export const competitions = [

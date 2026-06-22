@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Icon } from "./icons";
 
 const ROLES = [
@@ -39,82 +40,82 @@ const HERO_STATS = [
 const WHY_ITEMS = [
   {
     icon: "Sparkles",
-    title: "Premium stage experience",
-    desc: "A cleaner, more guided registration flow for serious participants.",
+    title: "Real speaking practice",
+    desc: "Move beyond the form and into a clear path for stage confidence.",
   },
   {
     icon: "BadgeCheck",
-    title: "Structured learning path",
-    desc: "Build confidence with competitions, workshops and mentoring.",
+    title: "Structured progress",
+    desc: "CT Pro, workshops and competitions create a visible learning ladder.",
   },
   {
     icon: "Trophy",
     title: "Recognition that matters",
-    desc: "Awards, certificates and visibility for your effort and talent.",
+    desc: "Trophies, certificates and coverage make the effort feel real.",
   },
   {
     icon: "ShieldCheck",
     title: "Trusted by schools",
-    desc: "Made for school communities, teachers and parents alike.",
+    desc: "Built for students, teachers and institutions that want a serious stage.",
   },
 ];
 
 const SHOWCASE_CARDS = [
   {
-    image: "/image copy 24.png",
-    eyebrow: "Flagship event",
-    title: "National Debate Championship",
-    desc: "A polished stage for strong speakers, quick thinkers and future leaders.",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
+    eyebrow: "Flagship course",
+    title: "CT Pro",
+    desc: "20 sessions of guided communication and public speaking practice.",
   },
   {
-    image: "/image copy 21.png",
-    eyebrow: "Community moment",
-    title: "Students, mentors and teams",
-    desc: "A vibrant classroom-to-stage experience with real participation energy.",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
+    eyebrow: "Workshop moment",
+    title: "Students in the room",
+    desc: "Classroom learning that moves quickly into live speaking practice.",
   },
   {
-    image: "/founder.png",
-    eyebrow: "Leadership lens",
-    title: "Built with purpose",
-    desc: "A thoughtful platform shaped around growth, confidence and impact.",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg",
+    eyebrow: "Recognition",
+    title: "Awards and coverage",
+    desc: "The finish line is visible, celebratory and worth sharing.",
   },
 ];
 
 const GALLERY_IMAGES = [
-  { src: "/image copy 2.png", caption: "Students on stage" },
-  { src: "/image copy 3.png", caption: "Mentorship moments" },
-  { src: "/image copy 4.png", caption: "Winners' celebration" },
-  { src: "/image copy 5.png", caption: "Audience and energy" },
-  { src: "/image copy 6.png", caption: "Gallery collage" },
-  { src: "/image copy 7.png", caption: "On-ground action" },
-  { src: "/image copy 8.png", caption: "Student storytelling" },
-  { src: "/image copy 9.png", caption: "Grand final moments" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg", caption: "Students in session" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.40.jpeg", caption: "Workshop focus" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg", caption: "Speaking with confidence" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.47.jpeg", caption: "Guided practice" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg", caption: "Online speech competition" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg", caption: "Certificate moment" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg", caption: "Free speech stage" },
+  { src: "/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg", caption: "Stage recognition" },
 ];
 
 const COMPETITIONS = [
   {
     tag: "Open",
     tagTone: "open",
-    title: "Verbattle Karnataka 2026",
-    desc: "The flagship registration path for students, teachers and school partners.",
-    date: "Now accepting registrations",
-    image: "/image copy 20.png",
+    title: "CT Pro",
+    desc: "A 20-session communication training program for students who want a clearer voice.",
+    date: "Admissions open",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg",
   },
   {
-    tag: "Closing Soon",
-    tagTone: "closing",
-    title: "Summer Camp Intake",
-    desc: "A sharp, practical communication track built for motivated learners.",
-    date: "Seats filling fast",
-    image: "/image copy 19.png",
+    tag: "Live",
+    tagTone: "soon",
+    title: "National Speech Competition",
+    desc: "A stage-ready competition format with awards and recognition built in.",
+    date: "Register now",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg",
   },
   {
     tag: "New Batch",
-    tagTone: "soon",
-    title: "Workshop Circuit",
-    desc: "Teacher and student workshops with a flexible schedule and clear outcomes.",
-    date: "Rolling admissions",
-    image: "/image copy 22.png",
+    tagTone: "closing",
+    title: "School Workshop Circuit",
+    desc: "In-school sessions that turn students into more confident speakers and listeners.",
+    date: "Season intake",
+    image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
   },
 ];
 
@@ -128,8 +129,8 @@ const COMMUNITY_ITEMS = [
   {
     icon: "Trophy",
     tone: "gold",
-    title: "Compete",
-    desc: "Step into debates and competitive speaking formats.",
+    title: "Speak",
+    desc: "Step into debates and speaking formats with support.",
   },
   {
     icon: "ShieldCheck",
@@ -140,8 +141,8 @@ const COMMUNITY_ITEMS = [
   {
     icon: "BadgeCheck",
     tone: "gold",
-    title: "Inspire",
-    desc: "Bring others along and lead by example.",
+    title: "Celebrate",
+    desc: "Bring others along and make progress visible.",
   },
 ];
 
@@ -338,7 +339,7 @@ export default function VerbattleRegister() {
             <h1 className="vbr-hero-title">
               A polished
               <br />
-              <span className="vbr-hero-title-accent">registration</span> experience
+              <span className="vbr-hero-title-accent">program</span> experience
             </h1>
             <p className="vbr-hero-sub">
               Join Verbattle through a cleaner, more professional flow designed for students,
@@ -346,13 +347,13 @@ export default function VerbattleRegister() {
             </p>
 
             <div className="vbr-hero-actions">
-              <button type="button" className="vbr-hero-btn">
+              <a href="#registration-form" className="vbr-hero-btn">
                 Start Registration <Icon.ArrowRight className="vb-icon-14" />
-              </button>
-              <button type="button" className="vbr-hero-btn vbr-hero-btn--ghost">
+              </a>
+              <Link href="/programs" className="vbr-hero-btn vbr-hero-btn--ghost">
                 <Icon.Play className="vb-icon-14" />
-                View Highlights
-              </button>
+                Browse Programs
+              </Link>
             </div>
 
             <div className="vbr-hero-stats">
@@ -384,22 +385,22 @@ export default function VerbattleRegister() {
 
           <div className="vbr-hero-visual">
             <div className="vbr-hero-card vbr-hero-card--main">
-              <img src="/image copy 24.png" alt="Verbattle event spotlight" />
+              <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg" alt="Verbattle CT Pro poster" />
               <div className="vbr-hero-card__overlay">
                 <div className="vbr-hero-card__chip">
                   <Icon.Sparkles className="vb-icon-14" />
-                  Premium event access
+                  Premium program access
                 </div>
                 <strong>Built for confidence, clarity and stage presence.</strong>
               </div>
             </div>
 
             <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--top">
-              <img src="/image copy 21.png" alt="Students in a Verbattle program" />
+              <img src="/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg" alt="Students in a Verbattle program" />
             </div>
 
             <div className="vbr-hero-card vbr-hero-card--side vbr-hero-card--bottom">
-              <img src="/image copy 10.png" alt="Community learning moment" />
+              <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg" alt="Community learning moment" />
             </div>
 
             <div className="vbr-hero-floating-card">
@@ -418,7 +419,7 @@ export default function VerbattleRegister() {
       <section className="vbr-showcase">
         <Reveal className="vbr-section-head">
           <span className="vbr-eyebrow vbr-eyebrow--dark">What You Get</span>
-          <h2>Registration built like a proper campaign page</h2>
+          <h2>Registration built around the real program images</h2>
           <p>Clean visuals, strong hierarchy and the same cinematic energy as the home page.</p>
         </Reveal>
 
@@ -464,7 +465,7 @@ export default function VerbattleRegister() {
                 The registration experience now feels just as polished as the platform itself.
               </p>
               <div className="vbr-testimonial-person">
-                <img src="/image copy 10.png" alt="Student testimonial" />
+                <img src="/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg" alt="Student testimonial" />
                 <div>
                   <strong>Verbattle Community</strong>
                   <span>Students and mentors</span>
@@ -500,6 +501,7 @@ export default function VerbattleRegister() {
             </div>
 
             <form
+              id="registration-form"
               className="vbr-form"
               onSubmit={(event) => {
                 event.preventDefault();
@@ -787,7 +789,11 @@ export default function VerbattleRegister() {
               Register Now <span className="vbr-submit-arrow">→</span>
             </button>
           </div>
-          <img className="vbr-promo-image" src="/image copy 23.png" alt="Students celebrating a debate win" />
+          <img
+            className="vbr-promo-image"
+            src="/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg"
+            alt="Students celebrating a debate win"
+          />
         </Reveal>
       </section>
     </div>

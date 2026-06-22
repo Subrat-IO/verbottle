@@ -261,12 +261,14 @@
 }
 
 .vb-btn--hero-secondary {
+  display: inline-flex;
   background: #ffffff;
   color: var(--vb-navy);
   border-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 14px 34px rgba(3, 10, 24, 0.14);
   justify-content: space-between;
   min-width: 248px;
+  width: fit-content;
   gap: 18px;
   font-weight: 800;
   white-space: nowrap;
@@ -521,6 +523,11 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.vb-program-card__img {
+  object-fit: contain;
+  padding: 10px;
 }
 
 .vb-hero__media-element {
@@ -893,6 +900,7 @@
   position: relative;
   height: 220px;
   overflow: hidden;
+  background: linear-gradient(180deg, #f7f9fd 0%, #eef3fb 100%);
 }
 
 .vb-program-card__art::after {
@@ -1743,6 +1751,22 @@
 
   .vb-nav__right .vb-btn {
     display: none;
+  }
+
+  .vb-hero__cta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vb-hero__cta .vb-btn {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .vb-btn--hero-secondary {
+    min-width: 0;
+    width: 100%;
+    white-space: normal;
   }
 
   .vb-hero__media,

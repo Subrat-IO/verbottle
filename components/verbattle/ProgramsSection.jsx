@@ -10,8 +10,8 @@ export default function ProgramsSection({ programs }) {
             <span className="vb-section__eyebrow">Programs</span>
             <h2 className="vb-section__title vb-underline">Programs That Shape Future Leaders</h2>
           </div>
-          <a href="#contact" className="vb-link-red">
-            Build A Custom Program <Icon.ArrowRight className="vb-icon-14" />
+          <a href="/programs" className="vb-link-red">
+            Explore Full Programs <Icon.ArrowRight className="vb-icon-14" />
           </a>
         </div>
 
@@ -33,8 +33,8 @@ export default function ProgramsSection({ programs }) {
                 <div className="vb-program-card__body">
                   <h3>{program.title}</h3>
                   <p>{program.desc}</p>
-                  <a href="#recent-competitions" className="vb-link-red vb-link-red--sm">
-                    See It In Action <Icon.ArrowRight className="vb-icon-12" />
+                  <a href="/programs" className="vb-link-red vb-link-red--sm">
+                    View Program Page <Icon.ArrowRight className="vb-icon-12" />
                   </a>
                 </div>
               </article>

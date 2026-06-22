@@ -43,14 +43,14 @@ export default function HeroSection({
               </a>
             ) : (
               <button className="vb-btn vb-btn--red" onClick={() => onOpenMedia(activeHeroVideo)}>
-                {activeHeroVideo.cta}
+                <span>{activeHeroVideo.cta}</span>
                 <span className="vb-btn__circle">
                   <Icon.Play className="vb-icon-14" />
                 </span>
               </button>
             )}
             <a className="vb-btn vb-btn--hero-secondary" href="#programs">
-              Explore Programs
+              <span>Explore Programs</span>
               <span className="vb-btn__circle vb-btn__circle--red">
                 <Icon.ArrowRight className="vb-icon-14" />
               </span>

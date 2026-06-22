@@ -1,4 +1,5 @@
 import { Icon } from "./icons";
+import Link from "next/link";
 
 export default function CtaSection({ onOpenVideo, spotlightVideo }) {
   return (
@@ -19,21 +20,21 @@ export default function CtaSection({ onOpenVideo, spotlightVideo }) {
           <div className="vb-cta__body">
             <span className="vb-section__eyebrow vb-section__eyebrow--light">Join The Energy</span>
             <h2>
-              Make The Homepage Feel
+              Register For The
               <br />
-              Like The Stage.
+              Next Stage.
             </h2>
             <p>
-              The page now has synced hero storytelling, modular sections, scroll-triggered reveals and
-              full-screen playback across every video touchpoint.
+              Move from browsing to booking with a clearer call-to-action that takes visitors straight
+              to the registration page.
             </p>
             <div className="vb-hero__cta">
-              <a className="vb-btn vb-btn--red" href="#contact">
-                Contact Verbattle
+              <Link className="vb-btn vb-btn--red" href="/register">
+                Register Now
                 <span className="vb-btn__circle">
                   <Icon.ArrowRight className="vb-icon-14" />
                 </span>
-              </a>
+              </Link>
               <button className="vb-btn vb-btn--white" onClick={() => onOpenVideo(spotlightVideo)}>
                 Replay Feature
                 <span className="vb-btn__circle vb-btn__circle--red">

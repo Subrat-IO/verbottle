@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon } from "./icons";
 import { isNavLinkActive, resolveNavHref } from "./navigation";
 
 export default function Header({ menuOpen, navLinks, setMenuOpen }) {
@@ -31,10 +30,10 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
         <div className="vb-nav__right">
           <Link
             className="vb-btn vb-btn--red vb-btn--sm"
-            href={resolveNavHref("#recent-competitions", pathname)}
+            href="/register"
             onClick={() => setMenuOpen(false)}
           >
-            Watch Highlights <Icon.Youtube className="vb-icon-14" />
+            Register
           </Link>
           <button
             className={`vb-burger ${menuOpen ? "is-open" : ""}`}
