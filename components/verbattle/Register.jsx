@@ -348,11 +348,16 @@ export default function VerbattleRegister() {
 
             <div className="vbr-hero-actions">
               <a href="#registration-form" className="vbr-hero-btn">
-                Start Registration <Icon.ArrowRight className="vb-icon-14" />
+                <span>Start Registration</span>
+                <span className="vbr-btn-arrow">
+                  <Icon.ArrowRight className="vb-icon-14" />
+                </span>
               </a>
               <Link href="/programs" className="vbr-hero-btn vbr-hero-btn--ghost">
-                <Icon.Play className="vb-icon-14" />
-                Browse Programs
+                <span>Browse Programs</span>
+                <span className="vbr-btn-arrow vbr-btn-arrow--light">
+                  <Icon.ArrowRight className="vb-icon-14" />
+                </span>
               </Link>
             </div>
 
@@ -699,7 +704,10 @@ export default function VerbattleRegister() {
               </label>
 
               <button type="submit" className="vbr-submit-btn">
-                Register Now <span className="vbr-submit-arrow">→</span>
+                <span>Register Now</span>
+                <span className="vbr-submit-arrow">
+                  <Icon.ArrowRight className="vb-icon-14" />
+                </span>
               </button>
 
               <p className="vbr-form-footnote">
@@ -768,7 +776,10 @@ export default function VerbattleRegister() {
                 <div className="vbr-comp-footer">
                   <span className="vbr-comp-date">📅 {competition.date}</span>
                   <button type="button" className="vbr-comp-btn">
-                    View Details →
+                    <span>View Details</span>
+                    <span className="vbr-comp-btn__arrow">
+                      <Icon.ArrowRight className="vb-icon-14" />
+                    </span>
                   </button>
                 </div>
               </div>
@@ -786,7 +797,10 @@ export default function VerbattleRegister() {
               onboarding flow.
             </p>
             <button type="button" className="vbr-promo-btn">
-              Register Now <span className="vbr-submit-arrow">→</span>
+              <span>Register Now</span>
+              <span className="vbr-submit-arrow">
+                <Icon.ArrowRight className="vb-icon-14" />
+              </span>
             </button>
           </div>
           <img
@@ -799,3 +813,5 @@ export default function VerbattleRegister() {
     </div>
   );
 }
+
+

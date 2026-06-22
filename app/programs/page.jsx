@@ -1,5 +1,5 @@
-import "../../components/verbattle/ProgramsPage.css";
-import ProgramsPage from "../../components/verbattle/ProgramsPage";
+import "../../Programs.css";
+import ProgramsPage from "../../ProgramsPage";
 
 export default function Page() {
   return <ProgramsPage />;

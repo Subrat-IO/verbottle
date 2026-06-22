@@ -101,42 +101,44 @@ export default function VerbattleHome() {
   };
 
   return (
-    <div className="vb">
+    <div className="vb vb-shell">
       <Header
         menuOpen={menuOpen}
         navLinks={navLinks}
         setMenuOpen={setMenuOpen}
       />
 
-      <main>
-        <HeroSection
-          activeHero={activeHero}
-          activeHeroVideo={activeHeroVideo}
-          heroVideos={heroVideos}
-          onNext={showNextHero}
-          onOpenMedia={openVideo}
-          onPrev={showPrevHero}
-          onSelectHero={setActiveHero}
-        />
+      <div className="vb-main">
+        <main>
+          <HeroSection
+            activeHero={activeHero}
+            activeHeroVideo={activeHeroVideo}
+            heroVideos={heroVideos}
+            onNext={showNextHero}
+            onOpenMedia={openVideo}
+            onPrev={showPrevHero}
+            onSelectHero={setActiveHero}
+          />
 
-        <StatsSection stats={stats} />
-        <ProgramsSection programs={programs} />
-        <CompetitionsSection competitions={competitions} />
-        <GallerySection
-          activeTab={activeTab}
-          galleryItems={filteredGalleryItems}
-          galleryTabs={galleryTabs}
-          onOpenMedia={openVideo}
-          onSetActiveTab={setActiveTab}
-        />
-        <SponsorsSection sponsors={sponsors} onOpenMedia={openVideo} />
-        <FounderSection founder={founder} onOpenMedia={openVideo} testimonial={testimonial} />
-        <AwardeesSection awardees={awardees} onOpenMedia={openVideo} />
-        <RecentCompetitionsSection onOpenVideo={openVideo} videos={recentVideos} />
-        <CtaSection onOpenVideo={openVideo} spotlightVideo={heroVideos[1]} />
-      </main>
+          <StatsSection stats={stats} />
+          <ProgramsSection programs={programs} />
+          <CompetitionsSection competitions={competitions} />
+          <GallerySection
+            activeTab={activeTab}
+            galleryItems={filteredGalleryItems}
+            galleryTabs={galleryTabs}
+            onOpenMedia={openVideo}
+            onSetActiveTab={setActiveTab}
+          />
+          <SponsorsSection sponsors={sponsors} onOpenMedia={openVideo} />
+          <FounderSection founder={founder} onOpenMedia={openVideo} testimonial={testimonial} />
+          <AwardeesSection awardees={awardees} onOpenMedia={openVideo} />
+          <RecentCompetitionsSection onOpenVideo={openVideo} videos={recentVideos} />
+          <CtaSection onOpenVideo={openVideo} spotlightVideo={heroVideos[1]} />
+        </main>
 
-      <Footer footerData={footerData} navLinks={navLinks} />
+        <Footer footerData={footerData} navLinks={navLinks} />
+      </div>
 
       <VideoModal activeVideo={activeMedia} onClose={closeVideo} />
     </div>

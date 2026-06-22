@@ -36,9 +36,9 @@ export default function CtaSection({ onOpenVideo, spotlightVideo }) {
                 </span>
               </Link>
               <button className="vb-btn vb-btn--white" onClick={() => onOpenVideo(spotlightVideo)}>
-                Replay Feature
+                <span>Replay Feature</span>
                 <span className="vb-btn__circle vb-btn__circle--red">
-                  <Icon.Play className="vb-icon-14" />
+                  <Icon.ArrowRight className="vb-icon-14" />
                 </span>
               </button>
             </div>

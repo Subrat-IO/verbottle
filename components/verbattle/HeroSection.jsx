@@ -26,9 +26,11 @@ export default function HeroSection({
           <div key={getHeroKey(activeHeroVideo)} className="vb-hero__copy">
             <h1 className="vb-hero__title">
               <span className="vb-hero__line">{activeHeroVideo.titleLines[0]}</span>
-              <span className="vb-hero__line">
-                {activeHeroVideo.titleLines[1].replace(activeHeroVideo.accent, "")}
-                <span className="vb-text-red">{activeHeroVideo.accent}</span>
+              <span className="vb-hero__line vb-hero__line--accent">
+                <span className="vb-hero__line-text">
+                  {activeHeroVideo.titleLines[1].replace(activeHeroVideo.accent, "")}
+                </span>
+                <span className="vb-text-red vb-hero__line-accent">{activeHeroVideo.accent}</span>
               </span>
             </h1>
             <p className="vb-hero__desc">{activeHeroVideo.description}</p>
@@ -45,7 +47,7 @@ export default function HeroSection({
               <button className="vb-btn vb-btn--red" onClick={() => onOpenMedia(activeHeroVideo)}>
                 <span>{activeHeroVideo.cta}</span>
                 <span className="vb-btn__circle">
-                  <Icon.Play className="vb-icon-14" />
+                  <Icon.ArrowRight className="vb-icon-14" />
                 </span>
               </button>
             )}

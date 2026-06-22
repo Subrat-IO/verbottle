@@ -1,7 +1,7 @@
 export const navLinks = [
   { label: "Home", href: "#home", active: true },
   { label: "Programs", href: "/programs" },
-  { label: "Competitions", href: "#competitions" },
+  { label: "Competitions", href: "/competitions" },
   { label: "Gallery", href: "#gallery" },
   { label: "Founder", href: "#founder" },
   { label: "Awardees", href: "#awardees" },
