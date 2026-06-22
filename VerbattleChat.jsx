@@ -109,7 +109,7 @@ const FORM_STEPS = [
 const INTRO_STEP = {
   id: "greeting",
   type: "greeting",
-  ask: () => "To start the conversation, say hi or choose a greeting below.",
+  ask: () => "To start the conversation, choose a greeting below.",
 };
 
 function getIndianGreeting() {
@@ -128,6 +128,10 @@ function getIndianGreeting() {
   return "Good evening";
 }
 
+function getGreetingOptions() {
+  return ["Hi", "Hello", getIndianGreeting()];
+}
+
 export default function VerbattleChat() {
   const [isOpen, setIsOpen] = useState(true);
   const [messages, setMessages] = useState([]);
@@ -139,7 +143,7 @@ export default function VerbattleChat() {
   const [isDone, setIsDone] = useState(false);
   const [selectedHobbies, setSelectedHobbies] = useState([]);
   const [waitingInput, setWaitingInput] = useState(false);
-  const [greetingLabel, setGreetingLabel] = useState(() => getIndianGreeting());
+  const [greetingOptions, setGreetingOptions] = useState(() => getGreetingOptions());
   const msgsRef = useRef(null);
   const inputRef = useRef(null);
   const chatSteps = [INTRO_STEP, ...FORM_STEPS];
@@ -179,7 +183,10 @@ export default function VerbattleChat() {
   }, []);
 
   useEffect(() => {
-    const updateGreeting = () => setGreetingLabel(getIndianGreeting());
+    const updateGreeting = () => {
+      const nextGreeting = getIndianGreeting();
+      setGreetingOptions(["Hi", "Hello", nextGreeting]);
+    };
     updateGreeting();
     const timer = window.setInterval(updateGreeting, 60000);
     return () => window.clearInterval(timer);
@@ -341,9 +348,15 @@ export default function VerbattleChat() {
                       <>
                         {currentStep?.type === "greeting" && (
                           <div className="vb-greeting-chips">
-                            <button className="vb-chip vb-greeting-chip" onClick={() => handleGreeting(greetingLabel)}>
-                              {greetingLabel}
-                            </button>
+                            {greetingOptions.map((option) => (
+                              <button
+                                key={option}
+                                className="vb-chip vb-greeting-chip"
+                                onClick={() => handleGreeting(option)}
+                              >
+                                {option}
+                              </button>
+                            ))}
                           </div>
                         )}
                         {currentStep?.type === "chips" && (

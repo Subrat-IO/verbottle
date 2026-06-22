@@ -155,6 +155,28 @@ const HOW_HEARD_OPTIONS = [
   "Other",
 ];
 
+const GENDER_OPTIONS = ["Male", "Female", "Other", "Prefer not to say"];
+
+const STATE_OPTIONS = [
+  "Andhra Pradesh",
+  "Delhi",
+  "Karnataka",
+  "Maharashtra",
+  "Odisha",
+  "Tamil Nadu",
+  "Telangana",
+  "West Bengal",
+];
+
+const GRADE_OPTIONS = [
+  "Grade 8",
+  "Grade 9",
+  "Grade 10",
+  "Grade 11",
+  "Grade 12",
+  "College / University",
+];
+
 function useReveal(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -315,17 +337,144 @@ function CommunityIcon({ name }) {
   return <SelectedIcon className="vb-icon-18" />;
 }
 
+function SmoothSelect({
+  id,
+  ariaLabel,
+  value,
+  placeholder,
+  options,
+  onChange,
+  query,
+  onQueryChange,
+  isOpen,
+  onToggle,
+  registerRef,
+}) {
+  const selectedLabel = value || placeholder;
+  const visibleOptions = options.filter((option) => option.toLowerCase().includes(query.toLowerCase()));
+
+  return (
+    <div className="vbr-smooth-select" ref={registerRef}>
+      <input
+        id={id}
+        type="text"
+        className={`vbr-select-trigger ${value ? "vbr-select-trigger--filled" : ""} ${
+          isOpen ? "vbr-select-trigger--open" : ""
+        }`}
+        value={isOpen ? query : selectedLabel}
+        placeholder={placeholder}
+        onFocus={() => {
+          if (!isOpen) {
+            onToggle();
+          }
+        }}
+        onClick={() => {
+          if (!isOpen) {
+            onToggle();
+          }
+        }}
+        onChange={(event) => {
+          onQueryChange(event.target.value);
+          if (!isOpen) {
+            onToggle();
+          }
+        }}
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-autocomplete="list"
+        aria-controls={`${id}-menu`}
+        aria-label={ariaLabel || placeholder}
+        autoComplete="off"
+      />
+      <span className="vbr-select-trigger__icon vbr-select-trigger__icon--floating">
+        <Icon.ChevronDown className="vb-icon-14" />
+      </span>
+
+      {isOpen ? (
+        <div id={`${id}-menu`} className="vbr-select-menu" role="listbox" aria-label={ariaLabel || placeholder}>
+          {visibleOptions.length ? visibleOptions.map((option) => {
+            const active = option === value;
+
+            return (
+              <button
+                key={option}
+                type="button"
+                role="option"
+                aria-selected={active}
+                className={`vbr-select-option ${active ? "vbr-select-option--active" : ""}`}
+                onClick={() => onChange(option)}
+              >
+                <span>{option}</span>
+                {active ? <Icon.Check className="vb-icon-14" /> : null}
+              </button>
+            );
+          }) : (
+            <div className="vbr-select-empty">No matches found</div>
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function VerbattleRegister() {
   const [role, setRole] = useState("student");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
   const [agreed, setAgreed] = useState(false);
   const [heroIn, setHeroIn] = useState(false);
+  const [openSelect, setOpenSelect] = useState(null);
+  const [selectQueries, setSelectQueries] = useState({
+    gender: "",
+    state: "",
+    grade: "",
+    heard: "",
+  });
+  const [formValues, setFormValues] = useState({
+    gender: "",
+    state: "",
+    city: "",
+    school: "",
+    grade: "",
+    heardAbout: "",
+  });
+  const selectRefs = useRef({});
 
   useEffect(() => {
     const timer = window.setTimeout(() => setHeroIn(true), 80);
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    function handlePointerDown(event) {
+      if (!openSelect) {
+        return;
+      }
+
+      const container = selectRefs.current[openSelect];
+      if (container && !container.contains(event.target)) {
+        setOpenSelect(null);
+      }
+    }
+
+    function handleEscape(event) {
+      if (event.key === "Escape") {
+        setOpenSelect(null);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [openSelect]);
+
+  function updateSelectValue(field, nextValue) {
+    setFormValues((current) => ({ ...current, [field]: nextValue }));
+    setSelectQueries((current) => ({ ...current, [field]: nextValue }));
+    setOpenSelect(null);
+  }
 
   return (
     <div className="vbr-page">
@@ -497,12 +646,9 @@ export default function VerbattleRegister() {
           <Reveal className="vbr-form-card" delay={120}>
             <div className="vbr-form-head">
               <div>
-                <h2>Create Your Account</h2>
-                <p>Fill in the details below to get started with Verbattle.</p>
+                <h2>Competition Registration</h2>
+                <p>Tell us about the participant and choose the right competition path.</p>
               </div>
-              <span className="vbr-login-link">
-                Already have an account? <a href="#login">Login</a>
-              </span>
             </div>
 
             <form
@@ -569,35 +715,56 @@ export default function VerbattleRegister() {
                   <label>
                     Gender <span className="vbr-required">*</span>
                   </label>
-                  <select defaultValue="">
-                    <option value="" disabled>
-                      Select Gender
-                    </option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Other</option>
-                  </select>
+                  <SmoothSelect
+                    id="gender-select"
+                    ariaLabel="Gender"
+                    value={formValues.gender}
+                    placeholder="Select gender"
+                    options={GENDER_OPTIONS}
+                    query={selectQueries.gender}
+                    onQueryChange={(nextQuery) =>
+                      setSelectQueries((current) => ({ ...current, gender: nextQuery }))
+                    }
+                    isOpen={openSelect === "gender"}
+                    onToggle={() => setOpenSelect((current) => (current === "gender" ? null : "gender"))}
+                    onChange={(nextValue) => updateSelectValue("gender", nextValue)}
+                    registerRef={(node) => {
+                      selectRefs.current.gender = node;
+                    }}
+                  />
                 </div>
                 <div className="vbr-field">
                   <label>
                     State <span className="vbr-required">*</span>
                   </label>
-                  <select defaultValue="">
-                    <option value="" disabled>
-                      Select State
-                    </option>
-                    <option>Karnataka</option>
-                    <option>Delhi</option>
-                    <option>Maharashtra</option>
-                    <option>Tamil Nadu</option>
-                    <option>Odisha</option>
-                  </select>
+                  <SmoothSelect
+                    id="state-select"
+                    ariaLabel="State"
+                    value={formValues.state}
+                    placeholder="Select state"
+                    options={STATE_OPTIONS}
+                    query={selectQueries.state}
+                    onQueryChange={(nextQuery) =>
+                      setSelectQueries((current) => ({ ...current, state: nextQuery }))
+                    }
+                    isOpen={openSelect === "state"}
+                    onToggle={() => setOpenSelect((current) => (current === "state" ? null : "state"))}
+                    onChange={(nextValue) => updateSelectValue("state", nextValue)}
+                    registerRef={(node) => {
+                      selectRefs.current.state = node;
+                    }}
+                  />
                 </div>
                 <div className="vbr-field">
                   <label>
                     City <span className="vbr-required">*</span>
                   </label>
-                  <input type="text" placeholder="Enter your city" />
+                  <input
+                    type="text"
+                    placeholder="Enter your city"
+                    value={formValues.city}
+                    onChange={(event) => setFormValues((current) => ({ ...current, city: event.target.value }))}
+                  />
                 </div>
               </div>
 
@@ -605,58 +772,14 @@ export default function VerbattleRegister() {
                 <label>
                   School / Institution <span className="vbr-required">*</span>
                 </label>
-                <input type="text" placeholder="Enter your school or institution name" />
-              </div>
-
-              <h4 className="vbr-section-title">Account Security</h4>
-
-              <div className="vbr-row-2">
-                <div className="vbr-field">
-                  <label>
-                    Create Password <span className="vbr-required">*</span>
-                  </label>
-                  <div className="vbr-input-icon-wrap">
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Create a strong password"
-                    />
-                    <button
-                      type="button"
-                      className="vbr-input-icon-btn"
-                      onClick={() => setShowPassword((value) => !value)}
-                      aria-label="Toggle password visibility"
-                    >
-                      {showPassword ? (
-                        <Icon.EyeOff className="vb-icon-16" />
-                      ) : (
-                        <Icon.Eye className="vb-icon-16" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-                <div className="vbr-field">
-                  <label>
-                    Confirm Password <span className="vbr-required">*</span>
-                  </label>
-                  <div className="vbr-input-icon-wrap">
-                    <input
-                      type={showConfirm ? "text" : "password"}
-                      placeholder="Confirm your password"
-                    />
-                    <button
-                      type="button"
-                      className="vbr-input-icon-btn"
-                      onClick={() => setShowConfirm((value) => !value)}
-                      aria-label="Toggle confirm password visibility"
-                    >
-                      {showConfirm ? (
-                        <Icon.EyeOff className="vb-icon-16" />
-                      ) : (
-                        <Icon.Eye className="vb-icon-16" />
-                      )}
-                    </button>
-                  </div>
-                </div>
+                <input
+                  type="text"
+                  placeholder="Enter your school or institution name"
+                  value={formValues.school}
+                  onChange={(event) =>
+                    setFormValues((current) => ({ ...current, school: event.target.value }))
+                  }
+                />
               </div>
 
               <h4 className="vbr-section-title">Additional Information</h4>
@@ -666,27 +789,43 @@ export default function VerbattleRegister() {
                   <label>
                     Grade / Class <span className="vbr-required">*</span>
                   </label>
-                  <select defaultValue="">
-                    <option value="" disabled>
-                      Select Grade / Class
-                    </option>
-                    <option>Grade 9</option>
-                    <option>Grade 10</option>
-                    <option>Grade 11</option>
-                    <option>Grade 12</option>
-                    <option>College / University</option>
-                  </select>
+                  <SmoothSelect
+                    id="grade-select"
+                    ariaLabel="Grade / Class"
+                    value={formValues.grade}
+                    placeholder="Select grade / class"
+                    options={GRADE_OPTIONS}
+                    query={selectQueries.grade}
+                    onQueryChange={(nextQuery) =>
+                      setSelectQueries((current) => ({ ...current, grade: nextQuery }))
+                    }
+                    isOpen={openSelect === "grade"}
+                    onToggle={() => setOpenSelect((current) => (current === "grade" ? null : "grade"))}
+                    onChange={(nextValue) => updateSelectValue("grade", nextValue)}
+                    registerRef={(node) => {
+                      selectRefs.current.grade = node;
+                    }}
+                  />
                 </div>
                 <div className="vbr-field">
                   <label>How did you hear about us?</label>
-                  <select defaultValue="">
-                    <option value="" disabled>
-                      Select an option
-                    </option>
-                    {HOW_HEARD_OPTIONS.map((option) => (
-                      <option key={option}>{option}</option>
-                    ))}
-                  </select>
+                  <SmoothSelect
+                    id="heard-select"
+                    ariaLabel="How did you hear about us?"
+                    value={formValues.heardAbout}
+                    placeholder="Select an option"
+                    options={HOW_HEARD_OPTIONS}
+                    query={selectQueries.heard}
+                    onQueryChange={(nextQuery) =>
+                      setSelectQueries((current) => ({ ...current, heard: nextQuery }))
+                    }
+                    isOpen={openSelect === "heard"}
+                    onToggle={() => setOpenSelect((current) => (current === "heard" ? null : "heard"))}
+                    onChange={(nextValue) => updateSelectValue("heard", nextValue)}
+                    registerRef={(node) => {
+                      selectRefs.current.heard = node;
+                    }}
+                  />
                 </div>
               </div>
 
@@ -813,5 +952,3 @@ export default function VerbattleRegister() {
     </div>
   );
 }
-
-
