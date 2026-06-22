@@ -1,0 +1,63 @@
+import { Icon } from "./icons";
+import ExpandButton from "./ExpandButton";
+
+export default function GallerySection({
+  activeTab,
+  galleryItems,
+  galleryTabs,
+  onSetActiveTab,
+  onOpenMedia,
+}) {
+  return (
+    <section id="gallery" className="vb-section vb-reveal vb-reveal--up">
+      <div className="vb-container">
+        <div className="vb-section__head">
+          <div>
+            <span className="vb-section__eyebrow">Visual Story</span>
+            <h2 className="vb-section__title vb-underline">Gallery</h2>
+          </div>
+          <a href="https://verbattle.com/index.html" className="vb-link-red" target="_blank" rel="noreferrer">
+            View Full Gallery <Icon.ArrowRight className="vb-icon-14" />
+          </a>
+        </div>
+
+        <div className="vb-gallery-tabs">
+          {galleryTabs.map((tab) => (
+            <button
+              key={tab}
+              className={`vb-gallery-tab ${activeTab === tab ? "is-active" : ""}`}
+              onClick={() => onSetActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        <div key={activeTab} className="vb-gallery-grid vb-gallery-grid--animated">
+          {galleryItems.map((item) => (
+            <article
+              className="vb-gallery-item"
+              key={`${item.title}-${item.image}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") })}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") });
+                }
+              }}
+            >
+              <img src={item.image} alt={item.title} />
+              <ExpandButton label={`Expand ${item.title}`} onClick={() => onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") })} />
+              <div className="vb-gallery-item__overlay">
+                <strong>{item.title}</strong>
+                <small>{item.tags.join(" • ")}</small>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
