@@ -297,7 +297,7 @@ export default function VerbattleChat() {
               <BotIcon />
             </div>
             <div className="vb-header-text">
-              <h1>Verbattle Live Assistant</h1>
+              <h1>Welcome to Verbattle World</h1>
               <p><span className="vb-status-dot" /> Online · Ask your queries</p>
             </div>
             <button className="vb-close-btn" onClick={() => setIsOpen(false)} aria-label="Close live assistant">
