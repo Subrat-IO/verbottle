@@ -6,25 +6,25 @@ import Footer from "./components/verbattle/Footer";
 import { footerData, navLinks } from "./components/verbattle/data";
 
 const competitionMedia = {
-  hero: "/competitions/herobg.webp",
+  hero: "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg",
   cards: [
-    "/competitions/herobg.webp",
-    "/image.png",
-    "/image%20copy.png",
-    "/image%20copy%202.png",
-    "/image%20copy%203.png",
-    "/image%20copy%204.png",
-    "/image%20copy%205.png",
-    "/image%20copy%206.png",
-    "/image%20copy%207.png",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.52 (1).jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.53 (1).jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.18.39 (1).jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.18.40.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg",
   ],
   people: [
     "/founder.png",
-    "/image%20copy%208.png",
-    "/image%20copy%209.png",
-    "/image%20copy%2010.png",
-    "/image%20copy%2011.png",
-    "/image%20copy%2012.png",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (1).jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (2).jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg",
+    "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (1).jpeg",
   ],
 };
 

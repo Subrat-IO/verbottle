@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { DRAFT_KEY, saveRegistrationSubmission } from "./registrationStorage";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 const ChevronDown = ({ className }) => (
@@ -212,7 +213,6 @@ const XIcon = ({ className }) => (
 );
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const DRAFT_KEY = "verbattle_registration_draft_v3";
 const COMPETITION_TYPES = ["Debate", "Speech"];
 const CATEGORY_OPTIONS = ["Beginner", "Junior", "Junior Plus", "Kannada"];
 const GENDER_OPTIONS = ["Male", "Female", "Other", "Prefer not to say"];
@@ -1101,53 +1101,14 @@ export default function VerbattleRegister() {
     setSubmitting(true);
     setSubmitError("");
     try {
-      const payload = new FormData();
-      payload.append("competitionType", form.competitionType);
-      payload.append("category", form.category);
-      payload.append("applicationNo", form.applicationNo);
-      payload.append("school", JSON.stringify(form.school));
-      payload.append("mentor", JSON.stringify(form.mentor));
-      payload.append("parentGuardian", JSON.stringify(form.parentGuardian));
-      payload.append(
-        "payment",
-        JSON.stringify({
-          paymentMode: form.payment.paymentMode,
-          utrNumber: form.payment.utrNumber,
-        }),
-      );
-      payload.append("declaration", JSON.stringify(form.declaration));
-      payload.append(
-        "participants",
-        JSON.stringify(
-          form.participants
-            .slice(0, participantCount)
-            .map(({ participantPhoto, schoolIdCard, ...rest }) => rest),
-        ),
-      );
-      form.participants.slice(0, participantCount).forEach((p, i) => {
-        if (p.participantPhoto)
-          payload.append(`participantPhoto_${i + 1}`, p.participantPhoto);
-        if (p.schoolIdCard)
-          payload.append(`schoolIdCard_${i + 1}`, p.schoolIdCard);
+      const savedSubmission = saveRegistrationSubmission({
+        ...form,
+        participants: form.participants.slice(0, participantCount),
       });
-      if (form.payment.paymentScreenshot)
-        payload.append("paymentScreenshot", form.payment.paymentScreenshot);
-      if (form.payment.consentForm)
-        payload.append("consentForm", form.payment.consentForm);
-
-      const res = await fetch(`${getApiBase()}/registrations/create.php`, {
-        method: "POST",
-        body: payload,
-      });
-      const data = await res.json();
-      if (!res.ok || !data.success)
-        throw new Error(
-          data.message || "Registration failed. Please try again.",
-        );
       window.localStorage.removeItem(DRAFT_KEY);
       setSubmitSuccess({
-        ...data,
-        applicationNo: resolveAppNo(data.applicationNo, form.applicationNo),
+        success: true,
+        applicationNo: savedSubmission?.applicationNo || form.applicationNo,
       });
       setForm(createInitialForm());
       setCurrentStep(0);

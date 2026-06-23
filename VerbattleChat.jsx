@@ -133,7 +133,7 @@ function getGreetingOptions() {
 }
 
 export default function VerbattleChat() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [data, setData] = useState({});
   const [step, setStep] = useState(0);

@@ -11,7 +11,7 @@ const pageContent = {
     "Verbattle Static Route",
     "VBT-BLOG-2631"
   ],
-  "heroImage": "/image copy 17.png",
+  "heroImage": "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg",
   "heroAlt": "Blog",
   "sections": [
     {
@@ -45,22 +45,22 @@ const pageContent = {
   "gallery": [
     {
       "title": "Blog Visual 1",
-      "image": "/image copy 18.png",
+      "image": "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg",
       "copy": "A local gallery image from the current project folder anchors this page in the site's own media set."
     },
     {
       "title": "Blog Visual 2",
-      "image": "/image copy 19.png",
+      "image": "/programs/WhatsApp Image 2026-06-21 at 00.18.40.jpeg",
       "copy": "The visual cards keep each route richer than a plain text page and satisfy the multi-image requirement."
     },
     {
       "title": "Blog Visual 3",
-      "image": "/image copy 20.png",
+      "image": "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (2).jpeg",
       "copy": "Each image block supports the theme of student voice, mentor support, or event energy in a static layout."
     },
     {
       "title": "Blog Visual 4",
-      "image": "/image copy 21.png",
+      "image": "/programs/WhatsApp Image 2026-06-21 at 00.20.53 (2).jpeg",
       "copy": "Because this route has its own file, the gallery can be changed later without touching any other page."
     }
   ],

@@ -8,13 +8,13 @@ import { footerData, navLinks } from "./components/verbattle/data";
 const galleryFilters = ["All", "Competitions", "Students", "Workshops", "Events"];
 
 const galleryItems = [
-  { image: "/image copy 2.png", title: "Awards and recognition", category: "Competitions" },
-  { image: "/image copy 3.png", title: "Speaker addressing the audience", category: "Events" },
-  { image: "/image copy 4.png", title: "Leadership and partner gathering", category: "Events" },
-  { image: "/image copy 5.png", title: "Team and guest moments", category: "Events" },
-  { image: "/image copy 6.png", title: "Students at the debate podium", category: "Competitions" },
-  { image: "/image copy 7.png", title: "Competition stage group photo", category: "Competitions" },
-  { image: "/image copy 8.png", title: "Young participants on stage", category: "Students" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg", title: "Awards and recognition", category: "Competitions" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (1).jpeg", title: "Speaker addressing the audience", category: "Events" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (2).jpeg", title: "Leadership and partner gathering", category: "Events" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.47.jpeg", title: "Team and guest moments", category: "Events" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg", title: "Students at the debate podium", category: "Competitions" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg", title: "Competition stage group photo", category: "Competitions" },
+  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (1).jpeg", title: "Young participants on stage", category: "Students" },
   { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg", title: "Classroom training session", category: "Workshops" },
   { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39 (1).jpeg", title: "Mentor-guided workshop", category: "Workshops" },
   { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39 (2).jpeg", title: "Students in discussion", category: "Students" },

@@ -9,7 +9,7 @@ import { isNavLinkActive, resolveNavHref } from "./navigation";
 function MenuTrigger({
   link,
   isOpen,
-  isMobileMenuOpen,
+  isMobileViewport,
   onCloseMenu,
   onEnter,
   onLeave,
@@ -17,12 +17,14 @@ function MenuTrigger({
   pathname,
 }) {
   const hasChildren = Array.isArray(link.children) && link.children.length > 0;
+  const linkIsActive = isNavLinkActive(link, pathname);
+  const linkHref = resolveNavHref(link.href, pathname);
 
   if (!hasChildren) {
     return (
       <Link
-        href={resolveNavHref(link.href, pathname)}
-        className={`vb-navlinks__item ${isNavLinkActive(link, pathname) ? "is-active" : ""}`}
+        href={linkHref}
+        className={`vb-navlinks__item ${linkIsActive ? "is-active" : ""}`}
         onClick={onCloseMenu}
       >
         {link.label}
@@ -36,10 +38,10 @@ function MenuTrigger({
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <div className={`vb-navgroup__trigger ${isOpen ? "is-open" : ""}`}>
+      <div className={`vb-navgroup__trigger ${isOpen ? "is-open" : ""} ${linkIsActive ? "is-active" : ""}`}>
         <Link
-          href={resolveNavHref(link.href, pathname)}
-          className={`vb-navlinks__item ${isNavLinkActive(link, pathname) ? "is-active" : ""}`}
+          href={linkHref}
+          className={`vb-navlinks__item ${linkIsActive ? "is-active" : ""}`}
           onClick={onCloseMenu}
         >
           {link.label}
@@ -49,7 +51,11 @@ function MenuTrigger({
           className={`vb-navlinks__toggle ${isOpen ? "is-active" : ""}`}
           aria-expanded={isOpen}
           aria-label={`Toggle ${link.label} menu`}
-          onClick={onToggle}
+          onClick={(event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            onToggle();
+          }}
         >
           <Icon.Caret className="vb-navlinks__caret vb-icon-14" />
         </button>
@@ -93,27 +99,41 @@ function MenuTrigger({
         </div>
       </div>
 
-      {isMobileMenuOpen && isOpen && link.children?.length > 0 && (
-        <div className="vb-navmobile-submenu">
-          {link.children.map((child) => {
-            const MenuIcon = Icon[child.icon] || Icon.Sparkles;
+      {isMobileViewport && link.children?.length > 0 && (
+        <div className={`vb-navmobile-submenu ${isOpen ? "is-open" : ""}`}>
+          <div className="vb-navmobile-submenu__inner">
+            <Link
+              href={linkHref}
+              className="vb-navmobile-submenu__item vb-navmobile-submenu__item--primary"
+              onClick={onCloseMenu}
+            >
+              <span className="vb-navmobile-submenu__icon">
+                <Icon.ArrowRight className="vb-icon-16" />
+              </span>
+              <span className="vb-navmobile-submenu__copy">
+                <strong>Explore {link.label}</strong>
+              </span>
+            </Link>
+            {link.children.map((child) => {
+              const MenuIcon = Icon[child.icon] || Icon.Sparkles;
 
-            return (
-              <Link
-                key={`${link.label}-${child.label}`}
-                href={resolveNavHref(child.href, pathname)}
-                className="vb-navmobile-submenu__item"
-                onClick={onCloseMenu}
-              >
-                <span className="vb-navmobile-submenu__icon">
-                  <MenuIcon className="vb-icon-16" />
-                </span>
-                <span className="vb-navmobile-submenu__copy">
-                  <strong>{child.label}</strong>
-                </span>
-              </Link>
-            );
-          })}
+              return (
+                <Link
+                  key={`${link.label}-${child.label}`}
+                  href={resolveNavHref(child.href, pathname)}
+                  className="vb-navmobile-submenu__item"
+                  onClick={onCloseMenu}
+                >
+                  <span className="vb-navmobile-submenu__icon">
+                    <MenuIcon className="vb-icon-16" />
+                  </span>
+                  <span className="vb-navmobile-submenu__copy">
+                    <strong>{child.label}</strong>
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
@@ -123,6 +143,7 @@ function MenuTrigger({
 export default function Header({ menuOpen, navLinks, setMenuOpen }) {
   const pathname = usePathname();
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const closeTimerRef = useRef(null);
 
   const clearCloseTimer = () => {
@@ -149,6 +170,23 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
     setMenuOpen(false);
   }, [pathname, setMenuOpen]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    const mediaQuery = window.matchMedia("(max-width: 980px)");
+    const syncViewport = () => setIsMobileViewport(mediaQuery.matches);
+
+    syncViewport();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", syncViewport);
+      return () => mediaQuery.removeEventListener("change", syncViewport);
+    }
+
+    mediaQuery.addListener(syncViewport);
+    return () => mediaQuery.removeListener(syncViewport);
+  }, []);
+
   useEffect(() => () => clearCloseTimer(), []);
 
   return (
@@ -167,20 +205,53 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
         </Link>
 
         <nav className={`vb-navlinks ${menuOpen ? "is-open" : ""}`}>
+          <div className="vb-navdrawer-head">
+            <Link
+              className="vb-navdrawer-brand"
+              href="/"
+              aria-label="Verbattle home"
+              onClick={() => {
+                setOpenDropdown(null);
+                setMenuOpen(false);
+              }}
+            >
+              <img className="vb-navdrawer-logo" src="/logo.png" alt="Verbattle" />
+              <div className="vb-navdrawer-copy">
+                <strong>Verbattle</strong>
+                <span>Think Better. Speak Better.</span>
+              </div>
+            </Link>
+            <button
+              type="button"
+              className="vb-navdrawer-close"
+              aria-label="Close menu"
+              onClick={() => {
+                setOpenDropdown(null);
+                setMenuOpen(false);
+              }}
+            >
+              <Icon.Close className="vb-icon-18" />
+            </button>
+          </div>
+
           {navLinks.map((link) => (
             <MenuTrigger
               key={link.label}
               link={link}
               isOpen={openDropdown === link.label}
-              isMobileMenuOpen={menuOpen}
+              isMobileViewport={isMobileViewport}
               pathname={pathname}
               onCloseMenu={() => {
                 clearCloseTimer();
                 setOpenDropdown(null);
                 setMenuOpen(false);
               }}
-              onEnter={() => openMenu(link.label)}
-              onLeave={() => queueCloseMenu(link.label)}
+              onEnter={() => {
+                if (!isMobileViewport) openMenu(link.label);
+              }}
+              onLeave={() => {
+                if (!isMobileViewport) queueCloseMenu(link.label);
+              }}
               onToggle={() => setOpenDropdown((current) => (current === link.label ? null : link.label))}
             />
           ))}

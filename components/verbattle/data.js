@@ -114,7 +114,7 @@ export const heroVideos = [
     type: "local",
     src: "/vidssave.com Education alone can change the society #school #education #students 480P.mp4",
     cta: "Watch Now",
-    thumb: "/image copy 21.png",
+    thumb: "/verbattle-categories/ChatGPT Image Jun 23, 2026, 05_20_16 PM.webp",
   },
   {
     title: "Develop the Mind. Empower the Voice.",
@@ -125,7 +125,7 @@ export const heroVideos = [
     type: "local",
     src: "/vidssave.com Top Debate on Facebook - Must watch! #verbattle #debatecompetition 480P.mp4",
     cta: "Watch Debate",
-    thumb: "/image copy 24.png",
+    thumb: "/verbattle-categories/ChatGPT Image Jun 23, 2026, 05_20_32 PM.webp",
   },
   {
     title: "Better Thinking. Better Decisions. Better Leaders.",
@@ -136,7 +136,7 @@ export const heroVideos = [
     type: "local",
     src: "/WEBSITE_VIDEO_VERBATTLE_V1.mp4",
     cta: "Watch Feature",
-    thumb: "/image.png",
+    thumb: "/verbattle-categories/ChatGPT Image Jun 23, 2026, 05_20_51 PM.webp",
   },
 ];
 
