@@ -6,6 +6,25 @@ function getHeroKey(video) {
   return video.videoId || video.src;
 }
 
+function renderHeroLine(line, accent, index, lines) {
+  const isLastLine = index === lines.length - 1;
+
+  if (!isLastLine || !accent || !line.includes(accent)) {
+    return (
+      <span key={`${line}-${index}`} className="vb-hero__line">
+        {line}
+      </span>
+    );
+  }
+
+  return (
+    <span key={`${line}-${index}`} className="vb-hero__line vb-hero__line--accent">
+      <span className="vb-hero__line-text">{line.replace(accent, "")}</span>
+      <span className="vb-text-red vb-hero__line-accent">{accent}</span>
+    </span>
+  );
+}
+
 export default function HeroSection({
   activeHero,
   activeHeroVideo,
@@ -23,13 +42,9 @@ export default function HeroSection({
         <div className="vb-hero__left vb-reveal vb-reveal--left">
           <div key={getHeroKey(activeHeroVideo)} className="vb-hero__copy">
             <h1 className="vb-hero__title">
-              <span className="vb-hero__line">{activeHeroVideo.titleLines[0]}</span>
-              <span className="vb-hero__line vb-hero__line--accent">
-                <span className="vb-hero__line-text">
-                  {activeHeroVideo.titleLines[1].replace(activeHeroVideo.accent, "")}
-                </span>
-                <span className="vb-text-red vb-hero__line-accent">{activeHeroVideo.accent}</span>
-              </span>
+              {activeHeroVideo.titleLines.map((line, index, lines) =>
+                renderHeroLine(line, activeHeroVideo.accent, index, lines),
+              )}
             </h1>
             <p className="vb-hero__desc">{activeHeroVideo.description}</p>
           </div>

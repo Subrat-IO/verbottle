@@ -11,7 +11,6 @@ export default function StaticVerbattlePage({
   eyebrow,
   title,
   description,
-  pageCode,
   heroImage,
   heroAlt,
   heroMeta = [],
@@ -23,6 +22,7 @@ export default function StaticVerbattlePage({
   ctaText,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const visibleHeroMeta = heroMeta.filter((item) => !/^VBT-/i.test(item));
 
   return (
     <div className={`vb ${styles.page}`}>
@@ -35,9 +35,9 @@ export default function StaticVerbattlePage({
             <h1>{title}</h1>
             <p>{description}</p>
 
-            {heroMeta.length ? (
+            {visibleHeroMeta.length ? (
               <div className={styles.heroMeta}>
-                {heroMeta.map((item) => (
+                {visibleHeroMeta.map((item) => (
                   <span key={item}>{item}</span>
                 ))}
               </div>
@@ -53,12 +53,6 @@ export default function StaticVerbattlePage({
           <div className={styles.quoteCard}>
             <strong>Verbattle Lens</strong>
             <p>{quote}</p>
-          </div>
-
-          <div className={styles.codeCard}>
-            <strong>Page Code</strong>
-            <p>Every static page now has its own fixed internal reference for easy content tracking and QA.</p>
-            <span className={styles.codeValue}>{pageCode}</span>
           </div>
         </section>
 

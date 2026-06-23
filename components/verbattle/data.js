@@ -123,7 +123,7 @@ export const heroVideos = [
     titleLines: ["Think Better.", "Speak Better. Lead Better."],
     accent: "Lead Better.",
     description:
-      "A clear opening message that positions Verbattle as a place where stronger thinking grows into stronger speaking and leadership.",
+      "Communication training that helps students think clearly, speak confidently, and lead with purpose.",
     type: "local",
     src: "/vidssave.com Education alone can change the society #school #education #students 480P.mp4",
     cta: "Watch Now",
@@ -134,7 +134,7 @@ export const heroVideos = [
     titleLines: ["Develop the Mind.", "Empower the Voice."],
     accent: "Voice.",
     description:
-      "This slide speaks to the deeper Verbattle mission: shaping thought, building confidence, and helping every learner speak with purpose.",
+      "Debate and speaking practice built to sharpen thought, strengthen confidence, and bring every learner's voice forward.",
     type: "local",
     src: "/vidssave.com Top Debate on Facebook - Must watch! #verbattle #debatecompetition 480P.mp4",
     cta: "Watch Debate",
@@ -142,10 +142,10 @@ export const heroVideos = [
   },
   {
     title: "Better Thinking. Better Decisions. Better Leaders.",
-    titleLines: ["Better Thinking.", "Better Decisions. Better Leaders."],
+    titleLines: ["Better Thinking.", "Better Decisions.", "Better Leaders."],
     accent: "Better Leaders.",
     description:
-      "The final hero line connects communication training to judgment and leadership, giving the homepage a stronger long-term outcome.",
+      "Programs and stage experiences that turn stronger thinking into better judgment and more responsible young leadership.",
     type: "local",
     src: "/WEBSITE_VIDEO_VERBATTLE_V1.mp4",
     cta: "Watch Feature",
