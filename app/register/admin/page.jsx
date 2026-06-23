@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  FRONTEND_ADMIN_CREDENTIALS,
+  getRegistrationAdminLockoutState,
   isRegistrationAdminAuthenticated,
+  registerFailedRegistrationAdminAttempt,
   setRegistrationAdminSession,
+  verifyRegistrationAdminCredentials,
 } from "../../../components/verbattle/registrationStorage";
 
 export default function RegistrationAdminLoginPage() {
@@ -13,26 +15,59 @@ export default function RegistrationAdminLoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [lockout, setLockout] = useState({
+    attempts: 0,
+    remainingMs: 0,
+    isLocked: false,
+  });
 
   useEffect(() => {
     if (isRegistrationAdminAuthenticated()) {
       router.replace("/register/admin/dashboard");
     }
+
+    setLockout(getRegistrationAdminLockoutState());
   }, [router]);
 
-  function handleSubmit(event) {
+  useEffect(() => {
+    if (!lockout.isLocked) return undefined;
+
+    const timer = window.setInterval(() => {
+      setLockout(getRegistrationAdminLockoutState());
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [lockout.isLocked]);
+
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    if (
-      username.trim() === FRONTEND_ADMIN_CREDENTIALS.username &&
-      password === FRONTEND_ADMIN_CREDENTIALS.password
-    ) {
+    const nextLockout = getRegistrationAdminLockoutState();
+    if (nextLockout.isLocked) {
+      setLockout(nextLockout);
+      setError(
+        `Too many failed attempts. Try again in ${Math.ceil(nextLockout.remainingMs / 60000)} minute(s).`,
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    if (await verifyRegistrationAdminCredentials(username, password)) {
       setRegistrationAdminSession();
       router.push("/register/admin/dashboard");
       return;
     }
 
-    setError("Invalid login details. Please try again.");
+    const failedState = registerFailedRegistrationAdminAttempt();
+    setLockout(failedState);
+    setIsSubmitting(false);
+    setError(
+      failedState.isLocked
+        ? `Too many failed attempts. Try again in ${Math.ceil(failedState.remainingMs / 60000)} minute(s).`
+        : "Invalid login details. Please try again.",
+    );
   }
 
   return (
@@ -118,6 +153,14 @@ export default function RegistrationAdminLoginPage() {
           font-size: 14px;
           font-weight: 800;
           box-shadow: 0 16px 38px rgba(209, 27, 47, 0.24);
+          transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+        }
+        .vba-login__button:hover {
+          transform: translateY(-1px);
+          box-shadow: 0 18px 42px rgba(209, 27, 47, 0.28);
+        }
+        .vba-login__button:disabled {
+          opacity: 0.7;
         }
         .vba-login__error {
           margin-top: 14px;
@@ -136,8 +179,8 @@ export default function RegistrationAdminLoginPage() {
           <span className="vba-login__eyebrow">Frontend Only Admin</span>
           <h1>Registration Login</h1>
           <p>
-            Use this screen to open saved registration records and download
-            print-ready PDF sheets from the browser.
+            Use this screen to open saved registration records and export
+            browser-ready Excel and PDF files.
           </p>
 
           <div className="vba-login__grid">
@@ -146,6 +189,7 @@ export default function RegistrationAdminLoginPage() {
               <input
                 id="admin-username"
                 value={username}
+                autoComplete="username"
                 onChange={(event) => {
                   setUsername(event.target.value);
                   setError("");
@@ -159,6 +203,7 @@ export default function RegistrationAdminLoginPage() {
                 id="admin-password"
                 type="password"
                 value={password}
+                autoComplete="current-password"
                 onChange={(event) => {
                   setPassword(event.target.value);
                   setError("");
@@ -166,19 +211,24 @@ export default function RegistrationAdminLoginPage() {
               />
             </div>
 
-            <button className="vba-login__button" type="submit">
-              Open Admin Dashboard
+            <button
+              className="vba-login__button"
+              type="submit"
+              disabled={isSubmitting || lockout.isLocked}
+            >
+              {lockout.isLocked
+                ? `Locked for ${Math.ceil(lockout.remainingMs / 60000)} min`
+                : isSubmitting
+                  ? "Checking..."
+                  : "Open Admin Dashboard"}
             </button>
           </div>
 
           {error ? <div className="vba-login__error">{error}</div> : null}
 
           <div className="vba-login__hint">
-            Demo login:
-            <br />
-            Username: <strong>{FRONTEND_ADMIN_CREDENTIALS.username}</strong>
-            <br />
-            Password: <strong>{FRONTEND_ADMIN_CREDENTIALS.password}</strong>
+            Admin credentials are now hidden from the page and repeated failed
+            login attempts trigger a temporary lock.
           </div>
         </form>
       </main>

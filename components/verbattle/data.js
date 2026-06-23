@@ -231,42 +231,42 @@ export const galleryTabs = ["All", "Events", "Competitions", "Workshops", "Winne
 
 export const galleryItems = [
   {
-    image: "/image copy 2.png",
-    title: "Students on stage",
+    image: "/DSC07194.webp",
+    title: "Opening-stage confidence",
     tags: ["Events", "Competitions"],
   },
   {
-    image: "/image copy 3.png",
-    title: "Mentorship moments",
+    image: "/DSC07199.webp",
+    title: "Mentorship in motion",
     tags: ["Workshops"],
   },
   {
-    image: "/image copy 4.png",
-    title: "Winners' celebration",
+    image: "/DSC07200.webp",
+    title: "Winners' spotlight",
     tags: ["Winners", "Competitions"],
   },
   {
-    image: "/image copy 5.png",
-    title: "Audience and energy",
+    image: "/DSC07201.webp",
+    title: "Audience energy",
     tags: ["Events"],
   },
   {
-    image: "/image copy 6.png",
-    title: "Gallery collage",
+    image: "/DSC00795.webp",
+    title: "Gallery highlight frame",
     tags: ["Events", "Winners"],
   },
   {
-    image: "/image copy 7.png",
+    image: "/DSC00796.webp",
     title: "On-ground action",
     tags: ["Competitions"],
   },
   {
-    image: "/image copy 8.png",
+    image: "/DSC00797.webp",
     title: "Student storytelling",
     tags: ["Events", "Workshops"],
   },
   {
-    image: "/image copy 9.png",
+    image: "/DSC00798.webp",
     title: "Grand final moments",
     tags: ["Competitions", "Winners"],
   },

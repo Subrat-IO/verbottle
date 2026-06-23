@@ -145,6 +145,7 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const closeTimerRef = useRef(null);
+  const isHomePage = pathname === "/";
 
   const clearCloseTimer = () => {
     if (closeTimerRef.current) {
@@ -256,7 +257,7 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
             />
           ))}
           <Link
-            className="vb-btn vb-btn--red vb-btn--sm vb-navlinks__cta"
+            className={`vb-btn vb-btn--red vb-btn--sm vb-navlinks__cta ${isHomePage ? "vb-btn--register-home" : ""}`}
             href="/register"
             onClick={() => {
               setOpenDropdown(null);
@@ -272,7 +273,7 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
 
         <div className="vb-nav__right">
           <Link
-            className="vb-btn vb-btn--red vb-btn--sm"
+            className={`vb-btn vb-btn--red vb-btn--sm ${isHomePage ? "vb-btn--register-home" : ""}`}
             href="/register"
             onClick={() => {
               setOpenDropdown(null);

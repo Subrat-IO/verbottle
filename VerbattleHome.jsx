@@ -92,6 +92,39 @@ export default function VerbattleHome() {
     setActiveMedia(null);
   };
 
+  const canNavigateGallery = Boolean(
+    activeMedia?.type === "image" &&
+      Array.isArray(activeMedia?.galleryItems) &&
+      activeMedia.galleryItems.length > 1,
+  );
+
+  const activeGalleryIndex =
+    activeMedia?.type === "image" && Number.isInteger(activeMedia?.currentIndex)
+      ? activeMedia.currentIndex
+      : 0;
+
+  const activeGalleryCount =
+    activeMedia?.type === "image" && Array.isArray(activeMedia?.galleryItems)
+      ? activeMedia.galleryItems.length
+      : 0;
+
+  const stepGallery = (direction) => {
+    if (!canNavigateGallery) return;
+
+    const items = activeMedia.galleryItems;
+    const nextIndex =
+      (activeGalleryIndex + direction + items.length) % items.length;
+    const nextItem = items[nextIndex];
+
+    setActiveMedia({
+      ...activeMedia,
+      src: nextItem.image,
+      title: nextItem.title,
+      meta: nextItem.tags?.join(" | ") || activeMedia.meta,
+      currentIndex: nextIndex,
+    });
+  };
+
   return (
     <div className="vb vb-shell">
       <Header
@@ -130,7 +163,16 @@ export default function VerbattleHome() {
         <Footer footerData={footerData} navLinks={navLinks} />
       </div>
 
-      <VideoModal activeVideo={activeMedia} onClose={closeVideo} />
+      <VideoModal
+        activeVideo={activeMedia}
+        onClose={closeVideo}
+        onPrevious={() => stepGallery(-1)}
+        onNext={() => stepGallery(1)}
+        canNavigate={canNavigateGallery}
+        positionLabel={
+          canNavigateGallery ? `${activeGalleryIndex + 1} / ${activeGalleryCount}` : ""
+        }
+      />
     </div>
   );
 }

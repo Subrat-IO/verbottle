@@ -41,6 +41,10 @@ export default function HeroSection({
       <div className="vb-container vb-hero__inner">
         <div className="vb-hero__left vb-reveal vb-reveal--left">
           <div key={getHeroKey(activeHeroVideo)} className="vb-hero__copy">
+            <a className="vb-hero__event-cta" href="/register">
+              <span>Register for Upcoming Event</span>
+              <Icon.ArrowRight className="vb-icon-14" />
+            </a>
             <h1 className="vb-hero__title">
               {activeHeroVideo.titleLines.map((line, index, lines) =>
                 renderHeroLine(line, activeHeroVideo.accent, index, lines),

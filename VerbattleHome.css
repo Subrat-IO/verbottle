@@ -459,6 +459,7 @@
 }
 
 .vb-btn--red {
+  position: relative;
   background: linear-gradient(135deg, var(--vb-red) 0%, #f44357 100%);
   color: #fff;
   box-shadow: 0 16px 36px rgba(209, 27, 47, 0.26);
@@ -582,6 +583,67 @@
 
 .vb-navlinks__cta {
   display: none;
+}
+
+.vb-btn--register-home {
+  isolation: isolate;
+  box-shadow:
+    0 18px 40px rgba(209, 27, 47, 0.3),
+    0 0 0 0 rgba(244, 67, 87, 0.42);
+  animation: vbRegisterPulse 2.8s ease-in-out infinite;
+}
+
+.vb-btn--register-home::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 34%,
+    rgba(255, 255, 255, 0.52) 50%,
+    rgba(255, 255, 255, 0.08) 66%,
+    transparent 100%
+  );
+  transform: translateX(-140%);
+  animation: vbRegisterSheen 2.8s ease-in-out infinite;
+  z-index: -1;
+}
+
+.vb-btn--register-home:hover {
+  animation-play-state: paused;
+}
+
+.vb-btn--register-home:hover::before {
+  animation-play-state: paused;
+}
+
+@keyframes vbRegisterPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    box-shadow:
+      0 18px 40px rgba(209, 27, 47, 0.3),
+      0 0 0 0 rgba(244, 67, 87, 0.36);
+  }
+  50% {
+    transform: translateY(-2px);
+    box-shadow:
+      0 24px 44px rgba(209, 27, 47, 0.34),
+      0 0 0 12px rgba(244, 67, 87, 0);
+  }
+}
+
+@keyframes vbRegisterSheen {
+  0%,
+  20% {
+    transform: translateX(-140%);
+  }
+  55%,
+  100% {
+    transform: translateX(140%);
+  }
 }
 
 /* ---------------- HERO ---------------- */
@@ -713,6 +775,38 @@
 
 .vb-hero__copy {
   animation: vbHeroContentIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vb-hero__event-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  width: fit-content;
+  margin-bottom: 18px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 34px rgba(3, 10, 24, 0.16);
+  transition:
+    transform 0.24s ease,
+    background 0.24s ease,
+    border-color 0.24s ease,
+    box-shadow 0.24s ease;
+}
+
+.vb-hero__event-cta:hover {
+  transform: translateY(-2px);
+  background: rgba(209, 27, 47, 0.18);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 20px 40px rgba(209, 27, 47, 0.2);
 }
 
 .vb-hero__desc {
@@ -1859,6 +1953,32 @@
   color: #fff;
 }
 
+.vb-modal__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  transform: translateY(-50%);
+  transition: background 0.22s ease, transform 0.22s ease;
+}
+
+.vb-modal__nav:hover {
+  background: rgba(209, 27, 47, 0.86);
+}
+
+.vb-modal__nav--prev {
+  left: 16px;
+}
+
+.vb-modal__nav--next {
+  right: 16px;
+}
+
 .vb-modal__frame {
   aspect-ratio: 16 / 9;
 }
@@ -1900,7 +2020,7 @@
 .vb-modal__meta span {
   color: rgba(255, 255, 255, 0.68);
   font-size: 13px;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 /* ---------------- RESPONSIVE ---------------- */
@@ -2475,6 +2595,10 @@
     align-items: flex-start;
   }
 
+  .vb-hero__event-cta {
+    display: none;
+  }
+
   .vb-hero__cta .vb-btn {
     width: auto;
     min-width: 214px;
@@ -2583,6 +2707,19 @@
   .vb-founder__sign {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .vb-modal__nav {
+    width: 42px;
+    height: 42px;
+  }
+
+  .vb-modal__nav--prev {
+    left: 10px;
+  }
+
+  .vb-modal__nav--next {
+    right: 10px;
   }
 
   .vb-cta {

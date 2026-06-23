@@ -3,39 +3,28 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Header from "./components/verbattle/Header";
 import Footer from "./components/verbattle/Footer";
+import ExpandButton from "./components/verbattle/ExpandButton";
+import VideoModal from "./components/verbattle/VideoModal";
 import { footerData, navLinks } from "./components/verbattle/data";
 
 const galleryFilters = ["All", "Competitions", "Students", "Workshops", "Events"];
 
 const galleryItems = [
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg", title: "Awards and recognition", category: "Competitions" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (1).jpeg", title: "Speaker addressing the audience", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (2).jpeg", title: "Leadership and partner gathering", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.47.jpeg", title: "Team and guest moments", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg", title: "Students at the debate podium", category: "Competitions" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg", title: "Competition stage group photo", category: "Competitions" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (1).jpeg", title: "Young participants on stage", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39.jpeg", title: "Classroom training session", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39 (1).jpeg", title: "Mentor-guided workshop", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.39 (2).jpeg", title: "Students in discussion", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.40.jpeg", title: "Speaking practice round", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.40 (1).jpeg", title: "Facilitated coaching moment", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.40 (2).jpeg", title: "Recognition and celebration", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41.jpeg", title: "Stage celebration frame", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (1).jpeg", title: "Learner spotlight", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.18.41 (2).jpeg", title: "Team activity session", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.47.jpeg", title: "Workshop room in action", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49.jpeg", title: "Student learning environment", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (1).jpeg", title: "Debate club interaction", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.49 (2).jpeg", title: "Participant movement and energy", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg", title: "Activity-based learning", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (1).jpeg", title: "Young speakers together", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (2).jpeg", title: "Interactive classroom exchange", category: "Workshops" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg", title: "Stage rehearsal portrait", category: "Competitions" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.52.jpeg", title: "Speaking lineup", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.52 (1).jpeg", title: "Peer conversation", category: "Students" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.53.jpeg", title: "Certificate presentation", category: "Events" },
-  { image: "/programs/WhatsApp Image 2026-06-21 at 00.20.53 (2).jpeg", title: "Completion day moments", category: "Events" },
+  { image: "/DSC07200.webp", title: "Championship spotlight", category: "Competitions" },
+  { image: "/DSC07201.webp", title: "Hall full of momentum", category: "Events" },
+  { image: "/DSC07194.webp", title: "Opening round focus", category: "Competitions" },
+  { image: "/DSC07199.webp", title: "Workshop mentor exchange", category: "Workshops" },
+  { image: "/DSC00055.webp", title: "Young speakers in action", category: "Students" },
+  { image: "/DSC00056.webp", title: "Stage-ready confidence", category: "Students" },
+  { image: "/DSC00062.webp", title: "Audience and celebration", category: "Events" },
+  { image: "/DSC00063.webp", title: "Small-group guidance", category: "Workshops" },
+  { image: "/DSC00064.webp", title: "Student discussion circle", category: "Students" },
+  { image: "/DSC00795.webp", title: "Award moment", category: "Competitions" },
+  { image: "/DSC00796.webp", title: "On-stage delivery", category: "Competitions" },
+  { image: "/DSC00797.webp", title: "Mentorship cue", category: "Workshops" },
+  { image: "/DSC00797_1.webp", title: "High-energy participation", category: "Students" },
+  { image: "/DSC00798.webp", title: "Final round lineup", category: "Competitions" },
+  { image: "/DSC00799.webp", title: "Community applause", category: "Events" },
 ];
 
 function useReveal() {
@@ -66,7 +55,11 @@ function Reveal({ className = "", delay = 0, children }) {
   const ref = useReveal();
 
   return (
-    <div ref={ref} className={`vb-reveal vb-reveal--up ${className}`} style={{ transitionDelay: `${delay}ms` }}>
+    <div
+      ref={ref}
+      className={`vb-reveal vb-reveal--up ${className}`}
+      style={{ transitionDelay: `${delay}ms` }}
+    >
       {children}
     </div>
   );
@@ -75,6 +68,7 @@ function Reveal({ className = "", delay = 0, children }) {
 export default function GalleryPage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [activeMedia, setActiveMedia] = useState(null);
 
   const visibleItems = useMemo(() => {
     if (activeFilter === "All") {
@@ -83,6 +77,62 @@ export default function GalleryPage() {
 
     return galleryItems.filter((item) => item.category === activeFilter);
   }, [activeFilter]);
+
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = activeMedia ? "hidden" : originalOverflow;
+
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [activeMedia]);
+
+  function openGalleryItem(index) {
+    const item = visibleItems[index];
+    if (!item) return;
+
+    setActiveMedia({
+      type: "image",
+      src: item.image,
+      title: item.title,
+      meta: item.category,
+      galleryItems: visibleItems.map((entry) => ({
+        image: entry.image,
+        title: entry.title,
+        tags: [entry.category],
+      })),
+      currentIndex: index,
+    });
+  }
+
+  function stepGallery(direction) {
+    if (!activeMedia?.galleryItems?.length) return;
+
+    const items = activeMedia.galleryItems;
+    const currentIndex = Number.isInteger(activeMedia.currentIndex)
+      ? activeMedia.currentIndex
+      : 0;
+    const nextIndex = (currentIndex + direction + items.length) % items.length;
+    const nextItem = items[nextIndex];
+
+    setActiveMedia({
+      ...activeMedia,
+      src: nextItem.image,
+      title: nextItem.title,
+      meta: nextItem.tags?.join(" | ") || "",
+      currentIndex: nextIndex,
+    });
+  }
+
+  const canNavigate = Boolean(
+    activeMedia?.type === "image" &&
+      Array.isArray(activeMedia?.galleryItems) &&
+      activeMedia.galleryItems.length > 1,
+  );
+
+  const currentPosition = canNavigate
+    ? `${(activeMedia?.currentIndex ?? 0) + 1} / ${activeMedia.galleryItems.length}`
+    : "";
 
   return (
     <div className="vb gal-page">
@@ -103,8 +153,14 @@ export default function GalleryPage() {
         <section className="gal-section">
           <div className="vb-container gal-shell">
             <Reveal className="gal-topbar">
-              <span className="gal-section__eyebrow">Verbattle Visual Archive</span>
-            
+              <div>
+                <span className="gal-section__eyebrow">Verbattle Visual Archive</span>
+                <h2>Fresh event frames, workshop moments, and stage energy from the latest uploads.</h2>
+              </div>
+              <div className="gal-topbar__meta">
+                <strong>{visibleItems.length}</strong>
+                <span>Visible Images</span>
+              </div>
             </Reveal>
 
             <Reveal className="gal-filterBar" delay={40}>
@@ -123,11 +179,28 @@ export default function GalleryPage() {
             <div className="gal-grid">
               {visibleItems.map((item, index) => (
                 <Reveal key={`${item.image}-${item.title}`} className="gal-card" delay={index * 28}>
-                  <img src={item.image} alt={item.title} />
-                  <div className="gal-card__meta">
-                    <span>{item.category}</span>
-                    <strong>{item.title}</strong>
-                  </div>
+                  <article
+                    className="gal-card__button"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openGalleryItem(index)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        openGalleryItem(index);
+                      }
+                    }}
+                  >
+                    <img src={item.image} alt={item.title} />
+                    <ExpandButton
+                      label={`Expand ${item.title}`}
+                      onClick={() => openGalleryItem(index)}
+                    />
+                    <div className="gal-card__meta">
+                      <span>{item.category}</span>
+                      <strong>{item.title}</strong>
+                    </div>
+                  </article>
                 </Reveal>
               ))}
             </div>
@@ -135,6 +208,14 @@ export default function GalleryPage() {
         </section>
       </main>
       <Footer footerData={footerData} navLinks={navLinks} />
+      <VideoModal
+        activeVideo={activeMedia}
+        onClose={() => setActiveMedia(null)}
+        onPrevious={() => stepGallery(-1)}
+        onNext={() => stepGallery(1)}
+        canNavigate={canNavigate}
+        positionLabel={currentPosition}
+      />
     </div>
   );
 }

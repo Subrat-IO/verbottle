@@ -2,7 +2,14 @@ import { useEffect } from "react";
 import { Icon } from "./icons";
 import { toPublicAssetPath } from "./media";
 
-export default function VideoModal({ activeVideo, onClose }) {
+export default function VideoModal({
+  activeVideo,
+  onClose,
+  onPrevious,
+  onNext,
+  canNavigate = false,
+  positionLabel = "",
+}) {
   useEffect(() => {
     if (!activeVideo) {
       return undefined;
@@ -11,13 +18,17 @@ export default function VideoModal({ activeVideo, onClose }) {
     const onKeyDown = (event) => {
       if (event.key === "Escape") {
         onClose();
+      } else if (canNavigate && activeVideo.type === "image" && event.key === "ArrowLeft") {
+        onPrevious?.();
+      } else if (canNavigate && activeVideo.type === "image" && event.key === "ArrowRight") {
+        onNext?.();
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
 
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [activeVideo, onClose]);
+  }, [activeVideo, canNavigate, onClose, onNext, onPrevious]);
 
   if (!activeVideo) {
     return null;
@@ -30,6 +41,26 @@ export default function VideoModal({ activeVideo, onClose }) {
         <button className="vb-modal__close" onClick={onClose} aria-label="Close">
           <Icon.Close className="vb-icon-18" />
         </button>
+        {canNavigate && activeVideo.type === "image" ? (
+          <>
+            <button
+              className="vb-modal__nav vb-modal__nav--prev"
+              type="button"
+              onClick={onPrevious}
+              aria-label="Previous image"
+            >
+              <Icon.ChevronLeft className="vb-icon-18" />
+            </button>
+            <button
+              className="vb-modal__nav vb-modal__nav--next"
+              type="button"
+              onClick={onNext}
+              aria-label="Next image"
+            >
+              <Icon.ChevronRight className="vb-icon-18" />
+            </button>
+          </>
+        ) : null}
         <div className="vb-modal__frame">
           {activeVideo.type === "image" ? (
             <img src={toPublicAssetPath(activeVideo.src)} alt={activeVideo.title || activeVideo.name} />
@@ -52,7 +83,9 @@ export default function VideoModal({ activeVideo, onClose }) {
         </div>
         <div className="vb-modal__meta">
           <strong>{activeVideo.title || activeVideo.name}</strong>
-          {activeVideo.meta ? <span>{activeVideo.meta}</span> : null}
+          <span>
+            {activeVideo.meta ? `${activeVideo.meta}${positionLabel ? `  |  ${positionLabel}` : ""}` : positionLabel}
+          </span>
         </div>
       </div>
     </div>

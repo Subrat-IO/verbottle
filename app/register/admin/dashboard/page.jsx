@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  buildRegistrationExportRows,
   clearRegistrationAdminSession,
   formatRegistrationDate,
   getStoredRegistrations,
@@ -15,6 +16,26 @@ function getParticipantLabel(participants) {
     .map((participant) => participant.fullName)
     .filter(Boolean)
     .join(", ");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function downloadBlob(filename, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
 export default function RegistrationAdminDashboardPage() {
@@ -61,6 +82,91 @@ export default function RegistrationAdminDashboardPage() {
     [records],
   );
 
+  function handleExcelExport() {
+    const rows = buildRegistrationExportRows(filteredRecords);
+    if (!rows.length) return;
+
+    const headers = Object.keys(rows[0]);
+    const csv = [
+      headers.join(","),
+      ...rows.map((row) =>
+        headers
+          .map((header) => `"${String(row[header] ?? "").replaceAll('"', '""')}"`)
+          .join(","),
+      ),
+    ].join("\r\n");
+
+    downloadBlob(
+      "verbattle-registrations-export.csv",
+      "\uFEFF" + csv,
+      "text/csv;charset=utf-8;",
+    );
+  }
+
+  function handlePdfExport() {
+    if (!filteredRecords.length) return;
+
+    const tableRows = filteredRecords
+      .map(
+        (record) => `
+          <tr>
+            <td>${escapeHtml(record.applicationNo)}</td>
+            <td>${escapeHtml(record.competitionType)}</td>
+            <td>${escapeHtml(record.category)}</td>
+            <td>${escapeHtml(record.school?.schoolName || "-")}</td>
+            <td>${escapeHtml(getParticipantLabel(record.participants || []) || "-")}</td>
+            <td>${escapeHtml(record.mentor?.teacherMentorName || "-")}</td>
+            <td>${escapeHtml(formatRegistrationDate(record.submittedAt))}</td>
+          </tr>
+        `,
+      )
+      .join("");
+
+    const printWindow = window.open("", "_blank", "noopener,noreferrer,width=1200,height=900");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!doctype html>
+      <html>
+        <head>
+          <title>Verbattle Registration Export</title>
+          <style>
+            body { font-family: Arial, sans-serif; color: #0f172a; padding: 24px; }
+            h1 { margin: 0 0 8px; font-size: 28px; color: #08234d; }
+            p { margin: 0 0 18px; color: #475569; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #cbd5e1; padding: 10px; font-size: 12px; text-align: left; vertical-align: top; }
+            th { background: #e2e8f0; }
+            @media print {
+              body { padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Verbattle Registrations</h1>
+          <p>Exported ${escapeHtml(formatRegistrationDate(new Date().toISOString()))}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Application No</th>
+                <th>Competition Type</th>
+                <th>Category</th>
+                <th>School</th>
+                <th>Participants</th>
+                <th>Mentor</th>
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody>${tableRows}</tbody>
+          </table>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    window.setTimeout(() => printWindow.print(), 350);
+  }
+
   return (
     <>
       <style>{`
@@ -94,6 +200,9 @@ export default function RegistrationAdminDashboardPage() {
           line-height: 1.6;
         }
         .vbad-logout {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           min-height: 46px;
           padding: 0 18px;
           border: 1px solid rgba(8, 35, 77, 0.12);
@@ -102,6 +211,35 @@ export default function RegistrationAdminDashboardPage() {
           color: #08234d;
           font: inherit;
           font-weight: 800;
+        }
+        .vbad-topbar__actions {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .vbad-export {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-height: 46px;
+          padding: 0 18px;
+          border-radius: 999px;
+          border: 1px solid rgba(8, 35, 77, 0.12);
+          background: #fff;
+          color: #08234d;
+          font: inherit;
+          font-weight: 800;
+        }
+        .vbad-export--primary {
+          border: 0;
+          background: linear-gradient(135deg, #d11b2f 0%, #f04c3a 100%);
+          color: #fff;
+          box-shadow: 0 14px 30px rgba(209, 27, 47, 0.2);
+        }
+        .vbad-export:disabled,
+        .vbad-logout:disabled {
+          opacity: 0.55;
+          cursor: not-allowed;
         }
         .vbad-controls {
           display: grid;
@@ -243,20 +381,38 @@ export default function RegistrationAdminDashboardPage() {
               <h1>Registration Dashboard</h1>
               <p>
                 Open submitted registrations, inspect saved form inputs, and
-                export print-ready PDF sheets from the browser.
+                export filtered registration data to Excel or PDF from the browser.
               </p>
             </div>
 
-            <button
-              className="vbad-logout"
-              type="button"
-              onClick={() => {
-                clearRegistrationAdminSession();
-                router.push("/register/admin");
-              }}
-            >
-              Log Out
-            </button>
+            <div className="vbad-topbar__actions">
+              <button
+                className="vbad-export vbad-export--primary"
+                type="button"
+                onClick={handleExcelExport}
+                disabled={!filteredRecords.length}
+              >
+                Export Excel
+              </button>
+              <button
+                className="vbad-export"
+                type="button"
+                onClick={handlePdfExport}
+                disabled={!filteredRecords.length}
+              >
+                Export PDF
+              </button>
+              <button
+                className="vbad-logout"
+                type="button"
+                onClick={() => {
+                  clearRegistrationAdminSession();
+                  router.push("/register/admin");
+                }}
+              >
+                Log Out
+              </button>
+            </div>
           </div>
 
           <div className="vbad-controls">

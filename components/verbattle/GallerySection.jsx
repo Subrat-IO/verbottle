@@ -32,25 +32,53 @@ export default function GallerySection({
         </div>
 
         <div key={activeTab} className="vb-gallery-grid vb-gallery-grid--animated">
-          {galleryItems.map((item) => (
+          {galleryItems.map((item, index) => (
             <article
               className="vb-gallery-item"
               key={`${item.title}-${item.image}`}
               role="button"
               tabIndex={0}
-              onClick={() => onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") })}
+              onClick={() =>
+                onOpenMedia({
+                  type: "image",
+                  src: item.image,
+                  title: item.title,
+                  meta: item.tags.join(" | "),
+                  galleryItems,
+                  currentIndex: index,
+                })
+              }
               onKeyDown={(event) => {
                 if (event.key === "Enter" || event.key === " ") {
                   event.preventDefault();
-                  onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") });
+                  onOpenMedia({
+                    type: "image",
+                    src: item.image,
+                    title: item.title,
+                    meta: item.tags.join(" | "),
+                    galleryItems,
+                    currentIndex: index,
+                  });
                 }
               }}
             >
               <img src={item.image} alt={item.title} />
-              <ExpandButton label={`Expand ${item.title}`} onClick={() => onOpenMedia({ type: "image", src: item.image, title: item.title, meta: item.tags.join(" • ") })} />
+              <ExpandButton
+                label={`Expand ${item.title}`}
+                onClick={() =>
+                  onOpenMedia({
+                    type: "image",
+                    src: item.image,
+                    title: item.title,
+                    meta: item.tags.join(" | "),
+                    galleryItems,
+                    currentIndex: index,
+                  })
+                }
+              />
               <div className="vb-gallery-item__overlay">
                 <strong>{item.title}</strong>
-                <small>{item.tags.join(" • ")}</small>
+                <small>{item.tags.join(" | ")}</small>
               </div>
             </article>
           ))}
