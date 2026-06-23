@@ -1,4 +1,5 @@
 .vbr-register-clean {
+  padding-top: 92px;
   background:
     radial-gradient(circle at top, rgba(255, 99, 71, 0.1), transparent 24%),
     linear-gradient(180deg, #fffdfb 0%, #fff7ef 100%);
@@ -100,6 +101,8 @@
 }
 
 .vbr-register-card {
+  position: relative;
+  z-index: 1;
   padding: 28px;
   border: 1px solid rgba(17, 24, 39, 0.06);
   border-radius: 28px;
@@ -370,7 +373,7 @@
 }
 
 .vbr-review-box {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   margin-top: 6px;
 }
 
@@ -560,6 +563,10 @@
 }
 
 @media (max-width: 640px) {
+  .vbr-register-clean {
+    padding-top: 80px;
+  }
+
   .vbr-register-wrap {
     width: min(100% - 16px, 1180px);
     padding-top: 18px;

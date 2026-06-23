@@ -92,14 +92,6 @@ export default function VerbattleHome() {
     setActiveMedia(null);
   };
 
-  const showNextHero = () => {
-    setActiveHero((current) => (current + 1) % heroVideos.length);
-  };
-
-  const showPrevHero = () => {
-    setActiveHero((current) => (current - 1 + heroVideos.length) % heroVideos.length);
-  };
-
   return (
     <div className="vb vb-shell">
       <Header
@@ -114,9 +106,7 @@ export default function VerbattleHome() {
             activeHero={activeHero}
             activeHeroVideo={activeHeroVideo}
             heroVideos={heroVideos}
-            onNext={showNextHero}
             onOpenMedia={openVideo}
-            onPrev={showPrevHero}
             onSelectHero={setActiveHero}
           />
 

@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 import "../../components/verbattle/Register.css";
@@ -18,3 +18,5 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+

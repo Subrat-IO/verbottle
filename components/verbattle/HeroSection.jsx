@@ -10,9 +10,7 @@ export default function HeroSection({
   activeHero,
   activeHeroVideo,
   heroVideos,
-  onNext,
   onOpenMedia,
-  onPrev,
   onSelectHero,
 }) {
 
@@ -103,18 +101,6 @@ export default function HeroSection({
                 <span className="vb-hero__thumb-label">{video.title}</span>
               </button>
             ))}
-          </div>
-
-          <div className="vb-hero__arrows">
-            <button aria-label="Previous video" onClick={onPrev}>
-              <Icon.ChevronUp className="vb-icon-16" />
-            </button>
-            <button aria-label="Open active video" onClick={() => onOpenMedia(activeHeroVideo)}>
-              <Icon.ChevronRight className="vb-icon-16" />
-            </button>
-            <button aria-label="Next video" onClick={onNext}>
-              <Icon.ChevronDown className="vb-icon-16" />
-            </button>
           </div>
         </div>
       </div>

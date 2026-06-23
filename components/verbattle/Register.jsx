@@ -10,6 +10,12 @@ const GENDER_OPTIONS = ["Male", "Female", "Other", "Prefer not to say"];
 const PAYMENT_MODES = ["UPI", "Bank Transfer", "Cash", "Other"];
 const MEDIUM_OPTIONS = ["English", "Kannada", "Hindi", "Other"];
 const RELATIONSHIP_OPTIONS = ["Father", "Mother", "Guardian", "Sibling", "Other"];
+const NAME_REGEX = /^[A-Za-z][A-Za-z\s.'-]{1,79}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const MOBILE_REGEX = /^\d{10}$/;
+const PINCODE_REGEX = /^\d{6}$/;
+const DOB_REGEX = /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+const UTR_REGEX = /^[A-Z0-9]{6,30}$/;
 const CLASS_OPTIONS = [
   "Class 5",
   "Class 6",
@@ -79,51 +85,100 @@ function createParticipant(index) {
   };
 }
 
-const INITIAL_FORM = {
-  competitionType: "Debate",
-  category: "Beginner",
-  school: {
-    schoolName: "",
-    headOfInstitutionName: "",
-    affiliation: "",
-    mediumOfEducation: "",
-    classesFrom: "",
-    classesTo: "",
-    schoolAddress: "",
-    schoolPincode: "",
-    schoolPhoneNumber: "",
-    schoolEmail: "",
-    schoolWebsite: "",
-    schoolContactPerson: "",
-  },
-  mentor: {
-    teacherMentorName: "",
-    teacherMentorContactNumber: "",
-    teacherMentorEmail: "",
-  },
-  participants: [createParticipant(0), createParticipant(1)],
-  parentGuardian: {
-    parentGuardianName: "",
-    relationship: "",
-    parentEmail: "",
-    parentMobileNumber: "",
-    parentAddress: "",
-    city: "",
-    state: "",
-    pincode: "",
-  },
-  payment: {
-    paymentMode: "",
-    utrNumber: "",
-    paymentScreenshot: null,
-    consentForm: null,
-  },
-  declaration: {
-    infoCorrect: false,
-    agreeTerms: false,
-    consentParticipation: false,
-  },
-};
+function getCompetitionCode(type) {
+  return type === "Speech" ? "SP" : "DB";
+}
+
+function getCategoryCode(category) {
+  return (category || "GEN")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "")
+    .slice(0, 3) || "GEN";
+}
+
+function getDateStamp() {
+  const now = new Date();
+  const year = String(now.getFullYear());
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}${month}${day}`;
+}
+
+function getRandomTrackingChunk(length = 6) {
+  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    const values = new Uint32Array(length);
+    crypto.getRandomValues(values);
+    return Array.from(values, (value) => alphabet[value % alphabet.length]).join("");
+  }
+
+  return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+}
+
+function createApplicationNumber(competitionType, category) {
+  return `VBT-${getDateStamp()}-${getCompetitionCode(competitionType)}-${getCategoryCode(category)}-${getRandomTrackingChunk()}`;
+}
+
+function createInitialForm() {
+  const competitionType = "Debate";
+  const category = "Beginner";
+
+  return {
+    applicationNo: createApplicationNumber(competitionType, category),
+    competitionType,
+    category,
+    school: {
+      schoolName: "",
+      headOfInstitutionName: "",
+      affiliation: "",
+      mediumOfEducation: "",
+      classesFrom: "",
+      classesTo: "",
+      schoolAddress: "",
+      schoolPincode: "",
+      schoolPhoneNumber: "",
+      schoolEmail: "",
+      schoolWebsite: "",
+      schoolContactPerson: "",
+    },
+    mentor: {
+      teacherMentorName: "",
+      teacherMentorContactNumber: "",
+      teacherMentorEmail: "",
+    },
+    participants: [createParticipant(0), createParticipant(1)],
+    parentGuardian: {
+      parentGuardianName: "",
+      relationship: "",
+      parentEmail: "",
+      parentMobileNumber: "",
+      parentAddress: "",
+      city: "",
+      state: "",
+      pincode: "",
+    },
+    payment: {
+      paymentMode: "",
+      utrNumber: "",
+      paymentScreenshot: null,
+      consentForm: null,
+    },
+    declaration: {
+      infoCorrect: false,
+      agreeTerms: false,
+      consentParticipation: false,
+    },
+  };
+}
+
+function resolveApplicationNumber(serverValue, fallbackValue) {
+  if (typeof serverValue === "string" && serverValue.trim()) {
+    return serverValue.trim();
+  }
+
+  return fallbackValue;
+}
 
 function getApiBaseUrl() {
   return (
@@ -150,6 +205,120 @@ function InputField({ label, required, children }) {
 
 function TextInput(props) {
   return <input className="vbr-clean-input" {...props} />;
+}
+
+function sanitizeDigits(value, maxLength) {
+  return value.replace(/\D/g, "").slice(0, maxLength);
+}
+
+function sanitizeName(value, maxLength = 80) {
+  return value.replace(/[^A-Za-z\s.'-]/g, "").replace(/\s{2,}/g, " ").slice(0, maxLength);
+}
+
+function sanitizeEmail(value, maxLength = 120) {
+  return value.replace(/\s/g, "").slice(0, maxLength).toLowerCase();
+}
+
+function sanitizeText(value, maxLength = 160) {
+  return value.replace(/\s{2,}/g, " ").slice(0, maxLength);
+}
+
+function sanitizeAlphaNumeric(value, maxLength = 30) {
+  return value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, maxLength);
+}
+
+function formatDobInput(value) {
+  const digits = sanitizeDigits(value, 8);
+
+  if (digits.length <= 2) {
+    return digits;
+  }
+
+  if (digits.length <= 4) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
+function parseDob(value) {
+  if (!DOB_REGEX.test(value)) {
+    return null;
+  }
+
+  const [day, month, year] = value.split("/").map(Number);
+  const date = new Date(year, month - 1, day);
+
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return null;
+  }
+
+  return date;
+}
+
+function calculateAgeFromDob(value) {
+  const dob = parseDob(value);
+
+  if (!dob) {
+    return "";
+  }
+
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age -= 1;
+  }
+
+  return age >= 0 && age <= 99 ? String(age) : "";
+}
+
+function isValidEmail(value) {
+  return !value || EMAIL_REGEX.test(value);
+}
+
+function isValidName(value) {
+  return NAME_REGEX.test(value.trim());
+}
+
+function isValidPhone(value) {
+  return MOBILE_REGEX.test(value);
+}
+
+function isValidPincode(value) {
+  return PINCODE_REGEX.test(value);
+}
+
+function isValidDob(value) {
+  const dob = parseDob(value);
+
+  if (!dob) {
+    return false;
+  }
+
+  return dob <= new Date();
+}
+
+function isValidUtr(value) {
+  return UTR_REGEX.test(value);
+}
+
+function isValidWebsite(value) {
+  if (!value) {
+    return true;
+  }
+
+  try {
+    const url = value.startsWith("http://") || value.startsWith("https://") ? value : `https://${value}`;
+    return Boolean(new URL(url).hostname);
+  } catch {
+    return false;
+  }
 }
 
 function NativeSelect({ children, ...props }) {
@@ -273,7 +442,7 @@ function StepIcon({ name }) {
 }
 
 export default function VerbattleRegister() {
-  const [form, setForm] = useState(INITIAL_FORM);
+  const [form, setForm] = useState(() => createInitialForm());
   const [currentStep, setCurrentStep] = useState(0);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -320,6 +489,7 @@ export default function VerbattleRegister() {
   function changeCompetitionType(type) {
     setForm((current) => ({
       ...current,
+      applicationNo: createApplicationNumber(type, current.category),
       competitionType: type,
     }));
     setCurrentStep(0);
@@ -356,83 +526,191 @@ export default function VerbattleRegister() {
     }));
   }
 
-  function validateParticipant(index) {
-    const participant = form.participants[index];
+  function updateParticipantDob(index, nextValue) {
+    const formatted = formatDobInput(nextValue);
+    const nextAge = calculateAgeFromDob(formatted);
 
-    return (
-      participant.fullName &&
-      participant.dateOfBirth &&
-      participant.gender &&
-      participant.classGradeSection &&
-      participant.mobileEmergencyNumber &&
-      participant.parentGuardianName &&
-      participant.relationship &&
-      participant.districtCity &&
-      participant.state &&
-      participant.pincode
-    );
+    setForm((current) => ({
+      ...current,
+      participants: current.participants.map((participant, participantIndex) =>
+        participantIndex === index
+          ? { ...participant, dateOfBirth: formatted, age: nextAge }
+          : participant,
+      ),
+    }));
   }
 
-  function validateCurrentStep() {
+  function getParticipantValidationError(index) {
+    const participant = form.participants[index];
+    const label = form.competitionType === "Debate" ? `Student ${index + 1}` : "Student";
+
+    if (!isValidName(participant.fullName)) {
+      return `${label} name must contain only letters and be 2 to 80 characters long.`;
+    }
+
+    if (!isValidName(participant.parentGuardianName)) {
+      return `Parent / guardian name for ${label.toLowerCase()} is invalid.`;
+    }
+
+    if (!isValidDob(participant.dateOfBirth)) {
+      return `${label} date of birth must be in DD/MM/YYYY format and be a real past date.`;
+    }
+
+    if (!participant.age) {
+      return `${label} age could not be calculated from the date of birth.`;
+    }
+
+    if (!participant.gender) {
+      return `Please select gender for ${label.toLowerCase()}.`;
+    }
+
+    if (!isValidPhone(participant.mobileEmergencyNumber)) {
+      return `${label} mobile number must be exactly 10 digits.`;
+    }
+
+    if (!participant.classGradeSection) {
+      return `Please select class / grade for ${label.toLowerCase()}.`;
+    }
+
+    if (participant.email && !isValidEmail(participant.email)) {
+      return `${label} email address is invalid.`;
+    }
+
+    if (!participant.relationship) {
+      return `Please select the relationship for ${label.toLowerCase()}.`;
+    }
+
+    if (!participant.districtCity.trim() || participant.districtCity.trim().length < 2) {
+      return `${label} city is required.`;
+    }
+
+    if (!participant.state) {
+      return `Please select state for ${label.toLowerCase()}.`;
+    }
+
+    if (!participant.residenceAddress.trim() || participant.residenceAddress.trim().length < 8) {
+      return `${label} address must be at least 8 characters long.`;
+    }
+
+    if (!isValidPincode(participant.pincode)) {
+      return `${label} pincode must be exactly 6 digits.`;
+    }
+
+    if (index === 0) {
+      if (!isValidPhone(form.parentGuardian.parentMobileNumber)) {
+        return "Parent mobile number must be exactly 10 digits.";
+      }
+
+      if (form.parentGuardian.parentEmail && !isValidEmail(form.parentGuardian.parentEmail)) {
+        return "Parent email address is invalid.";
+      }
+    }
+
+    return "";
+  }
+
+  function getSchoolValidationError() {
+    if (!form.school.schoolName.trim() || form.school.schoolName.trim().length < 2) {
+      return "School name is required.";
+    }
+
+    if (!isValidName(form.mentor.teacherMentorName)) {
+      return "Teacher / mentor name is invalid.";
+    }
+
+    if (form.school.headOfInstitutionName && !isValidName(form.school.headOfInstitutionName)) {
+      return "Head of institution name is invalid.";
+    }
+
+    if (!isValidPhone(form.mentor.teacherMentorContactNumber)) {
+      return "Teacher / mentor contact number must be exactly 10 digits.";
+    }
+
+    if (!isValidEmail(form.mentor.teacherMentorEmail) || !form.mentor.teacherMentorEmail) {
+      return "Teacher / mentor email address is invalid.";
+    }
+
+    if (!isValidPhone(form.school.schoolPhoneNumber)) {
+      return "School phone number must be exactly 10 digits.";
+    }
+
+    if (!isValidEmail(form.school.schoolEmail) || !form.school.schoolEmail) {
+      return "School email address is invalid.";
+    }
+
+    if (!isValidPincode(form.school.schoolPincode)) {
+      return "School pincode must be exactly 6 digits.";
+    }
+
+    if (form.school.schoolWebsite && !isValidWebsite(form.school.schoolWebsite)) {
+      return "School website URL is invalid.";
+    }
+
+    if (!form.school.schoolAddress.trim() || form.school.schoolAddress.trim().length < 8) {
+      return "School address must be at least 8 characters long.";
+    }
+
+    return "";
+  }
+
+  function getProgramValidationError() {
+    if (!form.competitionType || !form.category || !form.payment.paymentMode) {
+      return "Please complete the program details.";
+    }
+
+    if (!isValidUtr(form.payment.utrNumber)) {
+      return "UTR number must be 6 to 30 letters or digits only.";
+    }
+
+    return "";
+  }
+
+  function getDeclarationValidationError() {
+    if (!form.declaration.infoCorrect || !form.declaration.agreeTerms || !form.declaration.consentParticipation) {
+      return "Please complete the declaration before submitting.";
+    }
+
+    return "";
+  }
+
+  function getCurrentStepError() {
     if (competitionKey === "speech" && currentStep === 0) {
-      return validateParticipant(0);
+      return getParticipantValidationError(0);
     }
 
     if (competitionKey === "speech" && currentStep === 1) {
-      return (
-        form.school.schoolName &&
-        form.school.schoolAddress &&
-        form.school.schoolPincode &&
-        form.school.schoolPhoneNumber &&
-        form.school.schoolEmail &&
-        form.mentor.teacherMentorName &&
-        form.mentor.teacherMentorContactNumber &&
-        form.mentor.teacherMentorEmail
-      );
+      return getSchoolValidationError();
     }
 
     if (competitionKey === "speech" && currentStep === 2) {
-      return form.competitionType && form.category && form.payment.paymentMode && form.payment.utrNumber;
+      return getProgramValidationError();
     }
 
     if (competitionKey === "speech" && currentStep === 3) {
-      return true;
+      return "";
     }
 
     if (competitionKey === "debate" && currentStep === 0) {
-      return validateParticipant(0);
+      return getParticipantValidationError(0);
     }
 
     if (competitionKey === "debate" && currentStep === 1) {
-      return validateParticipant(1);
+      return getParticipantValidationError(1);
     }
 
     if (competitionKey === "debate" && currentStep === 2) {
-      return (
-        form.school.schoolName &&
-        form.school.schoolAddress &&
-        form.school.schoolPincode &&
-        form.school.schoolPhoneNumber &&
-        form.school.schoolEmail &&
-        form.mentor.teacherMentorName &&
-        form.mentor.teacherMentorContactNumber &&
-        form.mentor.teacherMentorEmail
-      );
+      return getSchoolValidationError();
     }
 
     if (competitionKey === "debate" && currentStep === 3) {
-      return form.competitionType && form.category && form.payment.paymentMode && form.payment.utrNumber;
+      return getProgramValidationError();
     }
 
     if (currentStep === lastStep) {
-      return (
-        form.declaration.infoCorrect &&
-        form.declaration.agreeTerms &&
-        form.declaration.consentParticipation
-      );
+      return getDeclarationValidationError();
     }
 
-    return true;
+    return "";
   }
 
   function saveDraft() {
@@ -452,8 +730,10 @@ export default function VerbattleRegister() {
   }
 
   function nextStep() {
-    if (!validateCurrentStep()) {
-      setSubmitError("Please complete the required fields in this step before continuing.");
+    const error = getCurrentStepError();
+
+    if (error) {
+      setSubmitError(error);
       return;
     }
 
@@ -469,8 +749,10 @@ export default function VerbattleRegister() {
   async function handleSubmit(event) {
     event.preventDefault();
 
-    if (!validateCurrentStep()) {
-      setSubmitError("Please complete the declaration before submitting.");
+    const error = getCurrentStepError();
+
+    if (error) {
+      setSubmitError(error);
       return;
     }
 
@@ -482,6 +764,7 @@ export default function VerbattleRegister() {
 
       payload.append("competitionType", form.competitionType);
       payload.append("category", form.category);
+      payload.append("applicationNo", form.applicationNo);
       payload.append("school", JSON.stringify(form.school));
       payload.append("mentor", JSON.stringify(form.mentor));
       payload.append("parentGuardian", JSON.stringify(form.parentGuardian));
@@ -532,8 +815,11 @@ export default function VerbattleRegister() {
       }
 
       window.localStorage.removeItem(DRAFT_KEY);
-      setSubmitSuccess(data);
-      setForm(INITIAL_FORM);
+      setSubmitSuccess({
+        ...data,
+        applicationNo: resolveApplicationNumber(data.applicationNo, form.applicationNo),
+      });
+      setForm(createInitialForm());
       setCurrentStep(0);
     } catch (error) {
       setSubmitError(error.message);
@@ -552,8 +838,9 @@ export default function VerbattleRegister() {
           <InputField label={`Full Name of ${form.competitionType === "Debate" ? `Student ${index + 1}` : "Student"}`} required>
             <TextInput
               value={participant.fullName}
-              onChange={(event) => patchParticipant(index, "fullName", event.target.value)}
+              onChange={(event) => patchParticipant(index, "fullName", sanitizeName(event.target.value))}
               placeholder="Enter full name"
+              maxLength={80}
             />
           </InputField>
 
@@ -561,21 +848,29 @@ export default function VerbattleRegister() {
             <TextInput
               value={participant.parentGuardianName}
               onChange={(event) => {
-                patchParticipant(index, "parentGuardianName", event.target.value);
+                const nextValue = sanitizeName(event.target.value);
+                patchParticipant(index, "parentGuardianName", nextValue);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "parentGuardianName", event.target.value);
+                  patchSection("parentGuardian", "parentGuardianName", nextValue);
                 }
               }}
               placeholder="Enter parent / guardian name"
+              maxLength={80}
             />
           </InputField>
 
-          <InputField label="Date of Birth" required>
+          <InputField label="Date of Birth (DD/MM/YYYY)" required>
             <TextInput
-              type="date"
               value={participant.dateOfBirth}
-              onChange={(event) => patchParticipant(index, "dateOfBirth", event.target.value)}
+              onChange={(event) => updateParticipantDob(index, event.target.value)}
+              placeholder="DD/MM/YYYY"
+              inputMode="numeric"
+              maxLength={10}
             />
+          </InputField>
+
+          <InputField label="Age" required>
+            <TextInput value={participant.age} placeholder="Auto calculated" readOnly />
           </InputField>
 
           <InputField label="Relationship" required>
@@ -605,12 +900,15 @@ export default function VerbattleRegister() {
             <TextInput
               value={isPrimary ? form.parentGuardian.parentMobileNumber : participant.mobileEmergencyNumber}
               onChange={(event) => {
+                const nextValue = sanitizeDigits(event.target.value, 10);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "parentMobileNumber", event.target.value);
+                  patchSection("parentGuardian", "parentMobileNumber", nextValue);
                 }
-                patchParticipant(index, "mobileEmergencyNumber", event.target.value);
+                patchParticipant(index, "mobileEmergencyNumber", nextValue);
               }}
-              placeholder="+91 Enter mobile number"
+              placeholder="Enter 10 digit mobile number"
+              inputMode="numeric"
+              maxLength={10}
             />
           </InputField>
 
@@ -628,20 +926,24 @@ export default function VerbattleRegister() {
               type="email"
               value={isPrimary ? form.parentGuardian.parentEmail : participant.email}
               onChange={(event) => {
+                const nextValue = sanitizeEmail(event.target.value);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "parentEmail", event.target.value);
+                  patchSection("parentGuardian", "parentEmail", nextValue);
                 }
-                patchParticipant(index, "email", event.target.value);
+                patchParticipant(index, "email", nextValue);
               }}
               placeholder="Enter email address"
+              maxLength={120}
             />
           </InputField>
 
           <InputField label="Mobile Number" required>
             <TextInput
               value={participant.mobileEmergencyNumber}
-              onChange={(event) => patchParticipant(index, "mobileEmergencyNumber", event.target.value)}
-              placeholder="+91 Enter mobile number"
+              onChange={(event) => patchParticipant(index, "mobileEmergencyNumber", sanitizeDigits(event.target.value, 10))}
+              placeholder="Enter 10 digit mobile number"
+              inputMode="numeric"
+              maxLength={10}
             />
           </InputField>
 
@@ -649,12 +951,14 @@ export default function VerbattleRegister() {
             <TextInput
               value={participant.districtCity}
               onChange={(event) => {
-                patchParticipant(index, "districtCity", event.target.value);
+                const nextValue = sanitizeName(event.target.value, 60);
+                patchParticipant(index, "districtCity", nextValue);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "city", event.target.value);
+                  patchSection("parentGuardian", "city", nextValue);
                 }
               }}
               placeholder="Enter city"
+              maxLength={60}
             />
           </InputField>
 
@@ -662,8 +966,9 @@ export default function VerbattleRegister() {
             <TextInput
               type="email"
               value={participant.email}
-              onChange={(event) => patchParticipant(index, "email", event.target.value)}
+              onChange={(event) => patchParticipant(index, "email", sanitizeEmail(event.target.value))}
               placeholder="Enter email address"
+              maxLength={120}
             />
           </InputField>
 
@@ -685,12 +990,14 @@ export default function VerbattleRegister() {
             <TextArea
               value={participant.residenceAddress}
               onChange={(event) => {
-                patchParticipant(index, "residenceAddress", event.target.value);
+                const nextValue = sanitizeText(event.target.value, 220);
+                patchParticipant(index, "residenceAddress", nextValue);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "parentAddress", event.target.value);
+                  patchSection("parentGuardian", "parentAddress", nextValue);
                 }
               }}
               placeholder="Enter your address"
+              maxLength={220}
             />
           </InputField>
 
@@ -698,12 +1005,15 @@ export default function VerbattleRegister() {
             <TextInput
               value={participant.pincode}
               onChange={(event) => {
-                patchParticipant(index, "pincode", event.target.value);
+                const nextValue = sanitizeDigits(event.target.value, 6);
+                patchParticipant(index, "pincode", nextValue);
                 if (isPrimary) {
-                  patchSection("parentGuardian", "pincode", event.target.value);
+                  patchSection("parentGuardian", "pincode", nextValue);
                 }
               }}
               placeholder="Enter pincode"
+              inputMode="numeric"
+              maxLength={6}
             />
           </InputField>
         </div>
@@ -716,22 +1026,22 @@ export default function VerbattleRegister() {
       <div className="vbr-form-stage">
         <div className="vbr-grid-2">
           <InputField label="School Name" required>
-            <TextInput value={form.school.schoolName} onChange={(e) => patchSection("school", "schoolName", e.target.value)} placeholder="Enter school name" />
+            <TextInput value={form.school.schoolName} onChange={(e) => patchSection("school", "schoolName", sanitizeText(e.target.value, 80))} placeholder="Enter school name" maxLength={80} />
           </InputField>
           <InputField label="Teacher / Registered Mentor" required>
-            <TextInput value={form.mentor.teacherMentorName} onChange={(e) => patchSection("mentor", "teacherMentorName", e.target.value)} placeholder="Enter teacher / mentor name" />
+            <TextInput value={form.mentor.teacherMentorName} onChange={(e) => patchSection("mentor", "teacherMentorName", sanitizeName(e.target.value))} placeholder="Enter teacher / mentor name" maxLength={80} />
           </InputField>
           <InputField label="Head of Institution Name">
-            <TextInput value={form.school.headOfInstitutionName} onChange={(e) => patchSection("school", "headOfInstitutionName", e.target.value)} placeholder="Enter head of institution name" />
+            <TextInput value={form.school.headOfInstitutionName} onChange={(e) => patchSection("school", "headOfInstitutionName", sanitizeName(e.target.value))} placeholder="Enter head of institution name" maxLength={80} />
           </InputField>
           <InputField label="Teacher / Mentor Contact Number" required>
-            <TextInput value={form.mentor.teacherMentorContactNumber} onChange={(e) => patchSection("mentor", "teacherMentorContactNumber", e.target.value)} placeholder="Enter mentor contact number" />
+            <TextInput value={form.mentor.teacherMentorContactNumber} onChange={(e) => patchSection("mentor", "teacherMentorContactNumber", sanitizeDigits(e.target.value, 10))} placeholder="Enter 10 digit mentor contact number" inputMode="numeric" maxLength={10} />
           </InputField>
           <InputField label="Affiliation">
-            <TextInput value={form.school.affiliation} onChange={(e) => patchSection("school", "affiliation", e.target.value)} placeholder="Enter affiliation" />
+            <TextInput value={form.school.affiliation} onChange={(e) => patchSection("school", "affiliation", sanitizeText(e.target.value, 80))} placeholder="Enter affiliation" maxLength={80} />
           </InputField>
           <InputField label="Teacher / Mentor Email" required>
-            <TextInput type="email" value={form.mentor.teacherMentorEmail} onChange={(e) => patchSection("mentor", "teacherMentorEmail", e.target.value)} placeholder="Enter mentor email" />
+            <TextInput type="email" value={form.mentor.teacherMentorEmail} onChange={(e) => patchSection("mentor", "teacherMentorEmail", sanitizeEmail(e.target.value))} placeholder="Enter mentor email" maxLength={120} />
           </InputField>
           <InputField label="Medium of Education">
             <SmoothSelect
@@ -742,30 +1052,30 @@ export default function VerbattleRegister() {
             />
           </InputField>
           <InputField label="School Phone Number" required>
-            <TextInput value={form.school.schoolPhoneNumber} onChange={(e) => patchSection("school", "schoolPhoneNumber", e.target.value)} placeholder="Enter school phone number" />
+            <TextInput value={form.school.schoolPhoneNumber} onChange={(e) => patchSection("school", "schoolPhoneNumber", sanitizeDigits(e.target.value, 10))} placeholder="Enter 10 digit school phone number" inputMode="numeric" maxLength={10} />
           </InputField>
           <InputField label="Classes From">
-            <TextInput value={form.school.classesFrom} onChange={(e) => patchSection("school", "classesFrom", e.target.value)} placeholder="From" />
+            <TextInput value={form.school.classesFrom} onChange={(e) => patchSection("school", "classesFrom", sanitizeDigits(e.target.value, 2))} placeholder="From" inputMode="numeric" maxLength={2} />
           </InputField>
           <InputField label="School Email" required>
-            <TextInput type="email" value={form.school.schoolEmail} onChange={(e) => patchSection("school", "schoolEmail", e.target.value)} placeholder="Enter school email" />
+            <TextInput type="email" value={form.school.schoolEmail} onChange={(e) => patchSection("school", "schoolEmail", sanitizeEmail(e.target.value))} placeholder="Enter school email" maxLength={120} />
           </InputField>
           <InputField label="Classes To">
-            <TextInput value={form.school.classesTo} onChange={(e) => patchSection("school", "classesTo", e.target.value)} placeholder="To" />
+            <TextInput value={form.school.classesTo} onChange={(e) => patchSection("school", "classesTo", sanitizeDigits(e.target.value, 2))} placeholder="To" inputMode="numeric" maxLength={2} />
           </InputField>
           <InputField label="School Website">
-            <TextInput value={form.school.schoolWebsite} onChange={(e) => patchSection("school", "schoolWebsite", e.target.value)} placeholder="Enter school website" />
+            <TextInput value={form.school.schoolWebsite} onChange={(e) => patchSection("school", "schoolWebsite", sanitizeText(e.target.value, 120))} placeholder="Enter school website" maxLength={120} />
           </InputField>
           <InputField label="School Pincode" required>
-            <TextInput value={form.school.schoolPincode} onChange={(e) => patchSection("school", "schoolPincode", e.target.value)} placeholder="Enter school pincode" />
+            <TextInput value={form.school.schoolPincode} onChange={(e) => patchSection("school", "schoolPincode", sanitizeDigits(e.target.value, 6))} placeholder="Enter school pincode" inputMode="numeric" maxLength={6} />
           </InputField>
           <InputField label="School Contact Person">
-            <TextInput value={form.school.schoolContactPerson} onChange={(e) => patchSection("school", "schoolContactPerson", e.target.value)} placeholder="Enter school contact person" />
+            <TextInput value={form.school.schoolContactPerson} onChange={(e) => patchSection("school", "schoolContactPerson", sanitizeName(e.target.value))} placeholder="Enter school contact person" maxLength={80} />
           </InputField>
         </div>
 
         <InputField label="School Address" required>
-          <TextArea value={form.school.schoolAddress} onChange={(e) => patchSection("school", "schoolAddress", e.target.value)} placeholder="Enter school address" />
+          <TextArea value={form.school.schoolAddress} onChange={(e) => patchSection("school", "schoolAddress", sanitizeText(e.target.value, 220))} placeholder="Enter school address" maxLength={220} />
         </InputField>
       </div>
     );
@@ -778,7 +1088,13 @@ export default function VerbattleRegister() {
           <InputField label="Category" required>
             <SmoothSelect
               value={form.category}
-              onChange={(nextValue) => setForm((current) => ({ ...current, category: nextValue }))}
+              onChange={(nextValue) =>
+                setForm((current) => ({
+                  ...current,
+                  category: nextValue,
+                  applicationNo: createApplicationNumber(current.competitionType, nextValue),
+                }))
+              }
               options={CATEGORY_OPTIONS}
               placeholder="Select category"
             />
@@ -800,7 +1116,7 @@ export default function VerbattleRegister() {
           </InputField>
 
           <InputField label="UTR Number" required>
-            <TextInput value={form.payment.utrNumber} onChange={(event) => patchSection("payment", "utrNumber", event.target.value)} placeholder="Enter UTR number" />
+            <TextInput value={form.payment.utrNumber} onChange={(event) => patchSection("payment", "utrNumber", sanitizeAlphaNumeric(event.target.value, 30))} placeholder="Enter UTR number" maxLength={30} />
           </InputField>
         </div>
       </div>
@@ -810,10 +1126,15 @@ export default function VerbattleRegister() {
   function renderUploadsStep() {
     return (
       <div className="vbr-form-stage">
+        <div className="vbr-confirmation-copy">
+          <h3>Upload documents</h3>
+          <p>Please upload the latest passport size photo or school ID card clearly so the admin team can verify the registration without delay.</p>
+        </div>
+
         <div className="vbr-grid-2">
           {form.participants.slice(0, participantCount).map((participant, index) => (
             <React.Fragment key={participant.participantNo}>
-              <InputField label={`Participant ${index + 1} Photo`}>
+              <InputField label={`Participant ${index + 1} Latest Passport Size Photo`}>
                 <FileInput accept=".jpg,.jpeg,.png,.webp" onChange={(file) => patchParticipant(index, "participantPhoto", file)} />
               </InputField>
               <InputField label={`Participant ${index + 1} School ID Card`}>
@@ -832,6 +1153,10 @@ export default function VerbattleRegister() {
         </div>
 
         <div className="vbr-review-box">
+          <div>
+            <span>Application No</span>
+            <strong>{form.applicationNo}</strong>
+          </div>
           <div>
             <span>Competition</span>
             <strong>{form.competitionType}</strong>
