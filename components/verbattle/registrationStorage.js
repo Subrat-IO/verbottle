@@ -3,9 +3,6 @@ export const REGISTRATION_SUBMISSIONS_KEY = "verbattle_registration_submissions_
 export const REGISTRATION_ADMIN_SESSION_KEY = "verbattle_registration_admin_session_v1";
 export const REGISTRATION_ADMIN_ATTEMPTS_KEY =
   "verbattle_registration_admin_attempts_v1";
-
-const FRONTEND_ADMIN_CREDENTIAL_HASH =
-  "23b17ea6e55f91533ef81c3d5a90262f1c1013033503f5fb5182b36a87ecb8a7";
 const REGISTRATION_ADMIN_MAX_ATTEMPTS = 5;
 const REGISTRATION_ADMIN_LOCKOUT_MS = 15 * 60 * 1000;
 
@@ -162,22 +159,6 @@ export function registerFailedRegistrationAdminAttempt() {
   );
 
   return getRegistrationAdminLockoutState();
-}
-
-export async function verifyRegistrationAdminCredentials(username, password) {
-  if (typeof window === "undefined" || !window.crypto?.subtle) return false;
-
-  const normalizedUsername = username.trim();
-  const value = `${normalizedUsername}::${password}`;
-  const buffer = await window.crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(value),
-  );
-  const hash = Array.from(new Uint8Array(buffer))
-    .map((part) => part.toString(16).padStart(2, "0"))
-    .join("");
-
-  return hash === FRONTEND_ADMIN_CREDENTIAL_HASH;
 }
 
 function getParticipantNames(participants = []) {

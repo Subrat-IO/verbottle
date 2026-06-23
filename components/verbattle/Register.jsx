@@ -425,10 +425,7 @@ function resolveAppNo(server, fallback) {
   return typeof server === "string" && server.trim() ? server.trim() : fallback;
 }
 function getApiBase() {
-  return (
-    process.env.NEXT_PUBLIC_REGISTRATION_API_URL ||
-    "http://localhost/verbattle-admin/backend/api"
-  );
+  return process.env.NEXT_PUBLIC_REGISTRATION_API_URL || "/api/register";
 }
 
 function createInitialForm() {
@@ -1105,10 +1102,28 @@ export default function VerbattleRegister() {
         ...form,
         participants: form.participants.slice(0, participantCount),
       });
+
+      const response = await fetch(getApiBase(), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(savedSubmission),
+      });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result?.success === false) {
+        throw new Error(
+          result?.message ||
+            "Registration was saved locally, but the email could not be sent.",
+        );
+      }
+
       window.localStorage.removeItem(DRAFT_KEY);
       setSubmitSuccess({
         success: true,
         applicationNo: savedSubmission?.applicationNo || form.applicationNo,
+        confirmationSent: result?.confirmationSent ?? false,
       });
       setForm(createInitialForm());
       setCurrentStep(0);
@@ -2537,6 +2552,9 @@ export default function VerbattleRegister() {
               <div className="vbr-inline-message vbr-inline-message--success">
                 Registration submitted! Your application number is:{" "}
                 <strong>{submitSuccess.applicationNo}</strong>
+                {submitSuccess.confirmationSent
+                  ? " A confirmation email has also been sent."
+                  : " The admin notification email was sent."}
               </div>
             )}
 

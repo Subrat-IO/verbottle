@@ -7,7 +7,6 @@ import {
   isRegistrationAdminAuthenticated,
   registerFailedRegistrationAdminAttempt,
   setRegistrationAdminSession,
-  verifyRegistrationAdminCredentials,
 } from "../../../components/verbattle/registrationStorage";
 
 export default function RegistrationAdminLoginPage() {
@@ -53,21 +52,40 @@ export default function RegistrationAdminLoginPage() {
     }
 
     setIsSubmitting(true);
+    setError("");
 
-    if (await verifyRegistrationAdminCredentials(username, password)) {
-      setRegistrationAdminSession();
-      router.push("/register/admin/dashboard");
-      return;
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok && result?.success) {
+        setRegistrationAdminSession();
+        router.push("/register/admin/dashboard");
+        return;
+      }
+
+      const failedState = registerFailedRegistrationAdminAttempt();
+      setLockout(failedState);
+      setError(
+        failedState.isLocked
+          ? `Too many failed attempts. Try again in ${Math.ceil(failedState.remainingMs / 60000)} minute(s).`
+          : result?.message || "Invalid login details. Please try again.",
+      );
+    } catch {
+      setError("Admin login request failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const failedState = registerFailedRegistrationAdminAttempt();
-    setLockout(failedState);
-    setIsSubmitting(false);
-    setError(
-      failedState.isLocked
-        ? `Too many failed attempts. Try again in ${Math.ceil(failedState.remainingMs / 60000)} minute(s).`
-        : "Invalid login details. Please try again.",
-    );
   }
 
   return (
