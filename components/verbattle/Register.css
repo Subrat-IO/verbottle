@@ -1,9 +1,25 @@
 .vbr-register-clean {
   padding-top: 92px;
-  background:
-    radial-gradient(circle at top, rgba(255, 99, 71, 0.1), transparent 24%),
-    linear-gradient(180deg, #fffdfb 0%, #fff7ef 100%);
+  background: #f4f1ea;
   color: #1f2937;
+}
+
+.vbr-register-hero {
+  background: linear-gradient(180deg, rgba(49, 49, 49, 0.96) 0%, rgba(69, 69, 69, 0.96) 100%);
+  color: #fff;
+}
+
+.vbr-register-hero__inner {
+  width: min(1180px, calc(100% - 24px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 62px 0 56px;
+  text-align: center;
+}
+
+.vbr-register-hero__content {
+  max-width: 520px;
 }
 
 .vbr-register-wrap {
@@ -12,39 +28,57 @@
   padding: 28px 0 56px;
 }
 
-.vbr-register-header {
+.vbr-register-toolbar {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  align-items: end;
+  align-items: center;
   margin-bottom: 18px;
 }
 
 .vbr-register-chip,
 .vbr-stage-kicker {
-  display: inline-flex;
-  align-items: center;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #fff0ea;
-  color: #ef4444;
-  font-size: 0.76rem;
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #ff5a3d;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.vbr-register-header h1 {
-  margin: 12px 0 8px;
-  font-size: clamp(2rem, 3vw, 3.4rem);
-  line-height: 1.05;
+.vbr-register-hero__content h1 {
+  margin: 0;
+  font-size: clamp(36px, 4vw, 52px);
+  line-height: 0.95;
+  color: #fff;
 }
 
-.vbr-register-header p,
+.vbr-register-hero__content p,
 .vbr-register-type-card span,
 .vbr-benefit-row span,
 .vbr-safety-strip {
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.vbr-register-hero__content p span {
+  margin: 0 8px;
+  color: #ff5a3d;
+}
+
+.vbr-register-toolbar__copy strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #08234d;
+  font-size: 1.1rem;
+}
+
+.vbr-register-toolbar__copy .vbr-header-sub {
+  margin: 0;
   color: #6b7280;
+  font-size: 0.94rem;
+  font-weight: 400;
+  line-height: 1.72;
 }
 
 .vbr-register-type-switcher {
@@ -510,7 +544,7 @@
 }
 
 @media (max-width: 820px) {
-  .vbr-register-header,
+  .vbr-register-toolbar,
   .vbr-stage-head,
   .vbr-footer-actions {
     flex-direction: column;
@@ -534,16 +568,25 @@
   }
 
   .vbr-stepper {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px 10px;
+    display: flex;
+    gap: 10px;
+    margin: 0 -4px 26px;
+    padding: 0 4px 4px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+    scroll-snap-type: x proximity;
   }
 
   .vbr-stepper-item {
-    min-height: 102px;
-    padding: 10px 8px;
+    min-width: 120px;
+    min-height: 84px;
+    padding: 10px 10px;
     border: 1px solid #f1f5f9;
-    border-radius: 18px;
+    border-radius: 16px;
     background: #fff;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
   }
 
   .vbr-footer-left,
@@ -567,8 +610,16 @@
     padding-top: 80px;
   }
 
+  .vbr-register-hero__inner,
   .vbr-register-wrap {
     width: min(100% - 16px, 1180px);
+  }
+
+  .vbr-register-hero__inner {
+    padding: 48px 0 42px;
+  }
+
+  .vbr-register-wrap {
     padding-top: 18px;
   }
 

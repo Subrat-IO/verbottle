@@ -155,62 +155,13 @@ function Reveal({ className = "", children, delay = 0 }) {
 function ProgramsHero() {
   return (
     <section className="pgm-hero">
-      <div
-        className="pgm-hero__bg"
-        style={{ backgroundImage: "url(/programs/WhatsApp Image 2026-06-21 at 00.20.49 (3).jpeg)" }}
-      />
-      <div className="pgm-hero__mesh" />
       <div className="vb-container pgm-hero__inner">
         <Reveal className="pgm-hero__content">
           <span className="pgm-hero__eyebrow">Programs</span>
-          <h1 className="pgm-hero__title">
-            <span>Programs that shape</span>
-            <span className="pgm-hero__titleAccent">clear thinkers,</span>
-            <span>confident speakers, and stronger school communities.</span>
-          </h1>
-          <p className="pgm-hero__desc">
-            Verbattle&apos;s program ecosystem is built around communication, debate, confidence, educator support,
-            and student growth. Each format serves a different need, but all of them move toward better thinking and
-            better expression.
+          <h1 className="pgm-hero__title">Programs</h1>
+          <p className="pgm-hero__crumb">
+            Home <span>/</span> Programs
           </p>
-          <div className="pgm-hero__actions">
-            <a href="#tracks" className="vb-btn vb-btn--red">
-              Explore Programs
-              <span className="vb-btn__circle">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-              </span>
-            </a>
-            <a href="/register" className="pgm-hero__ghost">
-              Start Registration
-            </a>
-          </div>
-        </Reveal>
-
-        <Reveal className="pgm-hero__visual" delay={80}>
-          <div className="pgm-hero__feature">
-            <img
-              src="/programs/WhatsApp Image 2026-06-21 at 00.20.48.jpeg"
-              alt="Verbattle students in program session"
-            />
-            <div className="pgm-hero__featureCopy">
-              <strong>Signature learning routes</strong>
-              <p>Forum, Academy, Debate Club, Activity Zone, Teachers Workshop, and Certification.</p>
-            </div>
-          </div>
-          <div className="pgm-hero__stats">
-            <article>
-              <strong>6</strong>
-              <span>core formats</span>
-            </article>
-            <article>
-              <strong>Students</strong>
-              <span>school-first design</span>
-            </article>
-            <article>
-              <strong>Teachers</strong>
-              <span>faculty support included</span>
-            </article>
-          </div>
         </Reveal>
       </div>
     </section>
@@ -364,7 +315,7 @@ function ProgramsFaq() {
             <Reveal key={item.q} className={`pgm-faq__item${open === index ? " is-open" : ""}`} delay={index * 60}>
               <button className="pgm-faq__button" onClick={() => setOpen(open === index ? -1 : index)}>
                 <span>{item.q}</span>
-                <span>{open === index ? "−" : "+"}</span>
+                <span>{open === index ? "-" : "+"}</span>
               </button>
               {open === index ? <p className="pgm-faq__answer">{item.a}</p> : null}
             </Reveal>

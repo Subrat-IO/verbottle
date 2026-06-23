@@ -30,11 +30,27 @@ export default function StaticVerbattlePage({
 
       <main className={styles.main}>
         <section className={styles.hero}>
-          <div className={styles.heroCard}>
-            <span className={styles.eyebrow}>{eyebrow}</span>
-            <h1>{title}</h1>
-            <p>{description}</p>
+          <div className={styles.heroInner}>
+            <div className={styles.heroContent}>
+              <span className={styles.heroKicker}>{eyebrow}</span>
+              <h1>{title}</h1>
+              <p>
+                Home <span>/</span> {title}
+              </p>
+            </div>
+          </div>
+        </section>
 
+        <div className={styles.contentShell}>
+        <section className={styles.topGrid}>
+          <div className={`${styles.heroCard} ${styles.heroImageWrap}`}>
+            <img src={heroImage} alt={heroAlt || title} />
+          </div>
+
+          <div className={styles.quoteCard}>
+            <strong>Verbattle Lens</strong>
+            <p>{quote}</p>
+            <p className={styles.heroDescription}>{description}</p>
             {visibleHeroMeta.length ? (
               <div className={styles.heroMeta}>
                 {visibleHeroMeta.map((item) => (
@@ -42,17 +58,6 @@ export default function StaticVerbattlePage({
                 ))}
               </div>
             ) : null}
-          </div>
-
-          <div className={`${styles.heroCard} ${styles.heroImageWrap}`}>
-            <img src={heroImage} alt={heroAlt || title} />
-          </div>
-        </section>
-
-        <section className={styles.topGrid}>
-          <div className={styles.quoteCard}>
-            <strong>Verbattle Lens</strong>
-            <p>{quote}</p>
           </div>
         </section>
 
@@ -108,6 +113,7 @@ export default function StaticVerbattlePage({
             Start Registration
           </Link>
         </section>
+        </div>
       </main>
 
       <Footer footerData={footerData} navLinks={navLinks} />

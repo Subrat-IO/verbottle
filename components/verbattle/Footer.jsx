@@ -19,7 +19,7 @@ export default function Footer({ footerData, navLinks }) {
     <footer id="contact" className="vb-footer">
       <div className="vb-container vb-footer__grid">
         <div className="vb-footer__col vb-footer__brand">
-          <Link className="vb-logo vb-logo--footer" href={resolveNavHref("#home", pathname)} aria-label="Verbattle home">
+          <Link className="vb-logo vb-logo--footer" href="/" aria-label="Verbattle home">
             <img className="vb-logo__image vb-logo__image--footer" src="/logo.png" alt="Verbattle" />
             <span className="vb-logo__tag">Debate. Lead. Inspire.</span>
           </Link>
@@ -97,7 +97,7 @@ export default function Footer({ footerData, navLinks }) {
       <div className="vb-container vb-footer__bottom">
         <span>© 2026 Verbattle. All Rights Reserved.</span>
         <span className="vb-footer__legal">
-          <Link href={resolveNavHref("#home", pathname)}>Back To Top</Link>
+          <Link href="/">Back To Home</Link>
           <a href="https://verbattle.com/index.html" target="_blank" rel="noreferrer">
             Official Site
           </a>

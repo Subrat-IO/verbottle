@@ -1,7 +1,7 @@
 export const navLinks = [
   {
     label: "Home",
-    href: "#home",
+    href: "/",
     active: true,
   },
   {
@@ -61,6 +61,10 @@ export const navLinks = [
     },
   },
   {
+    label: "Gallery",
+    href: "/gallery",
+  },
+  {
     label: "Competition",
     href: "/competitions",
     children: [
@@ -77,23 +81,6 @@ export const navLinks = [
       href: "/competitions",
       cta: "See Competitions",
       image: "/image copy 11.png",
-    },
-  },
-  {
-    label: "Support",
-    href: "/support",
-    children: [
-      { label: "Sponsors", href: "/support/sponsors", icon: "Building", desc: "Support student voice through meaningful partnerships." },
-      { label: "Patrons", href: "/support/patrons", icon: "BadgeCheck", desc: "Back long-term educational impact with trusted advocacy." },
-      { label: "Donate", href: "/support/donate", icon: "Heart", desc: "Help expand access to debate and communication training." },
-      { label: "Global Collaboration", href: "/support/global-collaboration", icon: "Pin", desc: "Work with Verbattle on outreach, programs, or events." },
-    ],
-    feature: {
-      eyebrow: "Support The Mission",
-      title: "Fuel access, scholarships, and bigger stages for every emerging speaker.",
-      href: "/support",
-      cta: "Partner With Us",
-      image: "/image copy 5.png",
     },
   },
   {

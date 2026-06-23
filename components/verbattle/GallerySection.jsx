@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Icon } from "./icons";
 import ExpandButton from "./ExpandButton";
 
@@ -16,9 +17,6 @@ export default function GallerySection({
             <span className="vb-section__eyebrow">Visual Story</span>
             <h2 className="vb-section__title vb-underline">Gallery</h2>
           </div>
-          <a href="https://verbattle.com/index.html" className="vb-link-red" target="_blank" rel="noreferrer">
-            View Full Gallery <Icon.ArrowRight className="vb-icon-14" />
-          </a>
         </div>
 
         <div className="vb-gallery-tabs">
@@ -56,6 +54,15 @@ export default function GallerySection({
               </div>
             </article>
           ))}
+        </div>
+
+        <div className="vb-gallery-more">
+          <Link href="/gallery" className="vb-btn vb-btn--red vb-btn--sm">
+            <span className="vb-btn__text">Load More</span>
+            <span className="vb-btn__circle">
+              <Icon.ArrowRight className="vb-icon-14" />
+            </span>
+          </Link>
         </div>
       </div>
     </section>

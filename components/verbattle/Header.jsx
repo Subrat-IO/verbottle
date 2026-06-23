@@ -36,15 +36,24 @@ function MenuTrigger({
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
-      <button
-        type="button"
-        className={`vb-navlinks__item vb-navlinks__item--trigger ${isOpen ? "is-active" : ""}`}
-        aria-expanded={isOpen}
-        onClick={onToggle}
-      >
-        <span>{link.label}</span>
-        <Icon.Caret className="vb-navlinks__caret vb-icon-14" />
-      </button>
+      <div className={`vb-navgroup__trigger ${isOpen ? "is-open" : ""}`}>
+        <Link
+          href={resolveNavHref(link.href, pathname)}
+          className={`vb-navlinks__item ${isNavLinkActive(link, pathname) ? "is-active" : ""}`}
+          onClick={onCloseMenu}
+        >
+          {link.label}
+        </Link>
+        <button
+          type="button"
+          className={`vb-navlinks__toggle ${isOpen ? "is-active" : ""}`}
+          aria-expanded={isOpen}
+          aria-label={`Toggle ${link.label} menu`}
+          onClick={onToggle}
+        >
+          <Icon.Caret className="vb-navlinks__caret vb-icon-14" />
+        </button>
+      </div>
 
       <div className={`vb-navdropdown ${isOpen ? "is-open" : ""}`}>
         <div className="vb-navdropdown__grid">
@@ -153,7 +162,7 @@ export default function Header({ menuOpen, navLinks, setMenuOpen }) {
         }}
       />
       <div className="vb-nav__inner">
-        <Link className="vb-logo" href={resolveNavHref("#home", pathname)} aria-label="Verbattle home">
+        <Link className="vb-logo" href="/" aria-label="Verbattle home">
           <img className="vb-logo__image" src="/logo.png" alt="Verbattle" />
         </Link>
 

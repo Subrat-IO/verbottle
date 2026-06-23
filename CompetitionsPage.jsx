@@ -338,6 +338,22 @@ function Fade({ children, className = "", delay = 0, dir = "up" }) {
   );
 }
 
+function CompetitionsPageHero() {
+  return (
+    <section className="cmp-page-hero">
+      <div className="vb-container cmp-page-hero__inner">
+        <Fade className="cmp-page-hero__content">
+          <span className="cmp-page-hero__kicker">Competitions</span>
+          <h1>Competitions</h1>
+          <p>
+            Home <span>/</span> Competitions
+          </p>
+        </Fade>
+      </div>
+    </section>
+  );
+}
+
 function SeatBar({ total, left }) {
   const pct = Math.round(((total - left) / total) * 100);
   const color = pct > 80 ? "#d11b2f" : pct > 60 ? "#f0a93b" : "#1a6b3a";
@@ -775,6 +791,7 @@ export default function CompetitionsPage() {
     <div className="vb">
       <Header menuOpen={menuOpen} navLinks={navLinks} setMenuOpen={setMenuOpen} />
       <main className="vb-main">
+        <CompetitionsPageHero />
         <UpcomingSection />
         <CompletedSection />
         <AwardeesSection />
