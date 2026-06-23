@@ -51,21 +51,21 @@ export default function HeroSection({
           <div className="vb-hero__cta">
             {activeHeroVideo.ctaLink ? (
               <a className="vb-btn vb-btn--red" href={activeHeroVideo.ctaLink}>
-                {activeHeroVideo.cta}
+                <span className="vb-btn__label">{activeHeroVideo.cta}</span>
                 <span className="vb-btn__circle">
                   <Icon.ArrowRight className="vb-icon-14" />
                 </span>
               </a>
             ) : (
               <button className="vb-btn vb-btn--red" onClick={() => onOpenMedia(activeHeroVideo)}>
-                <span>{activeHeroVideo.cta}</span>
+                <span className="vb-btn__label">{activeHeroVideo.cta}</span>
                 <span className="vb-btn__circle">
                   <Icon.ArrowRight className="vb-icon-14" />
                 </span>
               </button>
             )}
             <a className="vb-btn vb-btn--hero-secondary" href="#programs">
-              <span>Explore Programs</span>
+              <span className="vb-btn__label">Explore Programs</span>
               <span className="vb-btn__circle vb-btn__circle--red">
                 <Icon.ArrowRight className="vb-icon-14" />
               </span>

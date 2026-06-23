@@ -104,10 +104,7 @@ export default function GalleryPage() {
           <div className="vb-container gal-shell">
             <Reveal className="gal-topbar">
               <span className="gal-section__eyebrow">Verbattle Visual Archive</span>
-              <div className="gal-topbar__meta">
-                <strong>{visibleItems.length}</strong>
-                <span>{activeFilter === "All" ? "Photos" : `${activeFilter} Photos`}</span>
-              </div>
+            
             </Reveal>
 
             <Reveal className="gal-filterBar" delay={40}>

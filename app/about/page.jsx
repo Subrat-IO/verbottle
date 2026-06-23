@@ -1,89 +1,89 @@
-﻿import StaticVerbattlePage from "../../components/verbattle/StaticVerbattlePage";
+import StaticVerbattlePage from "../../components/verbattle/StaticVerbattlePage";
 
 const pageContent = {
-  "title": "About Verbattle",
-  "eyebrow": "About",
-  "pageCode": "VBT-ABOUT-2601",
-  "description": "This static Verbattle page focuses on student voice, dialogue, and leadership. It is designed for schools and families and now exists as its own route file instead of relying on a shared dynamic setup.",
-  "quote": "Inspired by the current Verbattle site structure and messaging, this route reframes student voice, dialogue, and leadership into a cleaner static page that is easier to maintain and navigate.",
-  "heroMeta": [
-    "About",
-    "Verbattle Static Route",
-    "VBT-ABOUT-2601"
+  title: "About Verbattle",
+  eyebrow: "About",
+  pageCode: "VBT-ABOUT-2601",
+  description:
+    "Verbattle is a student-first debate and communication platform built to help young people think clearly, speak confidently, and lead with purpose.",
+  quote:
+    "Verbattle turns workshops, competitions, and school partnerships into a stronger journey of student voice, critical dialogue, and leadership.",
+  heroMeta: ["Student Voice", "Critical Dialogue", "Youth Leadership"],
+  heroImage: "/founder.png",
+  heroAlt: "About Verbattle",
+  sections: [
+    {
+      title: "Why Verbattle Exists",
+      copy:
+        "Verbattle was built on the belief that students should not wait for adulthood to find their voice. The platform gives learners structured opportunities to speak, debate, question, and lead in meaningful public settings.",
+      bullets: [
+        "Built around student expression and confidence",
+        "Designed for schools, families, and young speakers",
+        "Focused on long-term thinking and leadership growth",
+      ],
+    },
+    {
+      title: "How Verbattle Helps",
+      copy:
+        "Workshops, competitions, and school-facing programs are designed to make communication practical instead of abstract. Students do not just learn theory; they use their voice in rooms that demand clarity, courage, and discipline.",
+      bullets: [
+        "Debate and speaking practice with structure",
+        "Mentor-led progress through real events",
+        "A stronger bridge between classroom learning and public expression",
+      ],
+    },
+    {
+      title: "What Visitors Should Understand",
+      copy:
+        "Verbattle is more than a competition brand. It is a broader ecosystem for communication training, stage confidence, respectful argument, and youth leadership that schools can trust and students can grow with.",
+      bullets: [
+        "Primary audience: schools, families, and students",
+        "Main focus: voice, dialogue, and leadership",
+        "Target outcome: clear understanding of the Verbattle mission",
+      ],
+    },
   ],
-  "heroImage": "/founder.png",
-  "heroAlt": "About Verbattle",
-  "sections": [
+  gallery: [
     {
-      "title": "Why About Verbattle Matters",
-      "copy": "This page is written around student voice, dialogue, and leadership. It turns the menu label into something useful for schools and families, so the route carries meaning instead of acting like a placeholder link.",
-      "bullets": [
-        "Grounded in student voice, dialogue, and leadership",
-        "Written for schools and families",
-        "Built as a static route with its own page file"
-      ]
+      title: "Students in Action",
+      image: "/image copy 2.png",
+      copy: "Competition moments and student energy show the public-facing side of the Verbattle experience.",
     },
     {
-      "title": "How This Route Helps The Site",
-      "copy": "The earlier navigation pointed several items back to broad pages or hash sections. This route now stands alone and makes the information architecture easier to browse, share, and expand.",
-      "bullets": [
-        "Supports cleaner menu behavior",
-        "Creates a stronger destination for search and sharing",
-        "Allows page-by-page editing without dynamic dependencies"
-      ]
+      title: "Mentor Support",
+      image: "/image copy 3.png",
+      copy: "Behind the stage moments is a strong mentor and workshop culture that helps students improve steadily.",
     },
     {
-      "title": "What Visitors Should Take Away",
-      "copy": "The main goal of this page is clarity before deeper browsing. It keeps the tone Verbattle-related, visually rich, and easier to understand for students, mentors, schools, and supporters.",
-      "bullets": [
-        "Primary audience: schools and families",
-        "Main focus: student voice, dialogue, and leadership",
-        "Target outcome: clarity before deeper browsing"
-      ]
-    }
+      title: "School Partnerships",
+      image: "/image copy 5.png",
+      copy: "Verbattle works closely with schools and institutions to make speaking and debate more visible and consistent.",
+    },
+    {
+      title: "Celebration and Recognition",
+      image: "/image copy 7.png",
+      copy: "Recognition matters because it gives students visible milestones and stronger motivation to keep growing.",
+    },
   ],
-  "gallery": [
+  highlights: [
     {
-      "title": "About Verbattle Visual 1",
-      "image": "/image.png",
-      "copy": "A local gallery image from the current project folder anchors this page in the site's own media set."
+      title: "Student-Centered",
+      copy: "The platform is built to help learners participate actively, not stay on the sidelines.",
     },
     {
-      "title": "About Verbattle Visual 2",
-      "image": "/image copy.png",
-      "copy": "The visual cards keep each route richer than a plain text page and satisfy the multi-image requirement."
+      title: "School-Friendly",
+      copy: "Programs and events are structured so institutions can engage meaningfully without friction.",
     },
     {
-      "title": "About Verbattle Visual 3",
-      "image": "/image copy 2.png",
-      "copy": "Each image block supports the theme of student voice, mentor support, or event energy in a static layout."
+      title: "Growth-Oriented",
+      copy: "The goal is not one event, but a progression in confidence, thinking, and communication.",
     },
-    {
-      "title": "About Verbattle Visual 4",
-      "image": "/image copy 3.png",
-      "copy": "Because this route has its own file, the gallery can be changed later without touching any other page."
-    }
   ],
-  "highlights": [
-    {
-      "title": "Own Code File",
-      "copy": "About Verbattle is implemented as its own dedicated page file inside the app directory."
-    },
-    {
-      "title": "Useful For Real Visitors",
-      "copy": "The copy and structure are shaped for schools and families, not only for internal navigation completeness."
-    },
-    {
-      "title": "Static And Editable",
-      "copy": "The route is intentionally static so future edits stay simple while still aiming for clarity before deeper browsing."
-    }
-  ],
-  "ctaTitle": "Ready to take the next step with Verbattle?",
-  "ctaText": "Use the registration flow to continue into workshops, programs, or competitions with the improved validation and application-number flow."
+  ctaTitle: "Ready to explore more of Verbattle?",
+  ctaText:
+    "Continue into programs, debate tracks, workshops, competitions, or registration through the improved site structure.",
 };
 
 export default function Page() {
   return <StaticVerbattlePage {...pageContent} />;
 }
-
-

@@ -437,6 +437,11 @@
   transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s ease;
 }
 
+.vb-btn__label {
+  color: inherit;
+  line-height: 1;
+}
+
 .vb-btn--red {
   background: linear-gradient(135deg, var(--vb-red) 0%, #f44357 100%);
   color: #fff;
@@ -482,6 +487,15 @@
 .vb-btn--hero-secondary:visited,
 .vb-btn--hero-secondary:hover {
   color: var(--vb-navy);
+}
+
+.vb-btn--hero-secondary .vb-btn__label {
+  display: inline-block;
+  color: #08234d !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative;
+  z-index: 1;
 }
 
 .vb-btn__circle {
@@ -1938,8 +1952,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
-    padding: 18px 18px 24px;
+    gap: 10px;
+    padding: 16px 16px 24px;
     border-radius: 0;
     background:
       linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
@@ -1974,9 +1988,9 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-height: 48px;
+    min-height: 50px;
     padding: 0 14px;
-    border-radius: 16px;
+    border-radius: 14px;
     color: var(--vb-ink);
     background: rgba(255, 255, 255, 0.96);
     border: 1px solid rgba(8, 35, 77, 0.08);
@@ -1994,14 +2008,19 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 0;
+    gap: 8px;
+    padding: 2px;
+    border-radius: 16px;
+    background: rgba(236, 241, 250, 0.72);
   }
 
   .vb-navlinks__toggle {
     width: 48px;
     height: 48px;
-    border-radius: 16px;
+    border-radius: 14px;
     color: var(--vb-ink);
+    background: #fff;
+    border: 1px solid rgba(8, 35, 77, 0.08);
   }
 
   .vb-navlinks__item:hover,
@@ -2024,6 +2043,10 @@
     width: 100%;
   }
 
+  .vb-navgroup.is-open .vb-navgroup__trigger {
+    background: rgba(209, 27, 47, 0.08);
+  }
+
   .vb-navdropdown {
     display: none;
   }
@@ -2032,7 +2055,9 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
-    padding: 8px 4px 2px 8px;
+    padding: 10px 4px 4px 12px;
+    margin-top: 2px;
+    border-left: 2px solid rgba(209, 27, 47, 0.12);
   }
 
   .vb-navmobile-submenu__item {
@@ -2041,9 +2066,10 @@
     gap: 10px;
     align-items: center;
     padding: 10px 11px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.82);
-    border: 1px solid rgba(209, 27, 47, 0.1);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(8, 35, 77, 0.08);
+    box-shadow: 0 8px 18px rgba(8, 35, 77, 0.05);
   }
 
   .vb-navmobile-submenu__icon {
@@ -2067,6 +2093,12 @@
     font-weight: 800;
     color: var(--vb-navy);
     line-height: 1.25;
+  }
+
+  .vb-navlinks__cta {
+    width: 100%;
+    margin-top: 8px;
+    justify-content: space-between;
   }
 
   .vb-nav__right {
