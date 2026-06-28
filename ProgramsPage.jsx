@@ -385,16 +385,38 @@ const css = `
   .pgm-quote__attr{font-size:0.86rem;color:#64748b;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;}
 
   /* ── FAQ ── */
-  .pgm-faq{display:flex;flex-direction:column;gap:0;margin-top:36px;max-width:760px;}
-  .pgm-faq__item{border-bottom:1px solid rgba(12,26,61,0.09);}
-  .pgm-faq__btn{
-    width:100%;display:flex;justify-content:space-between;align-items:center;
-    padding:18px 0;background:none;border:none;cursor:pointer;
-    font-size:0.97rem;font-weight:700;color:#08234d;text-align:left;gap:16px;
+  .pgm-faq{
+    display:grid;gap:14px;margin:36px auto 0;max-width:980px;
   }
-  .pgm-faq__btn svg{flex-shrink:0;transition:transform 0.25s ease;color:#d11b2f;}
-  .pgm-faq__item.is-open .pgm-faq__btn svg{transform:rotate(45deg);}
-  .pgm-faq__answer{font-size:0.9rem;line-height:1.72;color:#64748b;padding-bottom:18px;}
+  .pgm-faq__item{
+    overflow:hidden;border-radius:22px;
+    border:1px solid rgba(8,35,77,0.1);
+    background:linear-gradient(180deg,#ffffff 0%,#fbfcff 100%);
+    box-shadow:0 16px 38px rgba(8,35,77,0.06);
+    transition:border-color 0.25s ease,box-shadow 0.25s ease,transform 0.25s ease;
+  }
+  .pgm-faq__item.is-open{
+    border-color:rgba(209,27,47,0.24);
+    box-shadow:0 20px 44px rgba(8,35,77,0.1);
+  }
+  .pgm-faq__button{
+    width:100%;display:flex;justify-content:space-between;align-items:center;
+    gap:16px;padding:20px 26px;background:transparent;border:none;cursor:pointer;
+    font-size:1.02rem;font-weight:800;color:#08234d;text-align:left;
+  }
+  .pgm-faq__button:hover{background:rgba(8,35,77,0.02);}
+  .pgm-faq__button svg{flex-shrink:0;transition:transform 0.25s ease;color:#d11b2f;}
+  .pgm-faq__item.is-open .pgm-faq__button svg{transform:rotate(45deg);}
+  .pgm-faq__answer{
+    margin:0 !important;
+    padding:0 !important;
+    max-height:0;overflow:hidden;
+    transition:max-height 0.28s ease;
+  }
+  .pgm-faq__answer p{
+    margin:0;padding:0 26px 22px;
+    font-size:0.9rem;line-height:1.72;color:#64748b;
+  }
 
   /* ── CTA block ── */
   .pgm-cta{background:#d11b2f;text-align:center;padding:76px 48px;}
@@ -435,14 +457,18 @@ const css = `
 `;
 
 /* ─── FAQ item ─── */
-function FaqItem({ item, index }) {
-  const [open, setOpen] = useState(false);
+function FaqItem({ item, index, open, onToggle }) {
   return (
     <Fade
       className={`pgm-faq__item${open ? " is-open" : ""}`}
       delay={index * 0.07}
     >
-      <button className="pgm-faq__btn" onClick={() => setOpen((o) => !o)}>
+      <button
+        type="button"
+        className="pgm-faq__button"
+        aria-expanded={open}
+        onClick={onToggle}
+      >
         <span>{item.q}</span>
         <svg
           width="18"
@@ -457,7 +483,12 @@ function FaqItem({ item, index }) {
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
       </button>
-      {open && <p className="pgm-faq__answer">{item.a}</p>}
+      <div
+        className="pgm-faq__answer"
+        style={{ maxHeight: open ? "240px" : "0px" }}
+      >
+        <p>{item.a}</p>
+      </div>
     </Fade>
   );
 }
@@ -465,10 +496,11 @@ function FaqItem({ item, index }) {
 /* ─── page ─── */
 export default function ProgramsPage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState(0);
 
   return (
     <div className="vb">
-      <style>{css}</style>
+      <style suppressHydrationWarning>{css}</style>
       <Header
         menuOpen={menuOpen}
         navLinks={navLinks}
@@ -804,7 +836,15 @@ export default function ProgramsPage() {
             </Fade>
             <div className="pgm-faq">
               {faqItems.map((item, i) => (
-                <FaqItem key={item.q} item={item} index={i} />
+                <FaqItem
+                  key={item.q}
+                  item={item}
+                  index={i}
+                  open={openFaqIndex === i}
+                  onToggle={() =>
+                    setOpenFaqIndex((current) => (current === i ? -1 : i))
+                  }
+                />
               ))}
             </div>
           </div>

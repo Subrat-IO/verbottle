@@ -6,12 +6,13 @@
 }
 
 .main {
-  padding: 92px 0 72px;
+  padding: 0 0 72px;
 }
 
 .hero {
   background:
-    linear-gradient(180deg, rgba(49, 49, 49, 0.96) 0%, rgba(69, 69, 69, 0.96) 100%);
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.12), transparent 34%),
+    linear-gradient(180deg, #132746 0%, #1d355d 100%);
   color: #fff;
 }
 
@@ -20,7 +21,7 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  padding: 62px 0 56px;
+  padding: 134px 0 56px;
   text-align: center;
 }
 
@@ -318,7 +319,7 @@
 
 @media (max-width: 640px) {
   .main {
-    padding-top: 80px;
+    padding-top: 0;
   }
 
   .heroInner,
@@ -327,7 +328,7 @@
   }
 
   .heroInner {
-    padding: 48px 0 42px;
+    padding: 116px 0 42px;
   }
 
   .heroCard,

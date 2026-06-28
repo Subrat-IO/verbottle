@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Header from "./components/verbattle/Header";
 import Footer from "./components/verbattle/Footer";
 import { footerData, navLinks } from "./components/verbattle/data";
+import { toBackgroundImage, toPublicAssetPath } from "./components/verbattle/media";
 
 const competitionMedia = {
   hero: "/programs/WhatsApp Image 2026-06-21 at 00.20.51.jpeg",
@@ -26,6 +27,7 @@ const competitionMedia = {
     "/programs/WhatsApp Image 2026-06-21 at 00.20.50.jpeg",
     "/programs/WhatsApp Image 2026-06-21 at 00.20.50 (1).jpeg",
   ],
+  videos: ["nzqAzOqC2Hk", "0Ng0AgYvSBs", "akh9rAhQD7o"],
 };
 
 /* ═══════════════════════════════════════════════
@@ -130,7 +132,7 @@ const completedComps = [
     img: competitionMedia.cards[5],
     highlight: "82 teams · 3 days · Record attendance",
     format: "Parliamentary",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    videoId: competitionMedia.videos[0],
   },
   {
     id: 2,
@@ -141,7 +143,7 @@ const completedComps = [
     img: competitionMedia.cards[6],
     highlight: "340 delegates · 5 committees",
     format: "Model UN",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    videoId: competitionMedia.videos[1],
   },
   {
     id: 3,
@@ -227,10 +229,10 @@ const awardees = [
 
 const galleryItems = [
   { id: 1, type: "image", src: competitionMedia.cards[0], title: "NPDC 2024 Finals", tag: "Competition" },
-  { id: 2, type: "video", src: competitionMedia.cards[5], title: "Award Ceremony Highlights", tag: "Awards", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+  { id: 2, type: "video", src: competitionMedia.cards[5], title: "Award Ceremony Highlights", tag: "Awards", videoId: competitionMedia.videos[0] },
   { id: 3, type: "image", src: competitionMedia.cards[6], title: "VMUN Opening Ceremony", tag: "MUN" },
   { id: 4, type: "image", src: competitionMedia.cards[1], title: "Campus Drive - Bengaluru", tag: "Outreach" },
-  { id: 5, type: "video", src: competitionMedia.cards[2], title: "Best Speech of 2024", tag: "Highlights", videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+  { id: 5, type: "video", src: competitionMedia.cards[2], title: "Best Speech of 2024", tag: "Highlights", videoId: competitionMedia.videos[2] },
   { id: 6, type: "image", src: competitionMedia.cards[4], title: "Leadership Summit 2024", tag: "Summit" },
 ];
 
@@ -297,16 +299,20 @@ function Popup({ item, onClose }) {
         </button>
 
         <div className="cmp-popup__media">
-          {item.videoUrl ? (
+          {item.videoId ? (
             <iframe
-              src={item.videoUrl + "?autoplay=1&rel=0"}
+              src={`https://www.youtube-nocookie.com/embed/${item.videoId}?autoplay=1&rel=0`}
               title={item.title}
               allow="autoplay; fullscreen"
               allowFullScreen
               className="cmp-popup__iframe"
             />
           ) : (
-            <img src={item.src || item.img} alt={item.title || item.name} className="cmp-popup__img" />
+            <img
+              src={toPublicAssetPath(item.src || item.img)}
+              alt={item.title || item.name}
+              className="cmp-popup__img"
+            />
           )}
         </div>
 
@@ -388,7 +394,7 @@ function CompHero() {
     <section className="cmp-hero">
       {heroSlides.map((s, i) => (
         <div key={i} className={`cmp-hero__bg${i === active ? " is-active" : ""}`}
-          style={{ backgroundImage: `url(${s.img})` }} />
+          style={{ backgroundImage: toBackgroundImage(s.img) }} />
       ))}
       <div className="cmp-hero__mesh" />
 
@@ -439,7 +445,7 @@ function CompHero() {
           <div className="cmp-hero__spotlight-main">
             <div
               className="cmp-hero__spotlight-media"
-              style={{ backgroundImage: `url(${competitionMedia.hero})` }}
+              style={{ backgroundImage: toBackgroundImage(competitionMedia.hero) }}
               aria-hidden="true"
             />
             <div className="cmp-hero__spotlight-top">
@@ -522,7 +528,7 @@ function UpcomingSection() {
           {upcomingComps.map((c, i) => (
             <Fade key={c.id} delay={i * 70} className="cmp-ucard">
               <div className="cmp-ucard__art" onClick={() => setPopup({ ...c, src: c.img, title: c.title })}>
-                <img src={c.img} alt={c.title} loading="lazy" />
+                <img src={toPublicAssetPath(c.img)} alt={c.title} loading="lazy" />
                 <div className="cmp-ucard__art-overlay" />
                 <span className="cmp-ucard__format">{c.format}</span>
                 <span className="cmp-ucard__tag" style={{ background: c.tagColor }}>{c.tag}</span>
@@ -590,10 +596,10 @@ function CompletedSection() {
         <div className="cmp-done-grid">
           {completedComps.map((c, i) => (
             <Fade key={c.id} delay={i * 80} className="cmp-done-card">
-              <div className="cmp-done-card__media" onClick={() => setPopup({ ...c, src: c.img, videoUrl: c.video, title: c.title })}>
-                <img src={c.img} alt={c.title} loading="lazy" />
+              <div className="cmp-done-card__media" onClick={() => setPopup({ ...c, src: c.img, videoId: c.videoId, title: c.title })}>
+                <img src={toPublicAssetPath(c.img)} alt={c.title} loading="lazy" />
                 <div className="cmp-done-card__overlay" />
-                {c.video && (
+                {c.videoId && (
                   <div className="cmp-done-card__play">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9V3z" /></svg>
                   </div>
@@ -661,7 +667,7 @@ function AwardeesSection() {
               onMouseLeave={() => setHovered(null)}>
               <div className="cmp-awardee__card" onClick={() => setPopup({ ...a, src: a.img, title: a.name })}>
                 <div className="cmp-awardee__photo-wrap">
-                  <img src={a.img} alt={a.name} className="cmp-awardee__photo" loading="lazy" />
+                  <img src={toPublicAssetPath(a.img)} alt={a.name} className="cmp-awardee__photo" loading="lazy" />
                   <div className={`cmp-awardee__photo-ring${hovered === a.id ? " is-hovered" : ""}`} />
                   <span className="cmp-awardee__badge">{a.badge}</span>
                   <div className="cmp-awardee__expand">
@@ -724,7 +730,7 @@ function MediaGallery() {
           {visible.map((g, i) => (
             <Fade key={g.id} delay={i * 55} className={`cmp-gallery-item cmp-gallery-item--${g.type}`}
               onClick={() => setPopup(g)}>
-              <img src={g.src} alt={g.title} loading="lazy" />
+              <img src={toPublicAssetPath(g.src)} alt={g.title} loading="lazy" />
               <div className="cmp-gallery-item__overlay">
                 {g.type === "video" && (
                   <div className="cmp-gallery-item__play">

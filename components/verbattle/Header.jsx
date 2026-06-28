@@ -24,10 +24,12 @@ function MenuTrigger({
     return (
       <Link
         href={linkHref}
-        className={`vb-navlinks__item ${linkIsActive ? "is-active" : ""}`}
+        className={`vb-navlinks__item ${linkIsActive ? "is-active" : ""} ${link.highlight ? "vb-navlinks__item--highlight" : ""}`}
         onClick={onCloseMenu}
       >
-        {link.label}
+        <span className={`vb-navlinks__label ${link.highlight ? "vb-navlinks__label--gold" : ""}`}>
+          {link.label}
+        </span>
       </Link>
     );
   }

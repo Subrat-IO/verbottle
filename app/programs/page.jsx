@@ -1,8 +1,6 @@
-﻿import "../../Programs.css";
-import ProgramsPage from "../../ProgramsPage";
+﻿import ProgramsPage from "../../ProgramsPage";
 
 export default function Page() {
   return <ProgramsPage />;
 }
-
 

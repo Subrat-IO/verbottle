@@ -1,6 +1,6 @@
 import { Icon } from "./icons";
 import ExpandButton from "./ExpandButton";
-import { toPublicAssetPath } from "./media";
+import { toBackgroundImage, toPublicAssetPath } from "./media";
 
 function getHeroKey(video) {
   return video.videoId || video.src;
@@ -36,7 +36,7 @@ export default function HeroSection({
   
   return (
     <section id="home" className="vb-hero">
-      <div className="vb-hero__bg" style={{ backgroundImage: "url(/competitions/herobg.webp)" }} />
+      <div className="vb-hero__bg" style={{ backgroundImage: toBackgroundImage("/competitions/herobg.webp") }} />
       <div className="vb-hero__mesh" />
       <div className="vb-container vb-hero__inner">
         <div className="vb-hero__left vb-reveal vb-reveal--left">
@@ -116,7 +116,7 @@ export default function HeroSection({
                 className={`vb-hero__thumb ${index === activeHero ? "is-active" : ""}`}
                 onClick={() => onSelectHero(index)}
               >
-                <img src={video.thumb} alt={video.title} />
+                <img src={toPublicAssetPath(video.thumb)} alt={video.title} />
                 <span className="vb-hero__thumb-label">{video.title}</span>
               </button>
             ))}

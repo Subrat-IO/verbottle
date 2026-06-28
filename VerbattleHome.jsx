@@ -16,7 +16,6 @@ import Footer from "./components/verbattle/Footer";
 import VideoModal from "./components/verbattle/VideoModal";
 import {
   awardees,
-  competitions,
   footerData,
   founder,
   galleryItems,
@@ -24,11 +23,29 @@ import {
   heroVideos,
   navLinks,
   programs,
+  upcomingActivityCards,
   recentVideos,
   sponsors,
   stats,
   testimonial,
 } from "./components/verbattle/data";
+
+function hashGalleryItem(item, seed) {
+  const value = `${seed}:${item.image}:${item.title}`;
+  let hash = 0;
+
+  for (let index = 0; index < value.length; index += 1) {
+    hash = (hash * 31 + value.charCodeAt(index)) % 2147483647;
+  }
+
+  return hash;
+}
+
+function selectGalleryPreview(items, seed, count = 5) {
+  return [...items]
+    .sort((left, right) => hashGalleryItem(left, seed) - hashGalleryItem(right, seed))
+    .slice(0, Math.min(count, items.length));
+}
 
 export default function VerbattleHome() {
   const [activeTab, setActiveTab] = useState("All");
@@ -38,10 +55,12 @@ export default function VerbattleHome() {
 
   const filteredGalleryItems = useMemo(() => {
     if (activeTab === "All") {
-      return galleryItems;
+      return selectGalleryPreview(galleryItems, "All");
     }
 
-    return galleryItems.filter((item) => item.tags.includes(activeTab));
+    const sourceItems = galleryItems.filter((item) => item.tags.includes(activeTab));
+
+    return selectGalleryPreview(sourceItems, activeTab);
   }, [activeTab]);
 
   useEffect(() => {
@@ -145,7 +164,7 @@ export default function VerbattleHome() {
 
           <StatsSection stats={stats} />
           <ProgramsSection programs={programs} />
-          <CompetitionsSection competitions={competitions} />
+          <CompetitionsSection activities={upcomingActivityCards} />
           <GallerySection
             activeTab={activeTab}
             galleryItems={filteredGalleryItems}

@@ -1,5 +1,6 @@
 import { Icon } from "./icons";
 import ExpandButton from "./ExpandButton";
+import { toPublicAssetPath } from "./media";
 
 export default function RecentCompetitionsSection({ onOpenVideo, videos }) {
   return (
@@ -35,7 +36,14 @@ export default function RecentCompetitionsSection({ onOpenVideo, videos }) {
                   }
                 }}
               >
-                <img src={video.thumb || `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`} alt={video.title} />
+                <img
+                  src={
+                    video.thumb
+                      ? toPublicAssetPath(video.thumb)
+                      : `https://i.ytimg.com/vi/${video.videoId}/hqdefault.jpg`
+                  }
+                  alt={video.title}
+                />
                 <span className="vb-yt-card__dur">{video.meta}</span>
                 <span className="vb-play vb-play--md" aria-hidden="true">
                   <Icon.Play className="vb-icon-16" />

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "./icons";
 import ExpandButton from "./ExpandButton";
+import { toPublicAssetPath } from "./media";
 
 export default function GallerySection({
   activeTab,
@@ -62,7 +63,7 @@ export default function GallerySection({
                 }
               }}
             >
-              <img src={item.image} alt={item.title} />
+              <img src={toPublicAssetPath(item.image)} alt={item.title} />
               <ExpandButton
                 label={`Expand ${item.title}`}
                 onClick={() =>

@@ -7,10 +7,19 @@ html {
 body {
   margin: 0;
   background: #ffffff;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 button,
 a,
 input {
   -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
 }

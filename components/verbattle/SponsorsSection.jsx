@@ -1,4 +1,5 @@
 import ExpandButton from "./ExpandButton";
+import { toPublicAssetPath } from "./media";
 
 export default function SponsorsSection({ sponsors, onOpenMedia }) {
   return (
@@ -18,18 +19,44 @@ export default function SponsorsSection({ sponsors, onOpenMedia }) {
             <div
               className="vb-sponsor-card"
               key={sponsor.name}
-              onClick={() => onOpenMedia({ type: "image", src: sponsor.image, title: sponsor.name, meta: "Verbattle Sponsor" })}
-              role="button"
-              tabIndex={0}
+              onClick={() =>
+                sponsor.image
+                  ? onOpenMedia({
+                      type: "image",
+                      src: sponsor.image,
+                      title: sponsor.name,
+                      meta: "Verbattle Sponsor",
+                    })
+                  : undefined
+              }
+              role={sponsor.image ? "button" : undefined}
+              tabIndex={sponsor.image ? 0 : undefined}
               onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
+                if (sponsor.image && (event.key === "Enter" || event.key === " ")) {
                   event.preventDefault();
                   onOpenMedia({ type: "image", src: sponsor.image, title: sponsor.name, meta: "Verbattle Sponsor" });
                 }
               }}
             >
-              <img src={sponsor.image} alt={sponsor.name} />
-              <ExpandButton label={`Expand ${sponsor.name}`} onClick={() => onOpenMedia({ type: "image", src: sponsor.image, title: sponsor.name, meta: "Verbattle Sponsor" })} />
+              {sponsor.image ? (
+                <>
+                  <img src={toPublicAssetPath(sponsor.image)} alt={sponsor.name} />
+                  <ExpandButton
+                    label={`Expand ${sponsor.name}`}
+                    onClick={() =>
+                      onOpenMedia({ type: "image", src: sponsor.image, title: sponsor.name, meta: "Verbattle Sponsor" })
+                    }
+                  />
+                </>
+              ) : (
+                <div
+                  className="vb-sponsor-card__fallback"
+                  style={{ "--sponsor-accent": sponsor.accent || "#ef4444" }}
+                >
+                  <span className="vb-sponsor-card__mark">{sponsor.mark || sponsor.name.slice(0, 2)}</span>
+                  <strong>{sponsor.name}</strong>
+                </div>
+              )}
             </div>
           ))}
         </div>

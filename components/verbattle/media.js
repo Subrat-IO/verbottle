@@ -9,3 +9,9 @@ export function toPublicAssetPath(path) {
     .map((segment) => encodeURIComponent(segment))
     .join("/")}`;
 }
+
+export function toBackgroundImage(path) {
+  const assetPath = toPublicAssetPath(path);
+
+  return assetPath ? `url("${assetPath}")` : undefined;
+}

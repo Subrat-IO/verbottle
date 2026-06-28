@@ -1,6 +1,7 @@
 import { Manrope, Sora } from "next/font/google";
 import "./globals.css";
 import VerbattleChat from "../VerbattleChat";
+import ContentProtection from "../components/verbattle/ContentProtection";
 
 const bodyFont = Manrope({
   variable: "--font-body",
@@ -24,6 +25,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${bodyFont.variable} ${displayFont.variable}`}>
+        <ContentProtection />
         {children}
         <VerbattleChat />
       </body>

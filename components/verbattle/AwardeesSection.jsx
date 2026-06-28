@@ -1,4 +1,5 @@
 import ExpandButton from "./ExpandButton";
+import { toPublicAssetPath } from "./media";
 
 export default function AwardeesSection({ awardees, onOpenMedia }) {
   return (
@@ -30,7 +31,7 @@ export default function AwardeesSection({ awardees, onOpenMedia }) {
                   }
                 }}
               >
-                <img src={award.image} alt={award.title} />
+                <img src={toPublicAssetPath(award.image)} alt={award.title} />
                 <ExpandButton label={`Expand ${award.title}`} onClick={() => onOpenMedia({ type: "image", src: award.image, title: award.title, meta: award.subtitle })} />
               </div>
               <h3>{award.title}</h3>

@@ -1,5 +1,6 @@
 import { Icon } from "./icons";
 import ExpandButton from "./ExpandButton";
+import { toPublicAssetPath } from "./media";
 
 export default function FounderSection({ founder, onOpenMedia, testimonial }) {
   return (
@@ -21,7 +22,7 @@ export default function FounderSection({ founder, onOpenMedia, testimonial }) {
                 }
               }}
             >
-              <img className="vb-founder__photo" src={founder.image} alt={founder.name} />
+              <img className="vb-founder__photo" src={toPublicAssetPath(founder.image)} alt={founder.name} />
               <ExpandButton label={`Expand ${founder.name}`} onClick={() => onOpenMedia({ type: "image", src: founder.image, title: founder.name, meta: founder.role })} />
             </div>
             <div className="vb-founder__quote">
@@ -60,7 +61,7 @@ export default function FounderSection({ founder, onOpenMedia, testimonial }) {
                 }
               }}
             >
-              <img src={testimonial.image} alt={testimonial.title || testimonial.name} />
+              <img src={toPublicAssetPath(testimonial.image)} alt={testimonial.title || testimonial.name} />
               <button className="vb-play vb-play--md" aria-label="Play highlight" onClick={() => onOpenMedia(testimonial)}>
                 <Icon.Play className="vb-icon-16" />
               </button>

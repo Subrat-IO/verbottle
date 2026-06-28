@@ -5,27 +5,10 @@ import Header from "./components/verbattle/Header";
 import Footer from "./components/verbattle/Footer";
 import ExpandButton from "./components/verbattle/ExpandButton";
 import VideoModal from "./components/verbattle/VideoModal";
-import { footerData, navLinks } from "./components/verbattle/data";
+import { toPublicAssetPath } from "./components/verbattle/media";
+import { footerData, galleryItems, navLinks } from "./components/verbattle/data";
 
 const galleryFilters = ["All", "Competitions", "Students", "Workshops", "Events"];
-
-const galleryItems = [
-  { image: "/DSC07200.webp", title: "Championship spotlight", category: "Competitions" },
-  { image: "/DSC07201.webp", title: "Hall full of momentum", category: "Events" },
-  { image: "/DSC07194.webp", title: "Opening round focus", category: "Competitions" },
-  { image: "/DSC07199.webp", title: "Workshop mentor exchange", category: "Workshops" },
-  { image: "/DSC00055.webp", title: "Young speakers in action", category: "Students" },
-  { image: "/DSC00056.webp", title: "Stage-ready confidence", category: "Students" },
-  { image: "/DSC00062.webp", title: "Audience and celebration", category: "Events" },
-  { image: "/DSC00063.webp", title: "Small-group guidance", category: "Workshops" },
-  { image: "/DSC00064.webp", title: "Student discussion circle", category: "Students" },
-  { image: "/DSC00795.webp", title: "Award moment", category: "Competitions" },
-  { image: "/DSC00796.webp", title: "On-stage delivery", category: "Competitions" },
-  { image: "/DSC00797.webp", title: "Mentorship cue", category: "Workshops" },
-  { image: "/DSC00797_1.webp", title: "High-energy participation", category: "Students" },
-  { image: "/DSC00798.webp", title: "Final round lineup", category: "Competitions" },
-  { image: "/DSC00799.webp", title: "Community applause", category: "Events" },
-];
 
 function useReveal() {
   const ref = useRef(null);
@@ -75,7 +58,9 @@ export default function GalleryPage() {
       return galleryItems;
     }
 
-    return galleryItems.filter((item) => item.category === activeFilter);
+    return galleryItems.filter(
+      (item) => item.category === activeFilter || item.tags.includes(activeFilter),
+    );
   }, [activeFilter]);
 
   useEffect(() => {
@@ -155,12 +140,11 @@ export default function GalleryPage() {
             <Reveal className="gal-topbar">
               <div>
                 <span className="gal-section__eyebrow">Verbattle Visual Archive</span>
-                <h2>Fresh event frames, workshop moments, and stage energy from the latest uploads.</h2>
               </div>
-              <div className="gal-topbar__meta">
+              {/* <div className="gal-topbar__meta">
                 <strong>{visibleItems.length}</strong>
                 <span>Visible Images</span>
-              </div>
+              </div> */}
             </Reveal>
 
             <Reveal className="gal-filterBar" delay={40}>
@@ -191,14 +175,13 @@ export default function GalleryPage() {
                       }
                     }}
                   >
-                    <img src={item.image} alt={item.title} />
+                    <img src={toPublicAssetPath(item.image)} alt={item.title} />
                     <ExpandButton
                       label={`Expand ${item.title}`}
                       onClick={() => openGalleryItem(index)}
                     />
                     <div className="gal-card__meta">
                       <span>{item.category}</span>
-                      <strong>{item.title}</strong>
                     </div>
                   </article>
                 </Reveal>
