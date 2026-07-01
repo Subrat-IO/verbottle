@@ -139,10 +139,10 @@ export const sponsors = [
 ];
 
 export const stats = [
-  { icon: "Trophy", value: "Rs 10,00,00,000+", label: "Spent On The Cause", bg: "#ffe7d4", color: "#d26716" },
-  { icon: "Cap", value: "7,000+", label: "Teachers Trained", bg: "#e5f0ff", color: "#1847af" },
+  { icon: "Trophy", value: "$1.2 million ", label: "Spent On The Cause", bg: "#ffe7d4", color: "#d26716" },
+  { icon: "Cap", value: "10,000+", label: "Teachers Trained", bg: "#e5f0ff", color: "#1847af" },
   { icon: "Users", value: "1,000,00+", label: "Students Put On Stage", bg: "#efe7ff", color: "#7b39de" },
-  { icon: "Calendar", value: "80+", label: "Large Scale Competitions", bg: "#ddf7ea", color: "#128d55" },
+  { icon: "Calendar", value: "100+", label: "Large Scale Competitions", bg: "#ddf7ea", color: "#128d55" },
 ];
 
 export const programs = [

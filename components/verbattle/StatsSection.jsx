@@ -24,13 +24,8 @@ export default function StatsSection({ stats }) {
             })}
 
             <div className="vb-stats__item vb-stats__rating">
-              <span className="vb-stats__score">22,000+</span>
-              <span className="vb-stats__stars">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <Icon.Star key={index} className="vb-icon-14" />
-                ))}
-              </span>
-              <small className="vb-stats__trust">Student Lives Touched</small>
+              <span className="vb-stats__score">1000+</span>
+              <small className="vb-stats__trust">Academy Registrations</small>
             </div>
           </div>
         </div>
